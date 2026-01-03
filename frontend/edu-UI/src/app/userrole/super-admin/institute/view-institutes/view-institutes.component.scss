@@ -1,0 +1,156 @@
+.view-institutes{ padding:8px  }
+
+// mat-slide-toggle{ --mat-slide-toggle-bar-background: #dfeeff }
+@media (max-width:760px){ .search{ width:100% } .view-institutes .toolbar{ flex-direction:column; align-items:stretch } }
+
+
+/* Modal styles */
+.modal-backdrop{ position:fixed; inset:0; display:flex; align-items:center; justify-content:center; background:rgba(8,12,20,0.45); z-index:10050 }
+.modal{ min-width:60%; max-width:96%; min-height: 45%; max-height: 80%;
+	background: var(--theme-2) ; border-radius:12px; padding:14px; box-shadow:0 22px 58px rgba(2,10,30,0.42); z-index:10060 }
+.modal-header{ display:flex; justify-content:space-between; align-items:center; gap:10px; font-weight: bold; }
+.modal-header h1{color:var(--button-1); font-size:1.25rem; margin:0; font-weight: 600; }
+.modal-body{  display:flex; flex-direction:column; gap:10px; min-height: 300px; max-height:60vh; overflow:auto; }
+
+// ==
+/* Icon badge for labels */
+.detail-card .detail-grid { grid-template-columns: 200px 1fr; gap:6px 40px; }
+
+.detail-grid{ 
+	display:grid; background: var(--bg-1);
+	grid-template-columns: 180px 1fr; gap:2px 2px; align-items:center;
+	border:4px solid rgba(84, 167, 212, 0.06); border-radius:8px;
+	margin-left:48px; /* 2 * 16px (TAP) */ margin-right:32px;
+}
+.detail-grid .label{ color: var(--text-1); gap: 15px; font-weight:500; min-height:36px; display:flex; align-items:center; padding-left: 20PX;}
+.detail-grid .value{ color: var(--text-2); min-height:36px; display:flex; align-items:center; }
+
+
+.modal-actions{ display:flex; justify-content:flex-end; gap:8px; margin-top:12px; }
+.modal-actions button {background: var(--button-1) !important; color: var(--button-text-1) !important;}
+.modal-actions button:hover {background: var(--button-1-hover) !important; color: var(--button-text-2) !important;}
+
+// ============= Capus list styles =============
+.campus-list{ display:flex; flex-direction:column; gap:8px; margin-left:48px; margin-right:32px; }
+.department-list{ display:flex;}// gap:8px; margin-left:48px; margin-right:32px; }
+.department-list .detail-grid{ grid-template-columns: 440px 1fr; gap:6px 24px; align-content: baseline; }
+.campus-card{ background:var(--bg-1); border:1px solid rgba(11,114,133,0.06); padding:8px 10px; border-radius:8px }
+.campus-header{ display:flex; justify-content:space-between; align-items:center; gap:8px }
+.campus-lines{ margin-top:6px } 
+
+// ============= Department and Team chips styles =============
+.chips{ display:grid; gap:8px; flex-wrap:wrap; margin-left:48px; margin-right:32px; padding: 6px; background-color: var(--bg-1);}
+.chip{  font-weight:700 }
+
+
+@media (max-width:520px){
+	.modal-body .detail-row{ grid-template-columns:1fr }
+	.modal-body .detail-row strong{ margin-bottom:6px }
+}
+
+@media (max-width:720px){ .modal{ width:96%; padding:12px } }
+
+@media (max-width:520px){ .detail-card .detail-grid{ grid-template-columns:1fr } }
+
+@media (max-width:420px){
+	.filters-panel{ width: calc(100% - 24px); min-width: unset; max-width: calc(100% - 24px); }
+}
+
+@media (max-width:720px){ .list-wrapper{ max-height:50vh } }
+
+/* Custom button styles for all buttons */
+// .view-institutes .action-row button {background: var(--button-1); color: var(--button-text-1);}
+// .view-institutes .action-row button:hover {background: var(--button-1-hover); color: var(--button-text-2);}
+
+// .view-institutes .filter-actions button {background: var(--button-1); color: var(--button-text-1);}
+// .view-institutes .filter-actions button:hover {background: var(--button-1-hover); color: var(--button-text-2);}
+
+
+
+/* Filters panel styles */
+// .filters-panel{ margin:12px 0; padding:12px; display:flex; align-items:center; gap:12px; flex-wrap:wrap; border:2px solid rgba(4, 40, 46, 0.12); border-radius:8px; background:#fff; box-shadow:0 4px 12px rgba(1, 39, 46, 0.08) }
+// .filter-block{ display:flex; gap:12px; align-items:center; flex-wrap:wrap; width:100% }
+// .filter-item{ min-width:300px; max-width:340px }
+// .filter-actions{ display:flex; gap:8px; align-items:center; margin-left:auto }
+:host ::ng-deep .mat-mdc-form-field-subscript-wrapper {
+	display: none;
+}
+
+// mat-slide-toggle color change
+// mat-slide-toggle{ --mat-slide-toggle-bar-background: var(--button-1) }
+
+// Filter block visibility control for floating panel
+
+
+
+/* Make primary button visually distinct */
+// .filter-actions button.mat-flat-button:first-child{ background: var(--button-1); color: var(--button-text-1); }
+
+// :host ::ng-deep .filters-panel .mat-form-field-infix,
+// :host ::ng-deep .filters-panel .mat-form-field-flex{
+// 	min-height:22px !important;
+// 	padding-top:4px !important;
+// 	padding-bottom:2px !important;
+// }
+
+// :host ::ng-deep .filters-panel .mat-form-field-appearance-outline .mat-form-field-outline {
+// 	stroke: rgba(11,114,133,0.06);
+// }
+
+// /* Dense label and input sizing */
+// :host ::ng-deep .filters-panel .mat-form-field-label {
+// 	font-size: 0.72rem !important;
+// 	transform: translateY(-8px) !important;
+// }
+
+// :host ::ng-deep .filters-panel .mat-input-element {
+// 	padding: 2px 6px !important;
+// 	font-size: 0.88rem !important;
+// 	line-height: 1rem !important;
+// 	height: auto !important;
+// }
+
+
+
+
+// /* mat-tab-group / detail-card tuning */
+// .detail-card { padding: 8px; }
+// // .detail-card mat-tab-group { width: 100%; min-width: 340px; max-width: 880px; }
+
+// :host ::ng-deep .detail-card .mat-tab-group .mat-tab-header {
+// 	border-bottom: 1px solid rgba(15,35,55,0.06);
+// 	padding: 6px 8px;
+// }
+
+// :host ::ng-deep .detail-card .mat-tab-group .mat-tab-label {
+// 	font-size: 0.92rem;
+// 	padding: 6px 10px;
+// 	min-width: 90px;
+// 	margin-right: 6px;
+// }
+
+// :host ::ng-deep .detail-card .mat-tab-group .mat-tab-label .mat-icon {
+// 	font-size: 16px; margin-right:6px; vertical-align:middle;
+// }
+
+// /* make tab content area scrollable and bounded to modal height */
+// :host ::ng-deep .detail-card .mat-tab-group .mat-tab-body-wrapper {
+// 	max-height: calc(60vh - 80px);
+// 	overflow: auto;
+// 	padding: 8px 6px 2px 6px;
+// }
+
+// /* ensure inner grids/cards adapt */
+
+
+// @media (max-width:920px){
+// 	.detail-card mat-tab-group { min-width: 280px; max-width: calc(100% - 32px); }
+// 	:host ::ng-deep .detail-card .mat-tab-group .mat-tab-label { font-size: 0.84rem; padding: 6px 8px; }
+// 	.detail-card .detail-grid { grid-template-columns: 140px 1fr; }
+// }
+
+// @media (max-width:520px){
+// 	.detail-card mat-tab-group { min-width: unset; }
+// 	.detail-card .detail-grid { grid-template-columns: 1fr; margin-left:0; margin-right:0; }
+// 	.chips, .campus-list { margin-left:0; margin-right:0; }
+// }

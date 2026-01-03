@@ -1,0 +1,281 @@
+/* You can add global styles to this file, and also import other style files */
+// Design token variables (inlined here so component styles don't need per-file imports)
+// Theme variants
+:root {
+
+    // Top-nav 
+    --theme-2: #f2f2f2;             // Theme
+    --theme-2-text-1: #0b3946;      // Text primary
+    --theme-2-text-2: #243843;      // Text secondary
+    --theme-2-bg-1: #ffffff;        // Background primary
+    --theme-2-avatar: #9cc6b8;        //
+    --theme-2-border: rgba(15, 35, 55, 0.28);
+    --theme-2-hanover-bg: rgba(15, 35, 55, 0.06);
+
+    // Side-nav
+    --theme-1: #4a555f;
+    --theme-1-text-1: #ffffff;
+    --theme-1-text-2: #dfe3e6;
+    --theme-1-icon-1: #ffffff;
+    --theme-1-border: rgba(255, 255, 255, 0.28);
+    --theme-1-hanover-bg: rgba(255, 255, 255, 0.06);
+    
+    // Sidebar collapsed
+    --theme-3: #c5c7d1;
+    
+    /* Global layout variables (sidebar width is global so % values work across components) */
+    --sidenav-width: 18.75rem; /* 300px ÷ 16 */
+    --sidenav-max: 41.25rem;   /* 660px ÷ 16 */
+
+
+
+  /* -------------------------------------
+   * TABLES
+   * -----------------------------------*/
+  --table-header-bg: #4a555f;       /* Updated to match theme palette */
+  --table-header-text: #ffffff;
+  --table-header-icon: #e8f2ff;
+
+  --table-row-bg: #ffffff;
+  --table-row-hover-bg: #eef1f4;   /* Soft hover */
+  --table-row-hover-text: #1d2c33;
+  --table-row-text: #222b32;
+  --table-border: rgba(15, 35, 55, 0.15);
+
+  /* -------------------------------------
+   * BACKGROUNDS
+   * -----------------------------------*/
+  --bg-1: #ffffff;
+  --bg-2: #f4f5f6;     /* Slightly refined gray */
+  --bg-3: #e9ebec;
+
+
+  /* -------------------------------------
+   * BUTTONS
+   * -----------------------------------*/
+  --button-1: #1f7bff;    /* Primary blue */
+  --button-2: #2f3a4c;    /* Slate/navy button */
+  --button-3: #0b3946;    /* Deep teal action */
+
+  /* Hover states */
+  --button-1-hover: #1668d6;
+  --button-2-hover: #26303e;
+  --button-3-hover: #082c34;
+
+  /* Button text */
+  --button-text-1: #ffffff;
+  --button-text-2: #ffffff;
+  --button-text-3: #ffffff;
+
+
+  /* -------------------------------------
+   * BORDERS
+   * -----------------------------------*/
+  --border-1: rgba(15, 35, 55, 0.28);
+  --border-2: rgba(15, 35, 55, 0.12);
+  --border-3: rgba(243, 242, 241, 0.45);
+
+
+  /* -------------------------------------
+   * LABELS / ACCENTS
+   * -----------------------------------*/
+  --label-1: #050505;   /* Slightly refined slate */
+  --label-2: #484b4e;
+  --label-3: #586772;
+
+
+  /* -------------------------------------
+   * ICONS
+   * -----------------------------------*/
+  --icon-1: #6b7784;   /* Neutral slate */
+  --icon-2: #1f7bff;   /* Accent blue */
+  --icon-3: #0b3946;   /* Strong deep teal */
+
+
+  /* -------------------------------------
+   * TEXT COLORS
+   * -----------------------------------*/
+  --text-1: #000000;   /* Primary dark text */
+  --text-2: #161616b4;   /* Secondary slate */
+  --text-3: #5a6973;   /* Tertiary muted text */
+
+
+  /* -------------------------------------
+   * UTILITY
+   * -----------------------------------*/
+  --shadow-1: 0 12px 36px rgba(16, 32, 48, 0.06);
+  --muted-1: #6e7077;
+}
+
+// 
+html, body {
+  overflow: hidden;
+  margin: 0;
+  font-family: Roboto, serif !important;
+}
+
+/* Force Cambria everywhere but avoid overriding icon fonts (mat-icon) */
+*:not(.mat-icon):not(.material-icons):not(.mat-mdc-icon) , *:not(.mat-icon):not(.material-icons):not(.mat-mdc-icon)::before, *:not(.mat-icon):not(.material-icons):not(.mat-mdc-icon)::after {
+  font-family: Roboto, serif !important;
+}
+
+/* Ensure Material icon elements render their icon font */
+.mat-icon, .material-icons, .mat-mdc-icon {
+  font-family: 'Material Icons' !important;
+  speak: none;
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
+  letter-spacing: normal;
+  -webkit-font-feature-settings: 'liga';
+  -webkit-font-smoothing: antialiased;
+}
+
+
+@import "~ag-grid-community/styles/ag-grid.css";
+@import "~ag-grid-community/styles/ag-theme-alpine.css";
+@import "~@angular/material/prebuilt-themes/indigo-pink.css";
+
+// @import '~@angular/material/theming';
+
+@mixin mat-ripple-theme($theme) {
+    .mat-ripple-element {
+        background-color: #2e2e38;
+    }
+}
+
+// ========================= Toolbar styles ================================================================
+
+.toolbar{ padding:0.5rem; display:flex; justify-content:space-between; align-items:center; gap: 0.75rem /* 12px ÷ 16 */;  } 
+.toolbar .search{ width:22.5rem; background-color: var(--theme-2-bg-1); }
+.toolbar .search {flex: 1 1 26.25rem; /* 420px ÷ 16 */
+  min-width: 13.75rem; /* 220px ÷ 16 */
+  max-width: 28.125rem; /* 450px ÷ 16 */
+ }
+.toolbar .search .search-field { width: 100%; }
+.toolbar .search .mat-form-field-wrapper { padding: 0 0.5rem; }
+.toolbar .search mat-icon[matPrefix] { color: var(--icon-2); margin-right:0.5rem; }
+
+/* Richer toolbar & buttons */
+.toolbar .controls{ display:flex; align-items:center; gap:0.75rem; }
+.toolbar .action-row{ display:flex; gap:0.5rem; align-items:center; }
+.toolbar .controls button { background: var(--button-1) !important; color: var(--button-text-1) !important; }
+.toolbar .controls button:hover { background: var(--button-1-hover) !important; color: var(--button-text-2) !important; }
+
+//  ======================== Filters panel styles ================================================================
+/* Filters panel styles Old*/
+// .filters-panel{ margin:12px 0; padding:12px; display:flex; align-items:center; gap:12px; flex-wrap:wrap; border:2px solid rgba(4, 40, 46, 0.12); border-radius:8px; background:var(--bg-1); box-shadow:0 4px 12px rgba(1, 39, 46, 0.08) }
+// .filter-block{ display:flex; gap:12px; align-items:center; flex-wrap:wrap; width:100% }
+// .filter-row{ display:flex; gap:12px; align-items:center; flex-wrap:wrap; width:100% }
+// .filter-item{ min-width:300px; max-width:340px; }
+// .filter-actions{ display:flex; gap:8px; align-items:center; margin-left:auto }
+
+/* Popover (CDK Overlay) styles */
+.filters-panel{ min-width:20rem;max-width:26.25rem;padding: 0.5rem 0.625rem;border-radius:0.5rem;
+	box-shadow:0 14px 28px rgba(2,10,30,0.16);background: var(--theme-2);font-size:.9rem}
+
+/* Stack fields vertically for a clean single-column modern look */
+.filters-panel .filter-block{	display:flex;	flex-direction:column; gap: 0.75rem; margin-bottom:0.5rem; }
+.filters-panel .filter-item{ width:100%; max-width:100%; max-height:  4.0625rem; background-color: var(--bg-1) ;}
+.filters-panel mat-icon{ font-size:1rem }
+.filter-actions{ display:flex; justify-content:flex-end; gap: 0.5rem; }
+.filter-actions button{ padding: 0.25rem 0.5rem; height:1.875rem; font-size:0.82rem }
+
+.filter-actions button {background: var(--button-1) !important; color: var(--button-text-1) !important;}
+.filter-actions button:hover {background: var(--button-1-hover) !important; color: var(--button-text-2) !important;}
+
+.filters-panel .mat-mdc-form-field-subscript-wrapper {
+  display: none !important; }
+
+// ========================= Premium table styles ================================================================
+.list-card {padding: 0.5rem; }
+.list-wrapper{ background-color: var(--bg-1); border:0.125rem solid rgba(4, 40, 46, 0.12); border-radius: 0.5rem; max-height:75vh; overflow:auto; }
+.list-wrapper .actions-inline{ display:flex; gap:0.375rem; align-items:center }
+.list-wrapper .actions-inline button{ width:2rem; height:2rem }
+.list-wrapper .actions-inline button mat-icon{ font-size: 1.25rem;  }
+/* Premium table global theme — dark header, sticky/frozen, zebra rows, hover */
+.premium-table {width: 100%;border-collapse: separate; border:  0.1rem solid var(--border-1)!important;} /* 16px ÷ 16 */
+.mat-sort-header-arrow {color: var(--table-header-icon) !important;}
+
+/* Premium table header styling */
+.premium-table thead th.mat-header-cell,
+.premium-table thead th.mat-mdc-header-cell {
+    background: linear-gradient(180deg, var(--table-header-bg), var(--table-header-bg)) !important;
+    color: var(--table-header-text) !important;
+    font-weight: 500 !important;position: sticky !important;
+    top: 0 !important;z-index: 60 !important;
+    border-bottom: 1px solid rgba(255,255,255,0.06) !important;
+}
+.premium-table tbody tr:hover{ transform:translateY(-0.125rem); box-shadow:0 0.75rem 1.875rem rgba(6,18,30,0.06);background-color: var(--table-row-hover-bg);color:var(--table-row-hover-text);}
+.custom-paginator {border: 1px solid var(--border-1);}
+
+// ======================  View Tab Styles =========
+/* Modal styles */
+.modal-backdrop{ position:fixed; inset:0; display:flex; align-items:center; justify-content:center; background:rgba(8,12,20,0.45); z-index:10050 }
+.modal{ min-width:60%; max-width:96%; min-height: 45%; max-height: 80%;
+	background: var(--theme-2) ; border-radius: 0.75rem; padding: 0.875rem; box-shadow: 0 1.375rem 3.625rem rgba(2,10,30,0.42); z-index:10060 }
+.modal-header{ display:flex; justify-content:space-between; align-items:center; gap: 0.625rem; font-weight: bold; }
+.modal-header h1{color:var(--button-1); font-size:1.25rem; margin:0; font-weight: 500; }
+.modal-body{  display:flex; flex-direction:column; gap: 0.625rem; min-height: 18.75rem; max-height:60vh; overflow:auto; }
+
+/* Icon badge for labels */
+.detail-card .detail-grid { grid-template-columns: 10rem  1fr; gap: 0.375rem 2.5rem; }
+.detail-grid{ 
+  display: grid; background: var(--bg-1); grid-template-columns: 11.25rem 1fr; gap: 0.125rem 0.125rem; align-items: center;
+  border: 0.25rem solid rgba(84, 167, 212, 0.06); border-radius: 0.5rem;
+  margin-left: 3rem; /* 2 * 16px (TAP) */ margin-right: 2rem; /* 32px ÷ 16 */
+}
+.detail-grid .label{ color: var(--text-1); gap: 0.5rem; font-weight:500; min-height:2.25rem; display:flex; align-items:center; padding-left: 1.25rem;}
+.detail-grid .value{ color: var(--text-2); min-height:2.25rem; display:flex; align-items:center; }
+
+.modal-actions{ display:flex; justify-content:flex-end; gap:0.5rem; margin-top:0.75rem; }
+.modal-actions button {background: var(--button-1) !important; color: var(--button-text-1) !important;}
+.modal-actions button:hover {background: var(--button-1-hover) !important; color: var(--button-text-2) !important;}
+
+
+
+// ====================== Stepper button styles ================================================================
+button[matStepperNext].next-btn {
+  display: inline-flex !important;align-items: center !important;
+  gap: 6px !important;flex-direction: row !important; /* text then icon */ }
+
+button[matStepperNext].next-btn span { order: 1 !important; }
+button[matStepperNext].next-btn mat-icon { order: 2 !important;}
+
+
+// ===================== 
+/* Global mat-slide-toggle color override */
+.mat-mdc-slide-toggle.mat-accent,
+.mat-mdc-slide-toggle.mat-primary {
+  --mdc-switch-selected-handle-color: var(--button-1);
+  --mdc-switch-selected-focus-handle-color: var(--button-1);
+  --mdc-switch-selected-hover-handle-color: var(--button-1);
+  --mdc-switch-selected-pressed-handle-color: var(--button-1);
+
+  --mdc-switch-selected-track-color: var(--button-1);
+  --mdc-switch-selected-focus-track-color: var(--button-1);
+  --mdc-switch-selected-hover-track-color: var(--button-1);
+  --mdc-switch-selected-pressed-track-color: var(--button-1);
+
+  --mdc-switch-selected-focus-state-layer-color: var(--button-1);
+  --mdc-switch-selected-hover-state-layer-color: var(--button-1);
+  --mdc-switch-selected-pressed-state-layer-color: var(--button-1);
+}
+
+// global checkbox checked tick mark color
+.mat-mdc-checkbox.mat-mdc-checkbox-checked
+.mdc-checkbox__background,
+.mat-mdc-checkbox.mat-mdc-checkbox-indeterminate
+.mdc-checkbox__background {
+  background-color: var(--button-1) !important;
+  border-color: var(--button-1) !important;
+}
+
+
+
+/* small-screen adjustments */
+@media (max-width: 720px) {.premium-table td.mat-cell { padding:  0.5rem 0.625rem; }
+    .premium-table thead th.mat-header-cell,.premium-table thead th.mat-mdc-header-cell { font-size: 0.9rem; }
+}

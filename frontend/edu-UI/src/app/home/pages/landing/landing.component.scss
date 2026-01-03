@@ -1,0 +1,103 @@
+// Landing Page Styles
+.container{
+     display: flex;
+     flex-direction: column;
+}
+.header {
+     padding: 1rem;display: grid;     grid-template-columns: 1fr auto 1fr;
+     align-items: center;background-color: var(--theme-1);
+     color: var(--theme-1-text-1);
+
+     > *:nth-child(1) { justify-self: start; }
+     > *:nth-child(2) { justify-self: center; }
+     > *:nth-child(3) { justify-self: end; }
+}
+.brand{ font-weight: 500; font-size: 1.75rem; color: var(--theme-1-text-1) }
+.nav{ display: flex; gap: 2rem;      align-items: center; justify-content: space-between; margin-left: 1.125rem }
+.link{ color: var(--theme-1-text-1); font-weight: 500 }
+.link:hover{ color: var(--theme-1-text-1); text-decoration: underline }
+.actions{ margin-left: auto; display:flex; gap: 0.625rem }
+.mat-button-link button{ height: 2.25rem }
+.mat-button-link button[mat-stroked-button]{ color: var(--theme-1-text-1) ; border-color: rgba(255,255,255,0.18) }
+.mat-button-link button[mat-flat-button]{ color: #222; background: var(--theme-1-text-1) }
+
+// Hero section Main styles
+.hero { padding: 1.25rem ;max-height: 76vh;overflow: scroll; }
+
+.container.grid-two { display:grid; grid-template-columns:1fr 40rem; gap:2rem; align-items:center; padding:2rem; }
+.hero-left { max-width:60rem; }
+.hero-title { font-size: clamp(1rem, 3vw, 2.25rem); font-weight:500;  color:#04282e; }
+.hero-sub { font-size:1.125rem; color:#6b7280; }
+.hero-ctas { display:flex; gap:1rem; margin-bottom:1.5rem;     justify-content: space-evenly; }
+.btn-primary { display:inline-flex; align-items:center; gap:.5rem; padding:.75rem 1.25rem; border-radius:.5rem; font-weight:600; background:var(--theme-1); color: var(--theme-1-text-1); box-shadow:0 6px 16px rgba(30,136,229,.2); }
+.btn-primary:hover { background:var(--theme-1-text-1); color: var(--theme-1) ; }
+.btn-outline { display:inline-flex; align-items:center; gap:.5rem; padding:.75rem 1.25rem; border-radius:.5rem; font-weight:600; background:var(--theme-1) ; color: var(--theme-1-text-1); box-shadow:0 6px 16px rgba(30,136,229,.2); }
+.btn-outline:hover { background:var(--theme-1-text-1); color: var(--theme-1) ;  }
+.hero-stats { display:flex; gap:1rem; justify-content: space-between; }
+.stat { background:#fff; padding:.75rem 1rem; border-radius:.5rem; box-shadow:0 4px 12px rgba(2,6,23,.05); text-align:center; }
+.stat dt { font-size:.875rem; color:#6b7280; }
+.stat dd { margin:0; font-size:1.25rem; font-weight:700; color:#04282e; }
+.hero-right .hero-illustration { width:100%; height:320px; border-radius:1rem; background:linear-gradient(135deg,rgba(30,136,229,.15),rgba(99,102,241,.15)); border:1px solid rgba(0,0,0,.06); box-shadow:0 8px 24px rgba(2,6,23,.06); }
+
+/* Features */
+.features{ padding: 1.75rem 0 }
+.section-title{ margin: 0 0 1.125rem; font-size: 1.25rem; color: #04282e }
+.features-grid{ display:grid; grid-template-columns: repeat(4, 1fr); gap: 0.875rem }
+.feature{ background: var(--card-bg); border-radius: 0.625rem; padding: 1.125rem; box-shadow: 0 0.5rem 1.5rem rgba(2,6,23,0.04); display:flex; flex-direction:column; gap: 0.5rem; align-items:flex-start }
+.feature mat-icon{ font-size: 1.75rem; color: var(--accent); background: rgba(30,136,229,0.08); padding: 0.5rem; border-radius: 0.5rem }
+
+/* Steps */
+
+
+/* Section */
+.steps { padding: 2rem 0; background: var(--bg-1); }
+.steps .section-title { margin: 0 0 1rem; font-size: 1.5rem; font-weight: 500; color: var(--text-1); }
+
+/* Grid */
+.steps-grid {
+  list-style: none; padding: 0; margin: 0;  display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 1rem;
+}
+
+/* Step card */
+.step {
+  background: var(--bg-2); border: 1px solid var(--border); border-radius: 0.75rem;
+  padding: 1rem; text-align: center; position: relative; overflow: hidden;
+  transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease;
+}
+.step:hover { transform: translateY(-2px); box-shadow: var(--border-1); border-color: rgba(30, 136, 229, 0.25); }
+.step:focus-within { outline: 2px solid rgba(30, 136, 229, 0.35); outline-offset: 2px; }
+
+/* Number badge */
+.step .num {
+  width: 2.5rem; height: 2.5rem; border-radius: 999px; margin: 0 auto .5rem;
+  display: inline-flex; align-items: center; justify-content: center; font-weight: 500; color: var(--text-1);
+  background:
+    radial-gradient(circle at 50% 50%, rgba(30, 136, 229, .15), transparent 70%),
+    rgba(2, 6, 23, .04);
+  border: 1px solid rgba(30, 136, 229, .25);
+}
+
+/* Content */
+.step h4 { margin: .375rem 0 .25rem; font-size: 1.05rem; color: var(--text-1); }
+.step p { margin: 0; color: var(--text-1); font-size: .975rem; }
+
+/* Optional decorative edge (subtle gradient) */
+.step::after {
+  content: ""; position: absolute; inset: 0 0 auto 0; height: 4px;
+  opacity: .12;
+}
+
+/* CTA */
+.cta{ padding: 2.25rem 0; background: linear-gradient(180deg, #f6f8fa, #eef3f6); text-align: center; border-radius: 0.75rem; margin: 1.5rem 0 }
+.cta h2{ margin: 0 0 0.375rem; color: #04282e }
+.cta p{ color: var(--muted); margin: 0 0 0.875rem }
+.cta-actions{ display:inline-flex; gap: 0.625rem ;justify-content: space-around;}
+.cta .btn-primary{ box-shadow: 0 0.5rem 1.25rem rgba(30,136,229,0.12) }
+
+// Footer styles
+.footer { padding: 1.15rem; background-color: var(--theme-2);     display: flex;flex-direction: column;}
+.footer-grid{ display:grid; grid-template-columns: repeat(4, 1fr); gap: 1.125rem }
+.footer .col h5{ color: var(--theme-2-text-1) ; margin: 0 0 0.5rem }
+.footer p,.footer a{ color: var(--theme-2-text-1); margin: 0.375rem 0 }
+.footer a{ text-decoration:none }
+.footer .muted{ color: var(--theme-2-text-1); margin-top: 0.75rem }

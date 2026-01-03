@@ -1,0 +1,62 @@
+.exam-reports { padding: 8px; }
+.selections {
+  display: flex;
+  gap: 16px;
+  width: 50%; 
+}
+
+.selections mat-form-field {
+  flex: 1 1 0;   // equal width
+  width: 100%;
+  background-color: var(--bg-1);
+}
+:host ::ng-deep .mat-mdc-form-field-subscript-wrapper {
+	display: none;
+}
+.tab-actions{ padding:8px; display:flex; justify-content:space-between; align-items:center; gap:12px;  } 
+.tab-actions .search{ width:360px; background-color: var(--theme-2-bg-1); }
+.tab-actions .search { flex: 1 1 420px; min-width: 220px;  max-width: 450px; }
+.tab-actions .search .search-field { width: 100%; }
+.tab-actions .search .mat-form-field-wrapper { padding: 0 6px; }
+.tab-actions .search mat-icon[matPrefix] { color: var(--icon-2); margin-right:8px; }
+/* Richer toolbar & buttons */
+.tab-actions .controls{ display:flex; align-items:center; gap:12px }
+.tab-actions .action-row{ display:flex; gap:8px; align-items:center }
+.tab-actions .controls button { background: var(--button-1) !important; color: var(--button-text-1) !important; }
+.tab-actions .controls button:hover { background: var(--button-1-hover) !important; color: var(--button-text-2) !important; }
+
+.wrong-summary-link{ margin-left:10px; font-size:0.9em; color:var(--primary-color); cursor:pointer; text-decoration:underline; font-weight:600 }
+
+/* Fullscreen semi-transparent backdrop to focus attention */
+.wrong-summary-backdrop{ position: fixed; inset: 0; background: rgba(0,0,0,0.45); z-index: 1498; display:flex; align-items:center; justify-content:center; }
+
+.wrong-summary-panel{ position: relative; z-index: 1500; width: min(900px, 92%); max-height: 85vh; overflow: auto; }
+.wrong-summary-panel .card{ padding: 16px; background: linear-gradient(180deg, var(--bg-2) 0%, #ffffff 100%); border: 1px solid rgba(0,0,0,0.08); border-radius: 12px; box-shadow: 0 18px 40px rgba(2,12,34,0.35); }
+.wrong-summary-panel .panel-header{ display:flex; justify-content:space-between; align-items:center; margin-bottom:12px }
+.wrong-summary-panel .panel-header h4{ margin:0; font-size:1.05rem; letter-spacing:0.2px }
+.wrong-summary-panel .panel-sub{ font-size:0.9rem; color: rgba(0,0,0,0.6); }
+.wrong-summary-panel .panel-body{ padding: 6px 0 }
+.wrong-summary-panel .question-title{ font-weight:700; margin-bottom:12px; font-size:0.98rem }
+.wrong-summary-panel .summary-table{ width:100%; border-collapse:separate; border-spacing:0 8px; }
+.wrong-summary-panel .summary-table thead th{ text-align:left; padding:8px 12px; font-weight:700; font-size:0.9rem; color: rgba(0,0,0,0.75) }
+.wrong-summary-panel .summary-table tbody tr{ background: rgba(0,0,0,0.03); border-radius:8px; }
+.wrong-summary-panel .summary-table td{ padding:10px 12px; vertical-align:middle; }
+.wrong-summary-panel .summary-table td:first-child{ font-weight:600 }
+.wrong-summary-panel .summary-actions{ display:flex; justify-content:flex-end; gap:8px; margin-top:12px }
+.wrong-summary-panel .small-muted{ color: rgba(0,0,0,0.55); font-size:0.9rem }
+.wa-count-link{ color:var(--accent-color); text-decoration:underline; cursor:pointer; font-weight:600 }
+.muted{ color: rgba(0,0,0,0.5); font-size:0.95em }
+
+/* Responsive tweaks */
+@media (max-width: 640px){
+  .wrong-summary-panel{ width: 96%; }
+  .wrong-summary-panel .card{ padding: 12px }
+  .wrong-summary-panel .summary-table thead th{ font-size:0.85rem }
+}
+
+.resource-list{ list-style:none; padding:0; margin:0; display:flex; flex-direction:column; gap:10px }
+.resource-list li{ padding:10px; background: rgba(0,0,0,0.02); border-radius:8px; display:flex; justify-content:space-between; align-items:center }
+.res-title{ font-weight:700 }
+.res-desc{ font-size:0.9rem }
+.res-actions a{ background: var(--button-1); color: var(--button-text-1); padding:6px 10px; border-radius:6px; text-decoration:none }
+.res-actions a:hover{ opacity:0.95 }

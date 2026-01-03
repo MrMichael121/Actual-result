@@ -1,0 +1,120 @@
+
+.app-side-nav {
+	background-color: var(--theme-1);
+	color: var(--theme-1-text-1);
+	height: 100%;
+	width: var(--sidenav-width);
+	padding: 0.75rem 0;
+	display: flex;
+	flex-direction: column;
+}
+
+.app-side-nav .side-top { display:flex; flex-direction:column; align-items:center; position:relative }
+.app-side-nav .logo-wrap { width:100%; display:flex; align-items:center; justify-content:center; padding-bottom:1.875rem; padding-top: 1.25rem; }
+.app-side-nav .avatar-wrap { position:relative; display:flex; align-items:center; justify-content:center; margin-top:0.375rem }
+.app-side-nav .avatar { width:9.375rem; height:9.375rem; border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:700; background:#9cc6b8; color:#2b3b36; box-shadow: 0 0.75rem 1.875rem rgba(11,12,14,0.16); font-size:3rem; position:relative }
+.app-side-nav .avatar-initial { font-size:2.75rem; font-weight:800 }
+.app-side-nav .status-dot { width:0.75rem; height:0.75rem; border-radius:50%; background:#2dd06e; position:absolute; right:-0.375rem; bottom:0; border:0.1875rem solid rgba(255,255,255,0.06) }
+
+.app-side-nav .user-meta { display:flex; flex-direction:column; align-items:center; text-align:center }
+.app-side-nav .user-meta .name { font-weight:700; margin-top:0.5rem; font-size:1rem }
+.app-side-nav .user-meta .institute { font-size:0.8125rem; opacity:0.85; margin-top:0.375rem }
+
+.app-side-nav .collapse-btn { background:transparent; border:none; color: var(--theme-1-text-1); position:absolute; top:0.75rem; right:0.75rem }
+
+/* floating edge toggle */
+.app-side-nav .collapse-toggle {
+	position: absolute;
+	right: -18px;
+	top: 20px;
+}
+.app-side-nav .collapse-toggle:hover { transform: translateX(2px); background: rgba(255,255,255,0.06) }
+.app-side-nav.collapsed .collapse-toggle { right: -14px; top: 12px; }
+.app-side-nav .collapse-toggle mat-icon { font-size: 20px }
+
+.app-side-nav .menu { display:flex; flex-direction:column; gap:0.625rem; margin-top:1.5625rem; flex: 1 1 auto; }
+.app-side-nav .menu-item { color: var(--theme-1-text-1); text-decoration:none; padding:0.625rem 1.25rem;  display:flex; align-items:center; gap:1.25rem; transition:transform .12s ease, box-shadow .12s ease; position:relative; overflow:hidden }
+.app-side-nav .menu-item .menu-icon { opacity:0.95; color: var(--theme-1-icon-1); transition: color .12s ease, transform .12s ease }
+
+/* Replace background hover with left-accent + icon color change */
+.app-side-nav .menu-item::before {
+	content: '';
+	position: absolute;
+	left: -6px;
+	top: 1px;
+	bottom: 10px;
+	width: 0;
+	// border-radius: 4px;
+	background: transparent;
+	transition: width .12s ease, background .12s ease;
+}
+.app-side-nav .menu-item:hover { transform: translateX(2px); box-shadow: 0 6px 18px rgba(11,12,14,0.06); }
+.app-side-nav .menu-item:hover::before { width: 12px;  height: 100%;  background: var(--theme-1-text-1); }
+.app-side-nav .menu-item:hover .menu-icon { color: var(--accent, var(--theme-1-text-1)); transform: translateX(1px) }
+
+/* active state - stronger accent and slight background */
+.app-side-nav .menu-item.active, .app-side-nav .menu-item[aria-pressed="true"] { background: rgba(255,255,255,0.02); font-weight:500 }
+.app-side-nav .menu-item.active::before { width: 13px; height: 100%;  background: var(--theme-1-text-1) }
+.app-side-nav .menu-item.active .menu-icon { color: var(--accent, var(--theme-1-text-1)) }
+
+.app-side-nav.collapsed { width:4.5rem; padding:0.5rem 0.375rem }
+.app-side-nav.collapsed .menu-item { justify-content:center; padding:0.625rem }
+.app-side-nav.collapsed .menu-label { display:none }
+.app-side-nav.collapsed .user-meta { display:none }
+.app-side-nav.collapsed .avatar { width:2.5rem; height:2.5rem; font-size:0.875rem }
+
+/* Mobile: collapse sidebar by default and make collapse toggle visible */
+@media (max-width: 992px) {
+	.app-side-nav {
+		width: 72px;
+		padding: 8px 6px;
+		position: fixed;
+		left: 0;
+		top: 0;
+		height: 100vh;
+		z-index: 65;
+		transform: translateX(0);
+		box-shadow: 0 8px 24px rgba(2,10,30,0.24);
+		background-color: var(--theme-1);
+	}
+
+	/* hide labels and user meta by default on mobile */
+	.app-side-nav .menu-label,
+	.app-side-nav .user-meta,
+	.app-side-nav .logo-wrap .institute-logo { display: none; }
+
+	.app-side-nav .avatar { width: 40px; height: 40px; font-size: 14px }
+
+	/* ensure menu items are center-aligned icons only */
+	.app-side-nav .menu-item { justify-content: center; padding: 12px 6px; gap: 0 }
+	.app-side-nav .menu-item .menu-icon { margin: 0; }
+
+	/* ensure collapse-toggle floats and is tappable */
+	.app-side-nav .collapse-toggle { right: -10px; top: 12px; }
+	.app-side-nav .collapse-toggle { display: block; }
+
+	/* When expanded (use .expanded helper), show full nav */
+	.app-side-nav.expanded {
+		width: var(--sidenav-width);
+		padding: 12px 0;
+	}
+
+	.app-side-nav.expanded .menu-label,
+	.app-side-nav.expanded .user-meta,
+	.app-side-nav.expanded .logo-wrap .institute-logo { display: block; }
+
+	.app-side-nav.expanded .menu-item { justify-content: flex-start; padding: 10px 20px; gap: 20px }
+}
+
+/* ensure bottom block sits at the bottom */
+.app-side-nav .side-bottom { margin-top: auto; padding-bottom: 20px }
+
+
+.logo-wrap { padding-right:0.375rem; min-width: 6.25rem; display:flex; align-items:center; justify-content:center; overflow:hidden; max-width: 10rem; height: 100%; }
+
+/* institute logo sizing */
+.institute-logo { display:block; max-width:10rem; max-height:3.75rem; width:auto; height:auto; object-fit:contain }
+
+/* collapsed sidebar fallback */
+.app-side-nav.collapsed .logo-wrap { max-width:4rem }
+.app-side-nav.collapsed .institute-logo { max-width:2.5rem; max-height:2.5rem }

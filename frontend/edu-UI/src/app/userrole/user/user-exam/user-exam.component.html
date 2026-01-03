@@ -1,0 +1,107 @@
+<div class="page user-exam-runner">
+  <div *ngIf="!exam" class="muted">No exam loaded. Please launch an exam first.</div>
+  <div *ngIf="exam">
+    <div class="header">
+      <div class="title">{{ examTitle || exam.title || exam.name }}</div>
+      <div class="pill">{{ questions.length }} Questions</div>
+      <div class="timer" [class.warning]="remaining <= 300">Time left: {{ formatTime(remaining) }}
+        <span *ngIf="remaining <= 300" class="timer-warning">⚠️</span>
+      </div>
+      <div class="actions">
+        <button class="btn" (click)="openConfirm()" [disabled]="submitting">{{ submitting ? 'Submitting...' : 'Submit Exam' }}</button>
+      </div>
+    </div>
+
+    <!-- Progress Bar -->
+    <div class="progress-bar-outer">
+      <div class="progress-bar-inner" [style.width.%]="progressPercent"></div>
+      <div class="progress-label">{{ answeredCount }} / {{ questions.length }} answered</div>
+    </div>
+    <!-- Horizontal nav row under progress bar for quick jump (sticky) -->
+    <div class="nav-row">
+      <div class="nav-card card horizontal">
+        <div class="muted small">Tap a number to jump</div>
+        <div class="nav-controls">
+          <button type="button" class="btn-stroked" (click)="prevQuestion()" [disabled]="currentIndex === 0">Prev</button>
+        </div>
+        <div class="nav-list nav-grid" role="tablist">
+          <button *ngFor="let q of questions; let i = index" type="button" class="nav-item"
+            (click)="scrollToQuestion(i)" [attr.aria-label]="'Jump to question ' + (i+1)"
+            [class.answered]="answers[q.id || i]" [class.active]="currentIndex === i">{{ i+1 }}</button>
+        </div>
+        <div class="nav-controls">
+          <button type="button" class="btn-stroked" (click)="nextQuestion()" [disabled]="currentIndex === questions.length - 1">Next</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="questions">
+      <div class="q-list">
+        <!-- <div class="exam-progress">
+          <div class="pill">{{ questions.length }} Questions</div>
+          <div class="pill">Time left: {{ formatTime(remaining) }}</div>
+        </div> -->
+        <div *ngFor="let q of questions; let i = index" class="q-card" [attr.id]="'q-' + i">
+          <div class="q-text"><strong>{{ i+1 }}.</strong> {{ q.question || q.text }}</div>
+
+          <!-- Single choice -->
+          <div *ngIf="q.type === 'choose' || q.type === 'Choose' || q.type === 'MCQ'" class="q-options">
+            <label class="opt" *ngFor="let o of q.options">
+              <input type="radio" name="q-{{q.id}}" [value]="o.id || o.text" [(ngModel)]="answers[q.id || i]"
+                (change)="selectOne(q.id || i, o.id || o.text)" />
+              <span class="opt-text">{{ o.text }}</span>
+            </label>
+          </div>
+
+          <!-- Multiple choice -->
+          <div *ngIf="q.type === 'multi' || q.type === 'Multi'" class="q-options">
+            <label class="opt" *ngFor="let o of q.options">
+              <input type="checkbox" [value]="o.id || o.text" (change)="toggleMulti(q.id || i, o.id || o.text)"
+                [checked]="(answers[q.id || i] || []).indexOf(o.id || o.text) !== -1" />
+              <span class="opt-text">{{ o.text }}</span>
+            </label>
+          </div>
+
+          <!-- Fill in the blank -->
+          <div *ngIf="q.type === 'fill' || q.type === 'Fill'" class="q-input">
+            <input type="text" [(ngModel)]="answers[q.id || i]" placeholder="Enter short answer" />
+          </div>
+
+          <!-- Paragraph / long answer -->
+          <div *ngIf="q.type === 'paragraph' || q.type === 'Paragraph'" class="q-input">
+            <textarea rows="6" [(ngModel)]="answers[q.id || i]" placeholder="Write your answer here"></textarea>
+          </div>
+        </div>
+
+      </div>
+
+      <aside *ngIf="showConfirm"class="q-nav">
+        <div class="nav-card card">
+          <div class="heading-lg">Questions</div>
+          <div class="muted small">Tap a number to jump</div>
+          <div class="nav-list nav-grid-vertical">
+            <button *ngFor="let q of questions; let i = index" type="button" class="nav-item"
+              (click)="scrollToQuestion(i)" [attr.aria-label]="'Jump to question ' + (i+1)"
+              [class.answered]="answers[q.id || i]" [class.active]="currentIndex === i">{{ i+1 }}</button>
+          </div>
+          <!-- Confirmation Dialog -->
+          <div *ngIf="showConfirm" class="confirm-backdrop">
+            <div class="confirm-dialog card">
+              <div class="confirm-title">Submit Exam?</div>
+              <div class="confirm-body">Are you sure you want to submit? You won't be able to change your answers after submission.</div>
+              <div class="confirm-actions">
+                <button class="btn-stroked" (click)="showConfirm = false">Cancel</button>
+                <button class="btn" (click)="submit()">Yes, Submit</button>
+              </div>
+            </div>
+          </div>
+          <div class="pager">
+            <button type="button" class="btn-stroked" (click)="prevQuestion()">Prev</button>
+            <div class="muted">{{ currentIndex+1 }} / {{ questions.length }}</div>
+            <button type="button" class="btn-stroked" (click)="nextQuestion()">Next</button>
+          </div>
+        </div>
+      </aside>
+    </div>
+  </div>
+</div>

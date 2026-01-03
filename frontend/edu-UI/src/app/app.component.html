@@ -1,0 +1,25 @@
+<ng-container *ngIf="isLoggedIn$ | async; else publicView">
+    <div class="app-layout">
+
+        <div class="app-sidenav">
+            <app-side-nav></app-side-nav>
+        </div>
+
+        <div class="app-main">
+            <header class="app-topbar">
+                <app-navbar-main></app-navbar-main>
+            </header>
+
+            <main class="app-content">
+                <router-outlet></router-outlet>
+            </main>
+        </div>
+
+        <app-loader></app-loader>
+    </div>
+</ng-container>
+
+<ng-template #publicView>
+    <router-outlet></router-outlet>
+    <app-loader></app-loader>
+</ng-template>

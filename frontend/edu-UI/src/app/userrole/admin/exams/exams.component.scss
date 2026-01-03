@@ -1,0 +1,115 @@
+.page.admin-exams{padding: 8px}
+
+
+:host ::ng-deep .mat-mdc-form-field-subscript-wrapper {
+	display: none;
+}
+.exams-card{padding: 8px; border-radius: 8px;}
+.exams-list{  background-color: var(--bg-1); border-radius:8px; }
+
+// // .exams-card{ margin:0 auto; background:linear-gradient(180deg,#ffffff,#fbfdff); padding:20px; border-radius:14px; box-shadow:0 10px 30px rgba(10,30,50,0.08); border:1px solid rgba(15,35,55,0.04) }
+// .inst-row{ display:flex; gap:12px; align-items:center }
+// .inst-row .btn-primary{ margin-left:auto }
+
+// /* styled select input */
+// .input-field{ padding:8px 10px; border-radius:8px; border:1px solid #e6eef2; background:#fff; min-width:260px }
+// .input-field:focus{ outline:none; box-shadow:0 6px 18px rgba(11,114,133,0.10); border-color:#0b7285 }
+
+// .exams-list.rich{ margin:12px 0; padding:12px; border-radius:8px; display:flex; flex-direction:column; gap:14px ;background:var(--bg-1);}
+// .empty{ padding:28px; text-align:center; color:#6b7785 }
+// .exams-list th{background-color: var(--table-header-bg); color: var(--table-header-text); }
+// .exams-list tr{background-color: var(--table-row-bg); color: var(--table-row-text)}
+// .exams-list tr:hover{background-color: var(--table-row-hover-bg); color: var(--table-row-hover-text)}
+
+
+// .exam-card{ background:white; border-radius:12px; padding:16px; box-shadow:0 8px 26px rgba(12,28,46,0.06); border:1px solid rgba(12,28,46,0.04); transition:transform .18s ease, box-shadow .18s ease }
+// .exam-card:hover{ transform:translateY(-6px); box-shadow:0 20px 48px rgba(12,28,46,0.10) }
+// .exam-row{ display:flex; gap:18px; align-items:center; justify-content:space-between }
+// .exam-main{ max-width:72% }
+// .exam-title{ margin:0 0 6px 0; font-size:18px; color:#0b3946 }
+// .exam-sub{ font-size:13px; color:#6b7887 }
+// .exam-meta{ display:flex; flex-wrap:wrap; gap:12px; margin-top:10px }
+// .meta-item{ font-size:13px; color:#32414a }
+
+// /* small badges for meta items */
+// .meta-item strong{ display:inline-block; padding:2px 8px; background:#f1f7fb; border-radius:999px; margin-right:6px; color:#0b7285 }
+
+// .exam-actions{ display:flex; flex-direction:column; align-items:flex-end; gap:12px }
+// .publish-pill{ padding:6px 12px; border-radius:20px; font-weight:600; font-size:13px; color:#2b4050; background:#eef6ff }
+// .publish-pill.published{ background:#e6fff5; color:#0b6a43 }
+// .actions{ display:flex; gap:8px }
+
+
+// /* fallback small action dropdown (visual only) */
+// .action-dropdown{ position:relative }
+// .action-dropdown .dropdown-btn{ background:transparent; border:1px solid rgba(11,114,133,0.08); padding:6px 8px; border-radius:6px }
+// .action-dropdown .menu{ position:absolute; right:0; top:38px; background:white; border-radius:8px; box-shadow:0 10px 28px rgba(12,28,46,0.08); padding:8px; display:none }
+// .action-dropdown.open .menu{ display:block }
+
+// /* subtle publish pill */
+// .publish-pill{ font-size:13px; padding:6px 12px; border-radius:999px; background:#f4fbf8; color:#0b6a43 }
+// .publish-pill.published{ background:linear-gradient(90deg,#e6fff5,#f0fff9); color:#0b6a43; box-shadow:inset 0 -2px 0 rgba(11,100,70,0.03) }
+
+// /* button themes */
+// .btn-primary{ background:linear-gradient(90deg,#0b7285,#1f7bff); color:#fff; padding:8px 12px; border-radius:8px; border:none; cursor:pointer; box-shadow:0 6px 18px rgba(13,60,80,0.08); transition:transform .12s ease, box-shadow .12s ease }
+// .btn-primary:hover{ transform:translateY(-2px); box-shadow:0 14px 34px rgba(13,60,80,0.12) }
+// .btn-ghost{ background:transparent; border:1px solid rgba(11,114,133,0.12); color:#0b7285; padding:8px 12px; border-radius:8px }
+// .btn-danger{ background:linear-gradient(90deg,#ff6b6b,#ff4d4f); color:#fff; padding:8px 12px; border-radius:8px; border:none }
+
+@media (max-width:800px){
+	.exam-row{ flex-direction:column; align-items:flex-start }
+	.exam-main{ max-width:100% }
+	.exam-actions{ width:100%; flex-direction:row; justify-content:space-between }
+}
+
+/* Shared design helpers */
+// .card{ background:linear-gradient(180deg,#ffffff,#fbfdff); border-radius:10px; padding:14px; box-shadow:0 6px 20px rgba(16,32,48,0.06) }
+.muted{ color:#6b7887 }
+.heading-lg{ font-size:1.15rem; font-weight:700 }
+
+
+/* Table */
+.page.admin-exams .modal-overlay{ position:fixed; inset:0; display:flex; align-items:center; justify-content:center; background:rgba(8,12,20,0.45); z-index:10050 }
+.page.admin-exams .modal{ width:50%; max-width:96%; background:#fff; border-radius:12px; padding:14px; box-shadow:0 22px 58px rgba(2,10,30,0.42); z-index:10060 }
+.page.admin-exams .modal-header{ display:flex; justify-content:space-between; align-items:center; gap:10px; font-weight: bold; }
+.page.admin-exams .modal-body{ margin-top:10px; display:flex; flex-direction:column; gap:10px; max-height:60vh; overflow:auto; padding-right:6px }
+
+.detail-grid{ 
+	// display:grid; background:linear-gradient(180deg,#e9e8e8,#e9e8e8);
+	grid-template-columns: 180px 1fr; gap:2px 2px; align-items:center;
+	// border:4px solid rgba(84, 167, 212, 0.06);
+	box-shadow: 0 6px 20px rgba(16,32,48,0.09);
+	border-radius:8px;
+	margin-left:48px; /* 2 * 16px (TAP) */ margin-right:32px;
+}
+
+/* Detail card sections */
+.detail-grid .label{ color:#475d6b; font-weight:700; min-height:36px; display:flex; align-items:center; }
+.detail-grid .value{ color:#050505; min-height:36px; display:flex; align-items:center; }
+
+.modal-actions{ display:flex; justify-content:flex-end; gap:8px; margin-top:12px }
+.actions-inline mat-icon{ font-size: 20px;}
+
+/* Questions table (simple HTML table) */
+.questions-table {
+	width: 100%;
+	border-collapse: collapse;
+	margin-top: 8px;
+	margin-bottom: 16px;
+	border-radius: 8px;
+	border: 1px solid rgba(4,40,46,0.06);
+
+}
+.questions-table th,
+.questions-table td {
+	padding: 8px 10px;
+	border-bottom: 1px solid rgba(4,40,46,0.06);
+	text-align: left;
+	font-size: 13px;
+}
+.questions-table thead th { font-weight: 700; background: var(--table-header-bg); color: var(--table-header-text); }
+.category-details .questions-list { padding: 8px 12px 12px; }
+
+/* Small helpers */
+.small.muted { font-size: 12px; color: #6b7887; }
+.category-actions { margin-top:8px; display:flex; gap:8px; align-items:center }

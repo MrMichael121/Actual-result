@@ -1,0 +1,63 @@
+/* Page spacing */
+.view-questions{ padding:8px }
+
+.view-questions .controls{ display:flex; align-items:center; gap:12px }
+.view-questions .action-row{ display:flex; gap:8px; align-items:center }
+
+.filter-actions button{background-color: var(--button-1); color: var(--button-text-1);}
+.filter-actions button:hover{background-color: var(--button-1-hover); color: var(--button-text-2);}
+
+.action-row button{background-color: var(--button-1); color: var(--button-text-1);}
+.action-row button:hover{background-color: var(--button-1-hover); color: var(--button-text-2);}
+
+:host ::ng-deep .mat-mdc-form-field-subscript-wrapper {
+	display: none;}
+
+// Table 
+.list-wrapper{  background-color: var(--bg-1); border-radius:8px; }  //  border:2px solid var(--border-1);
+
+.q-title{ font-weight:600; color:#0b394d }
+.opt-row{ display:flex;  gap:12px; padding:6px 0 }
+.opt-label{ font-weight:700; margin-right:8px }
+.correct-mark{ color:green; font-weight:700 }
+
+@media (max-width:720px){ .premium-table td, .premium-table th{ padding:8px } }
+
+.batch-actions {
+	padding:12px;
+	align-items:center;
+  display: flex;
+  gap: 16px;
+  width: 50%; 
+}
+
+.batch-actions mat-form-field {
+  flex: 1 1 0;   // equal width
+  width: 100%;
+  background-color: var(--bg-1);
+}
+
+/* Batch actions toolbar: rich, elevated look */
+// .batch-actions{
+// 	display:flex;
+// 	align-items:center;
+// 	gap:12px;
+// 	padding:12px;
+// 	margin:12px 12px 0 12px;
+// 	background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.01));
+// 	border-radius:10px;
+// 	border: 1px solid rgba(15, 76, 100, 0.06);
+// 	box-shadow: 0 6px 18px rgba(7,22,28,0.06), inset 0 1px 0 rgba(255,255,255,0.02);
+// }
+
+// .batch-actions .filter-item{ min-width:240px }
+
+// .batch-actions button{ height:40px; padding:0 14px; font-weight:600 }
+// .batch-actions .spacer{ flex:1 1 auto }
+
+@media (max-width:900px){
+	.batch-actions{ flex-direction:column; align-items:stretch; gap:10px; }
+	.batch-actions .filter-item{ width:100%; min-width:unset }
+	.batch-actions button{ width:100% }
+}
+

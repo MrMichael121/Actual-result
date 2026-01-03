@@ -1,0 +1,243 @@
+<div class="view-questions page">
+    <div class="toolbar">
+        <!-- <div class="title"> -->
+            <!-- <h2>Questions</h2>
+            <p class="muted">Browse and review question bank</p> -->
+            <div class="search">
+                <mat-form-field appearance="outline" class="search-field">
+                    <mat-icon matPrefix aria-hidden="false" aria-label="Search icon">search</mat-icon>
+                    <input matInput placeholder="Search by text or type" [(ngModel)]="filter"
+                        (ngModelChange)="applyFilter($event)" aria-label="Search questions" />
+                    <button mat-icon-button matSuffix *ngIf="filter" (click)="filter = ''; applyFilter('')"
+                        aria-label="Clear search">
+                        <mat-icon>close</mat-icon>
+                    </button>
+                </mat-form-field>
+            </div>
+        <!-- </div> -->
+
+        <div class="controls">
+            <div class="action-row">
+                <button #filtersBtn mat-flat-button type="button"
+                    (click)="openFiltersOverlay(); $event.stopPropagation()" class="filter-btn custom-filter-btn">
+                    <mat-icon>filter_alt</mat-icon>
+                    <span>Filters</span>
+                </button>
+                <button mat-flat-button color="primary" (click)="refresh()" class="refresh-btn">
+                    <mat-icon>refresh</mat-icon>
+                    <span>Refresh</span>
+                </button>
+
+                <button *hasAccess="'Questions'; hasAccessAction: 'add'" mat-flat-button color="primary" routerLink="/questions">
+                    <mat-icon>add</mat-icon> Add Questions
+                </button>
+            </div>
+
+            <!-- <mat-form-field appearance="outline" class="search" floatLabel="always">
+                <mat-label>Search questions</mat-label>
+                <input #search matInput placeholder="Search by text or type" [value]="filter"
+                    (input)="applyFilter(search.value)" />
+                <button mat-icon-button matSuffix *ngIf="filter"
+                    (click)="applyFilter('')"><mat-icon>close</mat-icon></button>
+            </mat-form-field> -->
+        </div>
+    </div>
+
+    <div class="list-card">
+
+        <!-- Filters panel -->
+        <ng-template #filtersPanel>
+            <div class="filters-panel card" (click)="$event.stopPropagation()">
+                <div class="filter-block">
+                    <!-- <div class="filter-row"> -->
+                        <mat-form-field appearance="outline" class="filter-item">
+                            <mat-label>Institute</mat-label>
+                            <mat-select [(ngModel)]="selectedInstitute" [disabled]="!isSuperAdmin"
+                                (selectionChange)="onInstituteChange($event.value)">
+                                <mat-option value="">All Institutes</mat-option>
+                                <mat-option *ngFor="let inst of institutes"
+                                    [value]="inst.institute_id">{{inst.name}}</mat-option>
+                            </mat-select>
+                        </mat-form-field>
+
+                        <!-- <mat-form-field appearance="outline" class="filter-item">
+                            <mat-label>Category</mat-label>
+                            <input matInput placeholder="Enter category" [(ngModel)]="categoryFilterName">
+                        </mat-form-field> -->
+
+                        <mat-form-field appearance="outline" class="filter-item">
+                            <mat-icon matPrefix>category</mat-icon>
+                            <mat-label>Category</mat-label>
+                            <input matInput [formControl]="categoryCtrl" [matAutocomplete]="categoryAuto"
+                                placeholder="Pick a category" />
+                            <mat-autocomplete #categoryAuto="matAutocomplete" [displayWith]="displayCategory"
+                                (optionSelected)="onCategorySelected($event.option.value)">
+                                <mat-option *ngFor="let c of (filteredCategories$ | async)"
+                                    [value]="c">{{ c.name || c.category_name }}</mat-option>
+                            </mat-autocomplete>
+                        </mat-form-field>
+
+                        <mat-form-field appearance="outline" class="filter-item">
+                            <mat-label>Departments</mat-label>
+                            <mat-select multiple [(ngModel)]="selectedDepartments" placeholder="Select departments">
+                                <mat-option *ngFor="let d of departments" [value]="d.id">{{d.name}}</mat-option>
+                            </mat-select>
+                        </mat-form-field>
+
+                        <mat-form-field appearance="outline" class="filter-item">
+                            <mat-label>Teams</mat-label>
+                            <mat-select multiple [(ngModel)]="selectedTeams" placeholder="Select teams">
+                                <mat-option *ngFor="let t of teams" [value]="t.id">{{t.name}}</mat-option>
+                            </mat-select>
+                        </mat-form-field>
+
+                        <!-- Creation Date after -->
+                        <mat-form-field appearance="outline" class="filter-item">
+                            <mat-label>Created After</mat-label>
+                            <input matInput [matDatepicker]="pickerAfter" placeholder="Select start date"
+                                [(ngModel)]="filterCreationDateAfter">
+                            <mat-datepicker-toggle matSuffix [for]="pickerAfter"></mat-datepicker-toggle>
+                            <mat-datepicker #pickerAfter></mat-datepicker>
+                        </mat-form-field>
+
+                        <!-- add creation date before filter -->
+                        <mat-form-field appearance="outline" class="filter-item">
+                            <mat-label>Created Before</mat-label>
+                            <input matInput [matDatepicker]="picker" placeholder="Select end date"
+                                [(ngModel)]="filterCreationDate">
+                            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                            <mat-datepicker #picker></mat-datepicker>
+                        </mat-form-field>
+
+                        <!-- Active status filter -->
+                        <mat-form-field appearance="outline" class="filter-item">
+                            <mat-label>Active Status</mat-label>
+                            <mat-select [(ngModel)]="filterActiveStatus" placeholder="Select status">
+                                <mat-option [value]="null">All</mat-option>
+                                <mat-option [value]="true">Active</mat-option>
+                                <mat-option [value]="false">Inactive</mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                        <div class="filter-actions">
+                        <!-- Created By Me (checkbox) -->
+                        <div class="filter-item checkbox-item">
+                            <mat-checkbox [(ngModel)]="filterCreatedByMe">Created by me</mat-checkbox>
+                        </div>
+
+                        <!-- Public Access (checkbox) -->
+                        <div class="filter-item checkbox-item">
+                            <mat-checkbox [(ngModel)]="filterPublicAccess">Public
+                                access</mat-checkbox>
+                        </div>
+                        </div>
+
+                        <div class="filter-actions">
+                            <button mat-flat-button color="primary" type="button"
+                                (click)="onApply()"><mat-icon>check</mat-icon>
+                                Apply</button>
+                            <button mat-flat-button color="primary" type="button"
+                                (click)="onReset()"><mat-icon>clear</mat-icon>
+                                Reset</button>
+                        </div>
+                    <!-- </div> -->
+                </div>
+            </div>
+        </ng-template>
+
+        <div class="list-wrapper">
+            <div class="batch-actions" *ngIf="selectedQuestionIds.size > 0">
+                <mat-form-field appearance="outline" class="half">
+                    <mat-label>Target Category</mat-label>
+                    <mat-select [(value)]="selectedTargetCategory">
+                        <mat-option *ngFor="let c of categories" [value]="c.category_id">{{c.name}}</mat-option>
+                    </mat-select>
+                </mat-form-field>
+                <div class="controls">
+                <button mat-stroked-button color="primary" [disabled]="!selectedQuestionIds.size || !selectedTargetCategory || copyMoveInProgress" (click)="copySelected()">Copy</button>
+                <button mat-stroked-button color="accent" [disabled]="!selectedQuestionIds.size || !selectedTargetCategory || copyMoveInProgress" (click)="moveSelected()">Move</button>
+                </div>
+                <div class="spacer"></div>
+            </div>
+            <table mat-table [dataSource]="dataSource" class="mat-elevation-z1 compact premium-table" matSort>
+                <!-- Selection Column -->
+                <ng-container matColumnDef="select">
+                    <th mat-header-cell *matHeaderCellDef>
+                        <mat-checkbox (change)="toggleSelectAll($event.checked)"></mat-checkbox>
+                    </th>
+                    <td mat-cell *matCellDef="let q">
+                        <mat-checkbox (change)="toggleQuestionSelection(q, $event.checked)" [checked]="selectedQuestionIds.has(q.id)"></mat-checkbox>
+                    </td>
+                </ng-container>
+
+                <!-- Question Text Column -->
+                <ng-container matColumnDef="question">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header>Question</th>
+                    <td mat-cell *matCellDef="let q">
+                        <div class="q-title">{{q.question}}</div>
+                        <!-- <div class="q-meta muted">ID: <span class="muted-id">{{q.id}}</span></div> -->
+                    </td>
+                </ng-container>
+
+                <!-- Category Column -->
+                <ng-container matColumnDef="category">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header>Category</th>
+                    <td mat-cell *matCellDef="let q">{{ q.category || q.category_description || '—' }}</td>
+                </ng-container>
+
+                <!-- Type Column -->
+                <ng-container matColumnDef="type">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header>Type</th>
+                    <td mat-cell *matCellDef="let q">{{ q.originalType || q.type }}</td>
+                </ng-container>
+
+                <!-- Marks Column -->
+                <ng-container matColumnDef="marks">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header>Marks</th>
+                    <td mat-cell *matCellDef="let q">{{ q.marks || 0 }}</td>
+                </ng-container>
+
+                <!-- Options Column -->
+                <ng-container matColumnDef="options">
+                    <th mat-header-cell *matHeaderCellDef>Options</th>
+                    <td mat-cell *matCellDef="let q">
+                        <div *ngIf="q.options && q.options.length">
+                            <div *ngFor="let o of q.options; let idx = index" class="opt-row">
+                                <div class="opt-left">
+                                    <span class="opt-label">{{ ('ABCDEFGHIJKLMNOPQRSTUVWXYZ')[idx] || idx+1
+                                        }}.</span>
+                                    <span class="opt-text">{{ o?.text }}</span>
+                                </div>
+                                <div class="opt-right">
+                                    <span *ngIf="o?.is_correct === 1" class="correct-mark">✔</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div *ngIf="!q.options || !q.options.length" class="muted">{{ q.answer || '—' }}</div>
+                    </td>
+                </ng-container>
+
+                <!-- Actions Column -->
+                <ng-container matColumnDef="actions">
+                    <th mat-header-cell *matHeaderCellDef>Actions</th>
+                    <td mat-cell *matCellDef="let q">
+                        <div class="actions-inline">
+                        <!-- <button *hasAccess="'Questions'; hasAccessAction: 'view'" mat-icon-button title="View details"><mat-icon>visibility</mat-icon></button> -->
+                        <button *hasAccess="'Questions'; hasAccessAction: 'edit'" mat-icon-button color="accent"  (click)="editQuestion(q)" title="Edit"><mat-icon>edit</mat-icon></button>
+                        <button *hasAccess="'Questions'; hasAccessAction: 'delete'" mat-icon-button color="warn" (click)="deleteQuestion(q)" title="Delete"><mat-icon>delete</mat-icon></button>
+                        </div>
+                    </td>
+                </ng-container>
+
+                <thead>
+                    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                </thead>
+                <!-- <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr> -->
+                <tbody>
+                    <tr mat-row *matRowDef="let row; columns: displayedColumns" class="q-row"></tr> <!-- -->
+                </tbody>
+            </table>
+            <mat-paginator [pageSizeOptions]="[25,50,100]" showFirstLastButtons
+                class="custom-paginator"></mat-paginator>
+        </div>
+
+    </div>

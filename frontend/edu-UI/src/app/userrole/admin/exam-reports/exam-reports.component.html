@@ -1,0 +1,382 @@
+<div class="page exam-reports">
+     <div class="toolbar">
+          <div class="selections">
+               <mat-form-field appearance="outline">
+                    <mat-icon matPrefix>school</mat-icon>
+                    <mat-label>Institute</mat-label>
+                    <input matInput [formControl]="instituteCtrl" [matAutocomplete]="instAuto"
+                         placeholder="Pick an institute" />
+                    <mat-autocomplete #instAuto="matAutocomplete" [displayWith]="displayInstitute"
+                         (optionSelected)="onInstituteSelected($event.option.value)">
+                         <mat-option *ngFor="let inst of (filteredInstitutes$ | async)"
+                              [value]="inst">{{inst.name}}</mat-option>
+                    </mat-autocomplete>
+               </mat-form-field>
+
+               <mat-form-field appearance="outline">
+                    <mat-icon matPrefix>assignment</mat-icon>
+                    <mat-label>Scheduled Exams</mat-label>
+                    <input type="text" matInput [formControl]="examCtrl" [matAutocomplete]="auto"
+                         placeholder="Pick a exam" />
+                    <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayExam.bind(this)"
+                         (optionSelected)="onExamAutocompleteSelected($event.option.value)">
+                         <mat-option *ngFor="let exam of (filteredExams$ | async)" [value]="exam">
+                              <div class="option-main">{{ exam.title || exam.name }}</div>
+                              <!-- <div class="option-sub muted">{{ exam.schedule_id || exam.id || '' }}</div> -->
+                         </mat-option>
+                    </mat-autocomplete>
+               </mat-form-field>
+          </div>
+
+          <div class="controls">
+
+               <div class="action-row">
+                    <button mat-stroked-button color="primary" type="button" (click)="loadAnalytics()">
+                         <mat-icon>refresh</mat-icon>Refresh</button>
+                    <button #filtersBtn mat-flat-button type="button" class="filter-btn custom-filter-btn"
+                         (click)="openFiltersOverlay(); $event.stopPropagation()">
+                         <mat-icon>filter_alt</mat-icon>
+                         <span>Filters</span>
+                    </button>
+               </div>
+               <!-- Filter fields (rendered into overlay) -->
+               <ng-template #filtersPanel>
+                    <div class="filters-panel card" (click)="$event.stopPropagation()">
+                         <div class="filter-block">
+
+                              <mat-form-field appearance="outline" class="filter-item">
+                                   <mat-icon matPrefix>public</mat-icon>
+                                   <mat-label>Country</mat-label>
+                                   <mat-select [(ngModel)]="userFilters.country_id" name="filterCountry"
+                                        (selectionChange)="onCountryChange()">
+                                        <mat-option value="">All</mat-option>
+                                        <mat-option *ngFor="let c of countries" [value]="c.code">
+                                             {{ c.name }}
+                                        </mat-option>
+                                   </mat-select>
+                              </mat-form-field>
+
+                              <mat-form-field appearance="outline" class="filter-item">
+                                   <mat-icon matPrefix>location_city</mat-icon>
+                                   <mat-label>City</mat-label>
+                                   <mat-select [(ngModel)]="userFilters.city_id" name="filterCity">
+                                        <mat-option value="">All</mat-option>
+                                        <mat-option *ngFor="let c of cities" [value]="c.code">
+                                             {{ c.name }}
+                                        </mat-option>
+                                   </mat-select>
+                              </mat-form-field>
+
+                              <mat-form-field appearance="outline" class="filter-item">
+                                   <mat-icon matPrefix>location_on</mat-icon>
+                                   <mat-label>Campus</mat-label>
+                                   <mat-select [(ngModel)]="userFilters.campus_id" name="filterCampus">
+                                        <mat-option value="">All</mat-option>
+                                        <mat-option *ngFor="let cp of campusList" [value]="cp">
+                                             {{ cp }}
+                                        </mat-option>
+                                   </mat-select>
+                              </mat-form-field>
+
+                              <mat-form-field appearance="outline" class="filter-item">
+                                   <mat-icon matPrefix>business</mat-icon>
+                                   <mat-label>Department</mat-label>
+                                   <mat-select [(ngModel)]="userFilters.department_id" name="filterDepartment">
+                                        <mat-option value="">All</mat-option>
+                                        <mat-option *ngFor="let d of departmentList" [value]="d">
+                                             {{ d }}
+                                        </mat-option>
+                                   </mat-select>
+                              </mat-form-field>
+
+                              <mat-form-field appearance="outline" class="filter-item">
+                                   <mat-icon matPrefix>groups</mat-icon>
+                                   <mat-label>Team</mat-label>
+                                   <mat-select [(ngModel)]="userFilters.teams_id" name="filterTeam">
+                                        <mat-option value="">All</mat-option>
+                                        <mat-option *ngFor="let t of teamList" [value]="t">
+                                             {{ t }}
+                                        </mat-option>
+                                   </mat-select>
+                              </mat-form-field>
+
+                              <mat-form-field appearance="outline" class="filter-item">
+                                   <mat-icon matPrefix>calendar_today</mat-icon>
+                                   <mat-label>Joined after</mat-label>
+                                   <input matInput [matDatepicker]="joinAfter" [(ngModel)]="userFilters.joined_after"
+                                        placeholder="Joined after" />
+                                   <mat-datepicker-toggle matSuffix [for]="joinAfter"></mat-datepicker-toggle>
+                                   <mat-datepicker #joinAfter></mat-datepicker>
+                              </mat-form-field>
+
+                              <mat-form-field appearance="outline" class="filter-item">
+                                   <mat-icon matPrefix>calendar_today</mat-icon>
+                                   <mat-label>Joined before</mat-label>
+                                   <input matInput [matDatepicker]="joinBefore" [(ngModel)]="userFilters.joined_before"
+                                        placeholder="Joined before" />
+                                   <mat-datepicker-toggle matSuffix [for]="joinBefore"></mat-datepicker-toggle>
+                                   <mat-datepicker #joinBefore></mat-datepicker>
+                              </mat-form-field>
+
+
+                              <div class="filter-actions">
+                                   <button mat-stroked-button type="button"
+                                        (click)="loadScheduledExam(); closeFiltersOverlay();">
+                                        <mat-icon>search</mat-icon>
+                                        Apply
+                                   </button>
+                                   <button mat-button type="button"
+                                        (click)="resetFilters = { department_id: '', teams_id: '', country_id: '', city_id: '', campus_id: '' }; loadScheduledExam(); closeFiltersOverlay();">
+                                        <mat-icon>refresh</mat-icon>
+                                        Reset
+                                   </button>
+
+                              </div>
+
+                         </div>
+                    </div>
+               </ng-template>
+          </div>
+     </div>
+     <div class="list-card">
+          <div class="list-wrapper">
+               <mat-tab-group class="exam-tabs" (selectedTabChange)="onTabChange($event)"
+                    (selectedIndexChange)="activeMainTabIndex = $event">
+                    <mat-tab label="User Report">
+                         <div class="tab-actions">
+                              <div class="search">
+                                   <mat-form-field appearance="outline" class="search-field">
+                                        <mat-label>Search student</mat-label>
+                                        <input matInput [(ngModel)]="searchQuery" placeholder="Name or ID" />
+                                   </mat-form-field>
+                              </div>
+                              <div class="controls">
+                                   <div class="action-row">
+                                        <button mat-stroked-button color="primary" type="button"
+                                             (click)="loadUserReport(1)">Search</button>
+                                        <button mat-button type="button" (click)="exportUserCSV()">Export CSV</button>
+                                   </div>
+                              </div>
+                         </div>
+
+                         <div class="table-wrap" *ngIf="!loadingUserReport">
+                              <table mat-table [dataSource]="userReportData"
+                                   class="mat-elevation-z1 compact premium-table" matSort>
+                                   <ng-container matColumnDef="student_name">
+                                        <th mat-header-cell *matHeaderCellDef>Student</th>
+                                        <td mat-cell *matCellDef="let row">{{row.student_name}}</td>
+                                   </ng-container>
+                                   <ng-container matColumnDef="questions_attempted">
+                                        <th mat-header-cell *matHeaderCellDef>Attempted</th>
+                                        <td mat-cell *matCellDef="let row">{{row.questions_attempted}}</td>
+                                   </ng-container>
+                                   <ng-container matColumnDef="correct_answers">
+                                        <th mat-header-cell *matHeaderCellDef>Correct</th>
+                                        <td mat-cell *matCellDef="let row">{{row.correct_answers}}</td>
+                                   </ng-container>
+                                   <ng-container matColumnDef="wrong_answers">
+                                        <th mat-header-cell *matHeaderCellDef>Wrong</th>
+                                        <td mat-cell *matCellDef="let row">{{row.wrong_answers}}</td>
+                                   </ng-container>
+                                   <ng-container matColumnDef="marks_obtained">
+                                        <th mat-header-cell *matHeaderCellDef>Marks</th>
+                                        <td mat-cell *matCellDef="let row">{{row.marks_obtained}}</td>
+                                   </ng-container>
+                                   <ng-container matColumnDef="result">
+                                        <th mat-header-cell *matHeaderCellDef>Result</th>
+                                        <td mat-cell *matCellDef="let row">{{row.result}}</td>
+                                   </ng-container>
+
+                                   <tr mat-header-row
+                                        *matHeaderRowDef="['student_name','questions_attempted','correct_answers','wrong_answers','marks_obtained','result']">
+                                   </tr>
+                                   <tr mat-row
+                                        *matRowDef="let row; columns: ['student_name','questions_attempted','correct_answers','wrong_answers','marks_obtained','result'];">
+                                   </tr>
+                              </table>
+
+                              <div class="pager">
+                                   <button mat-button (click)="prevPage()" [disabled]="currentPage<=1">Prev</button>
+                                   <span>Page {{currentPage}} of {{ totalPages }}</span>
+                                   <button mat-button (click)="nextPage()"
+                                        [disabled]="currentPage>=totalPages">Next</button>
+                              </div>
+                         </div>
+                         <div *ngIf="loadingUserReport" class="loader-placeholder">Loading user report...</div>
+                    </mat-tab>
+                    <mat-tab label="Analytics Report">
+                         <div class="analytics-section">
+                              <!-- <h3>Category Report</h3>
+                              <table mat-table [dataSource]="categoryAnalytics" class="mat-elevation-z2 full-width">
+                                   <ng-container matColumnDef="category">
+                                        <th mat-header-cell *matHeaderCellDef>Category</th>
+                                        <td mat-cell *matCellDef="let c">{{c.category_name || c.name}}</td>
+                                   </ng-container>
+                                   <ng-container matColumnDef="questions">
+                                        <th mat-header-cell *matHeaderCellDef>Questions</th>
+                                        <td mat-cell *matCellDef="let c">{{c.total_questions || c.questions_count}}</td>
+                                   </ng-container>
+                                   <ng-container matColumnDef="mistakes">
+                                        <th mat-header-cell *matHeaderCellDef>Mistakes</th>
+                                        <td mat-cell *matCellDef="let c">{{c.mistakes || c.wrong_count}}</td>
+                                   </ng-container>
+                                   <ng-container matColumnDef="error_pct">
+                                        <th mat-header-cell *matHeaderCellDef>Error %</th>
+                                        <td mat-cell *matCellDef="let c">{{c.error_percentage || c.error_pct}}</td>
+                                   </ng-container>
+
+                                   <tr mat-header-row
+                                        *matHeaderRowDef="['category','questions','mistakes','error_pct']"></tr>
+                                   <tr mat-row
+                                        *matRowDef="let row; columns: ['category','questions','mistakes','error_pct'];">
+                                   </tr>
+                              </table> -->
+
+                              <mat-tab-group class="inner-analytics-tabs">
+                                   <mat-tab label="Category Report">
+                                        <div class="analytics-section">
+                                             <table mat-table [dataSource]="categoryAnalytics"
+                                                  class="mat-elevation-z1 compact premium-table" matSort>
+                                                  <ng-container matColumnDef="category">
+                                                       <th mat-header-cell *matHeaderCellDef>Category</th>
+                                                       <td mat-cell *matCellDef="let c">{{c.category_name || c.name}}
+                                                       </td>
+                                                  </ng-container>
+                                                  <ng-container matColumnDef="questions">
+                                                       <th mat-header-cell *matHeaderCellDef>Questions</th>
+                                                       <td mat-cell *matCellDef="let c">{{c.total_questions ||
+                                                            c.questions_count}}</td>
+                                                  </ng-container>
+                                                  <ng-container matColumnDef="mistakes">
+                                                       <th mat-header-cell *matHeaderCellDef>Mistakes</th>
+                                                       <td mat-cell *matCellDef="let c">{{c.wrong_answers || c.mistakes
+                                                            || c.wrong_count}}</td>
+                                                  </ng-container>
+                                                  <ng-container matColumnDef="error_pct">
+                                                       <th mat-header-cell *matHeaderCellDef>Error %</th>
+                                                       <td mat-cell *matCellDef="let c">{{c.error_percentage ||
+                                                            c.error_pct}}</td>
+                                                  </ng-container>
+
+                                                  <tr mat-header-row
+                                                       *matHeaderRowDef="['category','questions','mistakes','error_pct']">
+                                                  </tr>
+                                                  <tr mat-row
+                                                       *matRowDef="let row; columns: ['category','questions','mistakes','error_pct'];">
+                                                  </tr>
+                                             </table>
+                                        </div>
+                                   </mat-tab>
+                                   <mat-tab label="Question Summary">
+                                        <div class="analytics-section">
+                                             <table mat-table [dataSource]="questionSummary"
+                                                  class="mat-elevation-z1 compact premium-table" matSort>
+                                                  <ng-container matColumnDef="sno">
+                                                       <th mat-header-cell *matHeaderCellDef>#</th>
+                                                       <td mat-cell *matCellDef="let q; let i = index">{{q.sno || i+1}}
+                                                       </td>
+                                                  </ng-container>
+                                                  <ng-container matColumnDef="question">
+                                                       <th mat-header-cell *matHeaderCellDef>Question</th>
+                                                       <td mat-cell *matCellDef="let q">{{q.question_text || q.text}}
+                                                       </td>
+                                                  </ng-container>
+                                                  <ng-container matColumnDef="attempts">
+                                                       <th mat-header-cell *matHeaderCellDef>Attempts</th>
+                                                       <td mat-cell *matCellDef="let q">{{q.attempts}}</td>
+                                                  </ng-container>
+                                                  <ng-container matColumnDef="mistakes">
+                                                       <th mat-header-cell *matHeaderCellDef>Mistakes</th>
+                                                           <td mat-cell *matCellDef="let q">
+                                                                <!-- {{q.mistakes}} -->
+                                                                <!-- show link when mistakes > 1 -->
+                                                                <a *ngIf="(q.mistakes || 0) > 1" href="javascript:void(0)" class="wrong-summary-link"
+                                                                     (click)="openWrongAnswerSummary(q); $event.stopPropagation()">{{q.mistakes}}</a>
+                                                           </td>
+                                                  </ng-container>
+
+                                                  <tr mat-header-row
+                                                       *matHeaderRowDef="['sno','question','attempts','mistakes']"></tr>
+                                                  <tr mat-row
+                                                       *matRowDef="let row; columns: ['sno','question','attempts','mistakes'];">
+                                                  </tr>
+                                             </table>
+                                        </div>
+                                   </mat-tab>
+                              </mat-tab-group>
+                                                 <!-- Inline wrong answer summary panel (centered with backdrop) -->
+                                                 <div *ngIf="showWrongAnswerSummary" class="wrong-summary-backdrop" (click)="closeWrongAnswerSummary()">
+                                                      <div class="wrong-summary-panel" (click)="$event.stopPropagation()">
+                                                           <div class="card">
+                                                                <div class="panel-header">
+                                                                     <div>
+                                                                          <h4>Wrong Answer Summary</h4>
+                                                                          <div class="panel-sub">Details for selected question</div>
+                                                                     </div>
+                                                                     <button mat-icon-button aria-label="Close" type="button" (click)="closeWrongAnswerSummary()"><mat-icon>close</mat-icon></button>
+                                                                </div>
+                                                                <div class="panel-body">
+                                                                     <div *ngIf="selectedQuestionForWrongSummary">
+                                                                          <div class="question-title">Question: {{ selectedQuestionForWrongSummary.question_text || selectedQuestionForWrongSummary.text || selectedQuestionForWrongSummary.name || '' }}</div>
+                                                                          <table class="summary-table">
+                                                                               <thead><tr><th>Wrong Answers</th><th>No. of times selected</th><th>Occurrence %</th></tr></thead>
+                                                                               <tbody>
+                                                                                    <tr *ngFor="let wa of selectedWrongAnswers">
+                                                                                         <td>
+                                                                                              <a href="javascript:void(0)" class="wa-answer-link" (click)="openResourcesForWrongAnswer(selectedQuestionForWrongSummary, wa); $event.stopPropagation()">{{ wa.answer }}</a>
+                                                                                         </td>
+                                                                                         <td>
+                                                                                              <a href="javascript:void(0)" class="wa-count-link" (click)="openResourcesForWrongAnswer(selectedQuestionForWrongSummary, wa); $event.stopPropagation()">{{ wa.count || '-' }}</a>
+                                                                                         </td>
+                                                                                         <td>{{ wa.pct || '-' }}</td>
+                                                                                    </tr>
+                                                                               </tbody>
+                                                                          </table>
+                                                                          <div *ngIf="!selectedWrongAnswers || !selectedWrongAnswers.length" class="muted">No wrong answer data available for this question.</div>
+                                                                          <div class="summary-actions">
+                                                                               <button mat-stroked-button color="primary" (click)="closeWrongAnswerSummary()">Close</button>
+                                                                          </div>
+                                                                     </div>
+                                                                </div>
+                                                           </div>
+                                                      </div>
+                                                 </div>
+
+                                                 <!-- Resource modal (centered) -->
+                                                 <div *ngIf="showResourcePanel" class="wrong-summary-backdrop" (click)="closeResourcePanel()">
+                                                      <div class="wrong-summary-panel" (click)="$event.stopPropagation()">
+                                                           <div class="card">
+                                                                <div class="panel-header">
+                                                                     <div>
+                                                                          <h4>Resources</h4>
+                                                                          <div class="panel-sub small-muted">Resources related to the selected wrong answer</div>
+                                                                     </div>
+                                                                     <button mat-icon-button aria-label="Close resources" type="button" (click)="closeResourcePanel()"><mat-icon>close</mat-icon></button>
+                                                                </div>
+                                                                <div class="panel-body">
+                                                                     <div *ngIf="selectedResources && selectedResources.length">
+                                                                          <ul class="resource-list">
+                                                                               <li *ngFor="let r of selectedResources">
+                                                                                    <div class="res-title">{{ r.full_name }}</div>
+                                                                                    <div class="res-desc small-muted">{{ r.email  || '' }}</div>
+                                                                                    <!-- <div class="res-actions"><a target="_blank" [href]="r.url">Open</a></div> -->
+                                                                               </li>
+                                                                          </ul>
+                                                                     </div>
+                                                                     <div *ngIf="!selectedResources || !selectedResources.length" class="muted">No resources linked for this wrong answer.</div>
+                                                                </div>
+                                                                <div class="summary-actions">
+                                                                     <button mat-stroked-button color="primary" (click)="closeResourcePanel()">Close</button>
+                                                                </div>
+                                                           </div>
+                                                      </div>
+                                                 </div>
+                              <!-- <div class="analytics-actions" style="padding:8px 0 12px 0">
+                                        <button mat-stroked-button color="primary" type="button" (click)="loadAnalytics()">Refresh Analytics</button>
+                                   </div> -->
+                         </div>
+                    </mat-tab>
+               </mat-tab-group>
+          </div>
+     </div>
+</div>

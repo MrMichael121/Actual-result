@@ -1,0 +1,41 @@
+.page{ padding:18px }
+.dash-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px}
+.dash-header h2{margin:0}
+.dash-header .muted{color:#6b6f76}
+.kpis{display:flex;gap:16px}
+.kpi{background:#fff;padding:12px 18px;border-radius:10px;box-shadow:0 6px 18px rgba(0,0,0,0.06);min-width:120px;text-align:center}
+.kpi-val{font-size:20px;font-weight:700;color:#2e2e38}
+.kpi-label{font-size:12px;color:#6b6f76}
+
+.content{ margin-top:12px }
+.actions-row{ margin:12px 0 }
+.user-test-result .actions{ display:flex; gap:8px }
+.btn{ background:#0b7285; color:#fff; border:none; padding:8px 12px; border-radius:6px; cursor:pointer }
+.btn-outline{ background:transparent; border:1px solid #c6d6df; color:#0b7285 }
+.btn-secondary{ background:#eef3f6; color:#0b7285 }
+
+.summary{ display:flex; gap:12px; margin-top:18px }
+.card{ background:#fff; border-radius:10px; padding:14px 18px; box-shadow:0 6px 18px rgba(16,32,48,0.04); min-width:120px }
+.card .value{ font-weight:700; font-size:20px; color:#0b3946 }
+.card .label{ color:#6b7785; font-size:13px }
+
+.details{ margin-top:20px }
+.details .muted{ color:#6b7785; font-size:13px }
+.meta{ color:#32414a; margin-top:6px }
+
+.questions{ margin-top:16px }
+.q-table{ width:100%; border-collapse:collapse }
+.q-table thead th{ text-align:left; padding:10px 12px; border-bottom:1px solid #e6e6ea }
+.q-table tbody td{ padding:10px 12px; border-bottom:1px solid #f1f3f6 }
+.q-table tbody tr.correct{ background:#f5fff7 }
+
+@media (max-width:700px){
+	.summary{ flex-direction:column }
+	.card{ width:100% }
+}
+
+/* Shared design helpers */
+.btn-primary{ background:#0b7285; color:#fff; border-radius:8px; padding:8px 12px }
+.heading-lg{ font-size:1.15rem; font-weight:700 }
+
+.cta{ margin-top:10px }

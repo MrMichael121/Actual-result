@@ -1,0 +1,34 @@
+<div class="shared-table">
+  <div class="table-toolbar">
+    <div class="left">
+      <ng-content select="[table-actions]"></ng-content>
+    </div>
+    <div class="right">
+      <mat-form-field appearance="outline" class="search">
+        <input matInput placeholder="Search" (input)="applyFilter($any($event.target).value)" />
+      </mat-form-field>
+    </div>
+  </div>
+
+  <table mat-table [dataSource]="dataSource" class="mat-elevation-z1" matSort>
+
+    <ng-container *ngFor="let h of headers" [matColumnDef]="h.key">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header="{{h.sortable ? h.key : ''}}">{{h.label}}</th>
+      <td mat-cell *matCellDef="let row">{{ row[h.key] }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="actions" *ngIf="showActions">
+      <th mat-header-cell *matHeaderCellDef>Actions</th>
+      <td mat-cell *matCellDef="let row">
+        <button mat-icon-button color="primary" (click)="onView(row)" aria-label="View"><mat-icon>visibility</mat-icon></button>
+        <button mat-icon-button color="accent" (click)="onEdit(row)" aria-label="Edit"><mat-icon>edit</mat-icon></button>
+        <button mat-icon-button color="warn" (click)="onDelete(row)" aria-label="Delete"><mat-icon>delete</mat-icon></button>
+      </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;" (click)="onRowClick(row)"></tr>
+  </table>
+
+  <mat-paginator [pageSizeOptions]="pageSizeOptions" showFirstLastButtons></mat-paginator>
+</div>

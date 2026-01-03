@@ -1,0 +1,472 @@
+<div class="page admin-schedule-exam">
+   <div class="toolbar">
+      <div class="title">
+      </div>
+      <div class="actions">
+         <button mat-button type="button" (click)="goBack()">
+            <mat-icon>arrow_back</mat-icon>
+            View scheduled exams
+         </button>
+      </div>
+
+   </div>
+   <div class="schedule-card">
+      <mat-horizontal-stepper linear #stepper>
+
+         <!-- STEP 1: BASIC INFO + SCHEDULE -->
+         <mat-step>
+            <ng-template matStepLabel>Basic info</ng-template>
+
+            <div class="step1-two-column">
+               <!-- LEFT: BASIC INFO -->
+               <section class="card section basic-info">
+                  <h3 class="section-title">Basic info</h3>
+
+                  <!-- Institute + Filters toggle -->
+                  <div class="form-row">
+                     <div class="form-col form-col-2">
+                        <mat-form-field appearance="outline" class="full-width" color="primary">
+                           <mat-icon matPrefix>apartment</mat-icon>
+                           <mat-label>Institute*</mat-label>
+                           <mat-select name="institute" [(ngModel)]="model.institute"
+                              [disabled]="!isSuperAdmin || readOnly" required>
+                              <mat-option value="">Select institute</mat-option>
+                              <mat-option *ngFor="let inst of institutes" [value]="inst.institute_id">
+                                 {{ inst.name }}
+                              </mat-option>
+                           </mat-select>
+                           <mat-hint align="start">Required</mat-hint>
+                           <mat-error *ngIf="!model.institute">Institute is required.</mat-error>
+                        </mat-form-field>
+                     </div>
+
+                     <div class="form-col form-col-auto filter-toggle">
+
+                        <button #filtersBtn mat-stroked-button color="primary" type="button"
+                           (click)="openFiltersOverlay(); $event.stopPropagation()" [disabled]="readOnly"
+                           aria-haspopup="true" [attr.aria-expanded]="filterEnabled">
+                           <mat-icon>filter_list</mat-icon>
+                           Filters
+                        </button>
+                     </div>
+                  </div>
+
+
+
+                  <!-- Exam selector + preview -->
+                  <div class="form-row">
+                     <div class="form-col">
+                        <mat-form-field appearance="outline" class="full-width" color="primary">
+                           <mat-icon matPrefix>assignment</mat-icon>
+                           <mat-label>Exam*</mat-label>
+                           <mat-select [(ngModel)]="model.exam_id" name="examId"
+                              (selectionChange)="onExamChange($event.value)" required>
+                              <mat-option value="">Select exam</mat-option>
+                              <mat-option *ngFor="let ex of examsList" [value]="ex.id">
+                                 {{ ex.title }}
+                              </mat-option>
+                           </mat-select>
+                           <mat-hint align="start">Required</mat-hint>
+                           <mat-error *ngIf="!model.exam_id">Exam is required.</mat-error>
+                        </mat-form-field>
+
+                        <div *ngIf="selectedExam" class="exam-preview card">
+                           <div class="exam-preview-header">
+                              <h4 class="exam-title">
+                                 {{
+                              selectedExam.description ||
+                              selectedExam.summary ||
+                              selectedExam.short_description ||
+                              'No description available.'
+                              }}
+                              </h4>
+                              <span class="exam-meta">
+                                 Questions:
+                                 {{ selectedExam.total_questions || selectedExam.question_count || '-' }}
+                                 •
+                                 Duration:
+                                 {{ selectedExam.duration_mins || selectedExam.duration || '-' }} mins
+                                 •
+                                 Pass mark:
+                                 {{ selectedExam.pass_mark || selectedExam.passing_score || '-' }}%
+                              </span>
+                           </div>
+                        </div>
+                     </div>
+                  </div>
+
+                  <!-- Scheduler name -->
+                  <div class="form-row">
+                     <div class="form-col">
+                        <mat-form-field appearance="outline" class="full-width" color="primary">
+                           <mat-icon matPrefix>person</mat-icon>
+                           <mat-label>Scheduler name*</mat-label>
+                           <input matInput id="schedulerName" [(ngModel)]="model.schedulerName" name="schedulerName"
+                              placeholder="E.g. Weekly Math Test Batch A" [disabled]="readOnly" required />
+                           <mat-hint align="start">Name used to identify this schedule.</mat-hint>
+                           <mat-error *ngIf="!model.schedulerName">Scheduler name is required.</mat-error>
+                        </mat-form-field>
+                     </div>
+                  </div>
+               </section>
+
+               <!-- RIGHT: SCHEDULE -->
+               <section class="card section schedule-section">
+                  <h3 class="section-title">Schedule</h3>
+
+                  <!-- Start row -->
+                  <div class="schedule-row">
+                     <mat-form-field appearance="outline" class="schedule-field date-field" color="primary">
+                        <!-- <mat-icon matPrefix>event</mat-icon> -->
+                        <mat-label>Start date*</mat-label>
+                        <input matInput [matDatepicker]="startDatePicker" [(ngModel)]="model.startDate" name="startDate"
+                           placeholder="Select start date" required />
+                        <mat-datepicker-toggle matSuffix [for]="startDatePicker"></mat-datepicker-toggle>
+                        <mat-datepicker #startDatePicker></mat-datepicker>
+                        <mat-hint align="start">Required</mat-hint>
+                        <mat-error *ngIf="!model.startDate">Start date is required.</mat-error>
+                     </mat-form-field>
+
+                     <mat-form-field appearance="outline" class="schedule-field time-field" color="primary">
+                        <mat-icon matPrefix>schedule</mat-icon>
+                        <mat-label>Start time*</mat-label>
+                        <input matInput type="time" [(ngModel)]="model.startTime" name="startTime" placeholder="HH:MM"
+                           required />
+                        
+                        <mat-hint align="start">Required</mat-hint>
+                        <mat-error *ngIf="!model.startTime">Start time is required.</mat-error>
+                     </mat-form-field>
+                  </div>
+
+                  <!-- End row -->
+                  <div class="schedule-row">
+                     <mat-form-field appearance="outline" class="schedule-field date-field" color="primary">
+                        <!-- <mat-icon matPrefix>event</mat-icon> -->
+                        <mat-label>End date (optional)</mat-label>
+                        <input matInput [matDatepicker]="endDatePicker" [(ngModel)]="model.endDate" name="endDate"
+                           placeholder="Select end date" />
+                        <mat-datepicker-toggle matSuffix [for]="endDatePicker"></mat-datepicker-toggle>
+                        <mat-datepicker #endDatePicker></mat-datepicker>
+                     </mat-form-field>
+
+                     <mat-form-field appearance="outline" class="schedule-field time-field" color="primary">
+                        <mat-icon matPrefix>schedule</mat-icon>
+                        <mat-label>End time (optional)</mat-label>
+                        <input matInput type="time" [(ngModel)]="model.endTime" name="endTime" placeholder="HH:MM" />
+                        
+                     </mat-form-field>
+                  </div>
+
+                  <!-- Toggles -->
+                  <div class="schedule-toggles">
+                     <mat-slide-toggle [(ngModel)]="model.publish" [disabled]="readOnly">
+                        Publish
+                     </mat-slide-toggle>
+
+                     <mat-slide-toggle [(ngModel)]="model.userreview" [disabled]="readOnly">
+                        Instant review
+                     </mat-slide-toggle>
+                     <!-- limited or multiple review -->
+                      <mat-slide-toggle [(ngModel)]="model.multiplereview" [disabled]="readOnly">
+                        Multiple review
+                     </mat-slide-toggle>
+                  </div>
+               </section>
+            </div>
+
+            <div class="form-actions">
+               <button  color="primary" mat-button matStepperNext type="button" [disabled]="readOnly">
+                  Next
+               </button>
+            </div>
+         </mat-step>
+
+         <!-- STEP 2: SELECT USERS -->
+         <mat-step>
+            <ng-template matStepLabel>Select users</ng-template>
+
+            <section class="card section">
+               <div class="section-header">
+                  <h3 class="section-title">Select users</h3>
+                  <button #userFiltersBtn class="user-filter-button" mat-stroked-button color="primary" type="button"
+                     (click)="openUserFiltersOverlay(); $event.stopPropagation()" aria-haspopup="true"
+                     [attr.aria-expanded]="userFilterOpen">
+                     <mat-icon>filter_list</mat-icon>
+                     Filters
+                  </button>
+               </div>
+
+               <!-- User filters slide-in filtersPaneluser --> 
+               <ng-template #filtersPanelUserAnchor>
+                  <div class="filters-panel" *ngIf="userFilterOpen" (click)="closeUserFilter()">
+                     <div class="filter-block" (click)="$event.stopPropagation()">
+
+                        <mat-form-field appearance="outline" class="filter-item">
+                           <mat-icon matPrefix>public</mat-icon>
+                           <mat-label>Country</mat-label>
+                                        <mat-select [(ngModel)]="userFilters.country_id" name="filterCountry"
+                              (selectionChange)="onCountryChange()">
+                              <mat-option value="">All</mat-option>
+                              <mat-option *ngFor="let c of countries" [value]="c.code">
+                                 {{ c.name }}
+                              </mat-option>
+                           </mat-select>
+                        </mat-form-field>
+
+                        <mat-form-field appearance="outline" class="filter-item">
+                           <mat-icon matPrefix>location_city</mat-icon>
+                           <mat-label>City</mat-label>
+                           <mat-select [(ngModel)]="userFilters.city_id" name="filterCity" (selectionChange)="loadUsers()">
+                              <mat-option value="">All</mat-option>
+                              <mat-option *ngFor="let c of cities" [value]="c.code">
+                                 {{ c.name }}
+                              </mat-option>
+                           </mat-select>
+                        </mat-form-field>
+                        
+                        <mat-form-field appearance="outline" class="filter-item">
+                           <mat-icon matPrefix>location_on</mat-icon>
+                           <mat-label>Campus</mat-label>
+                                        <mat-select [(ngModel)]="userFilters.campus_id" name="filterCampus"
+                              (selectionChange)="loadUsers()">
+                              <mat-option value="">All</mat-option>
+                              <mat-option *ngFor="let cp of campusList" [value]="cp">
+                                 {{ cp }}
+                              </mat-option>
+                           </mat-select>
+                        </mat-form-field>
+
+                        <mat-form-field appearance="outline" class="filter-item">
+                           <mat-icon matPrefix>business</mat-icon>
+                           <mat-label>Department</mat-label>
+                                        <mat-select [(ngModel)]="userFilters.department_id" name="filterDepartment"
+                              (selectionChange)="loadUsers()">
+                              <mat-option value="">All</mat-option>
+                              <mat-option *ngFor="let d of departmentList" [value]="d">
+                                 {{ d }}
+                              </mat-option>
+                           </mat-select>
+                        </mat-form-field>
+
+                        <mat-form-field appearance="outline" class="filter-item">
+                           <mat-icon matPrefix>groups</mat-icon>
+                           <mat-label>Team</mat-label>
+                           <mat-select [(ngModel)]="userFilters.teams_id" name="filterTeam" (selectionChange)="loadUsers()">
+                              <mat-option value="">All</mat-option>
+                              <mat-option *ngFor="let t of teamList" [value]="t">
+                                 {{ t }}
+                              </mat-option>
+                           </mat-select>
+                        </mat-form-field>
+
+                        <mat-form-field appearance="outline" class="filter-item">
+                           <mat-icon matPrefix>calendar_today</mat-icon>
+                           <mat-label>Joined after</mat-label>
+                           <input matInput [matDatepicker]="joinAfter" [(ngModel)]="userFilters.joined_after"
+                              placeholder="Joined after" />
+                           <mat-datepicker-toggle matSuffix [for]="joinAfter"></mat-datepicker-toggle>
+                           <mat-datepicker #joinAfter></mat-datepicker>
+                        </mat-form-field>
+
+                        <mat-form-field appearance="outline" class="filter-item">
+                           <mat-icon matPrefix>calendar_today</mat-icon>
+                           <mat-label>Joined before</mat-label>
+                           <input matInput [matDatepicker]="joinBefore" [(ngModel)]="userFilters.joined_before"
+                              placeholder="Joined before" />
+                           <mat-datepicker-toggle matSuffix [for]="joinBefore"></mat-datepicker-toggle>
+                           <mat-datepicker #joinBefore></mat-datepicker>
+                        </mat-form-field>
+
+
+                        <div class="filter-actions">
+                              <button mat-stroked-button type="button" (click)="loadUsers()">
+                                 <mat-icon>search</mat-icon>
+                                 Apply
+                              </button>
+                              <button mat-button type="button" (click)="userFilters = { department_id: '', teams_id: '', country_id: '', city_id: '', campus_id: '' }; loadUsers()">
+                                 <mat-icon>refresh</mat-icon>
+                                 Reset
+                              </button>
+
+                        </div>
+
+                     </div>
+                  </div>
+               </ng-template>
+
+
+               <!-- User list -->
+               <div class="user-list">
+                  <div class="user-list-header">
+                     <mat-checkbox [(ngModel)]="selectAll" (change)="toggleSelectAll($event.checked)">
+                        Select all ({{ users.length }})
+                     </mat-checkbox>
+                     <button mat-button type="button" (click)="loadUsers()">
+                        <mat-icon>refresh</mat-icon>
+                        Refresh
+                     </button>
+                  </div>
+
+                  <mat-selection-list class="user-selection-list">
+                     <mat-list-option *ngFor="let u of users" [value]="u.id" (click)="$event.stopPropagation()">
+                        <mat-checkbox [checked]="selectedUsers.indexOf(u.id) >= 0"
+                           (change)="toggleUserSelection(u.id, $event.checked)">
+                           {{ u.name }}
+                           <span class="muted">&nbsp;({{ u.email }})</span>
+                        </mat-checkbox>
+                     </mat-list-option>
+                  </mat-selection-list>
+               </div>
+            </section>
+
+            <div class="form-actions">
+               <button mat-button matStepperPrevious type="button">Back</button>
+               <button mat-button matStepperNext color="primary" type="button">
+                  Next
+               </button>
+            </div>
+         </mat-step>
+
+         <!-- STEP 3: ACTIONS -->
+         <mat-step>
+            <ng-template matStepLabel>Review</ng-template>
+            <section class="card section">
+                  <div class="review-summary">
+                     <div class="row">
+                        <div class="label">Institute</div>
+                        <div class="value">{{ (model.institute && (getInstituteName(model.institute) || model.institute)) || '—' }}</div>
+                     </div>
+
+                     <div class="row">
+                        <div class="label">Exam</div>
+                        <div class="value">{{ selectedExam?.title || model.exam_id || '—' }}</div>
+                     </div>
+
+                     <div class="row">
+                        <div class="label">Scheduler name</div>
+                        <div class="value">{{ model.schedulerName || '—' }}</div>
+                     </div>
+
+                     <div class="row">
+                        <div class="label">Start</div>
+                        <div class="value">{{ formatDate(model.startDate) }} {{ model.startTime || '' }}</div>
+                     </div>
+
+                     <div class="row">
+                        <div class="label">End</div>
+                        <div class="value">{{ formatDate(model.endDate) }} {{ model.endTime || '' }}</div>
+                     </div>
+
+                     <div class="row">
+                        <div class="label">Publish</div>
+                        <div class="value">{{ model.publish ? 'Yes' : 'No' }}</div>
+                     </div>
+
+                     <div class="row">
+                        <div class="label">User review</div>
+                        <div class="value">{{ model.userreview ? 'Enabled' : 'Disabled' }}</div>
+                     </div>
+
+                     <div class="row">
+                        <div class="label">Assigned users</div>
+                        <div class="value">
+                           <ng-container *ngIf="selectedUsers && selectedUsers.length; else noAssigned">
+                              <ul class="assigned-list">
+                                 <li *ngFor="let uid of selectedUsers">{{ getUserNameById(uid) || uid }}</li>
+                              </ul>
+                           </ng-container>
+                           <ng-template #noAssigned><span class="muted">No users assigned</span></ng-template>
+                        </div>
+                     </div>
+
+                  </div>
+               </section>
+            <section class="card section actions-panel">
+               <div class="form-actions">
+                  <button mat-button matStepperPrevious type="button">Back</button>
+                  <!-- <button mat-button type="button"
+                     (click)="model = { institute:'', testName:'', testType:'MCQ', startDate:'', startTime:'', endDate:'', endTime:'', startDateTime:'', endDateTime:'', durationMin:60, assignBatches:[], totalQuestions:0, maxAttempts:1, publish:false, categories: [] }; newCategory = { name: '', questions: 0 }"
+                     [disabled]="readOnly">
+                     <mat-icon>refresh</mat-icon>
+                     Reset
+                  </button> -->
+
+                  <button *ngIf="!readOnly" mat-raised-button color="primary" type="button" (click)="schedule()">
+                     <mat-icon>event_available</mat-icon>
+                     {{ model && (model.testName || model.schedulerName) ? 'Update' : 'Schedule Exam' }}
+                  </button>
+
+                  <button *ngIf="readOnly" mat-stroked-button type="button" (click)="goBack()">
+                     <mat-icon>arrow_back</mat-icon>
+                     Back
+                  </button>
+               </div>
+            </section>
+         </mat-step>
+
+      </mat-horizontal-stepper>
+
+      <!-- Exam filters overlay -->
+      <ng-template #filtersPanel>
+         <div *ngIf="filterEnabled" class="filters-panel" (click)="filterEnabled = false">
+            <div class="filter-block" (click)="$event.stopPropagation()">
+
+               <mat-form-field appearance="outline" class="filter-item">
+                  <mat-label>Exam name</mat-label>
+                  <input matInput placeholder="Exam name" [(ngModel)]="filterExamName" />
+               </mat-form-field>
+
+               <!-- <mat-form-field appearance="outline" class="filter-item">
+                  <mat-label>Departments</mat-label>
+                  <mat-select name="filterDepartments" multiple [(ngModel)]="selectedDepartments"
+                     placeholder="Select departments">
+                     <mat-option *ngFor="let d of departmentList" [value]="d">{{ d }}</mat-option>
+                  </mat-select>
+               </mat-form-field>
+
+               <mat-form-field appearance="outline" class="filter-item">
+                  <mat-label>Teams</mat-label>
+                  <mat-select name="filterTeams" multiple [(ngModel)]="selectedTeams" placeholder="Select teams">
+                     <mat-option *ngFor="let t of teamList" [value]="t">{{ t }}</mat-option>
+                  </mat-select>
+               </mat-form-field> -->
+
+               <mat-form-field appearance="outline" class="filter-item">
+                  <mat-label>Created after</mat-label>
+                  <input matInput name="filterCreatedAfter" [matDatepicker]="examCreatedAfter"
+                     placeholder="Select start date" [(ngModel)]="filterCreationDateAfter" />
+                  <mat-datepicker-toggle matSuffix [for]="examCreatedAfter"></mat-datepicker-toggle>
+                  <mat-datepicker #examCreatedAfter></mat-datepicker>
+               </mat-form-field>
+
+               <mat-form-field appearance="outline" class="filter-item">
+                  <mat-label>Created before</mat-label>
+                  <input matInput name="filterCreatedBefore" [matDatepicker]="examCreatedBefore"
+                     placeholder="Select end date" [(ngModel)]="filterCreationDate" />
+                  <mat-datepicker-toggle matSuffix [for]="examCreatedBefore"></mat-datepicker-toggle>
+                  <mat-datepicker #examCreatedBefore></mat-datepicker>
+               </mat-form-field>
+
+               <div class="filter-item">
+                  <mat-checkbox [(ngModel)]="filterCreatedByMe">Created by me</mat-checkbox>
+               </div>
+
+
+               <div class="filter-actions">
+                  <button mat-stroked-button type="button" color="primary" (click)="applyFilters()">
+                     <mat-icon>search</mat-icon>
+                     Apply
+                  </button>
+                  <button mat-button type="button" (click)="resetFilters()">
+                     <mat-icon>refresh</mat-icon>
+                     Reset
+                  </button>
+               </div>
+
+            </div>
+         </div>
+      </ng-template>
+   </div>
+
+
+</div>

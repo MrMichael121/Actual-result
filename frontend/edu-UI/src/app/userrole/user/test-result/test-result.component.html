@@ -1,0 +1,67 @@
+<div class="page user-dashboard">
+  <header class="dash-header">
+    <div>
+      <h2>My Dashboard</h2>
+      <p class="muted">Quick overview of your performance</p>
+    </div>
+    <div class="kpis">
+      <div class="kpi">
+        <div class="kpi-val">{{ result?.score || '--' }}</div>
+        <div class="kpi-label">Last score</div>
+      </div>
+      <div class="kpi">
+        <div class="kpi-val">{{ percent || '--' }}%</div>
+        <div class="kpi-label">Last %</div>
+      </div>
+      <div class="kpi">
+        <div class="kpi-val">{{ result?.total_questions || '--' }}</div>
+        <div class="kpi-label">Questions answered</div>
+      </div>
+      <div class="kpi">
+        <div class="kpi-val">{{ accuracy || '--' }}%</div>
+        <div class="kpi-label">Accuracy</div>
+      </div>
+    </div>
+  </header>
+
+  <section class="content">
+    <div *ngIf="result; else noResult">
+  <div class="actions-row">
+        <button class="btn" (click)="downloadPdf()">Download PDF</button>
+        <button class="btn btn-outline" (click)="reviewAnswers()">Review Answers</button>
+        <button class="btn btn-secondary" (click)="backToDashboard()">Back to Dashboard</button>
+      </div>
+
+      <div class="details card">
+        <h3>Exam: {{ result.title }} <small class="muted">({{ result.test_id }})</small></h3>
+        <div class="meta">Taken by <strong>{{ result.user }}</strong> • Started: {{ result.started_at }} • Finished: {{ result.completed_at }}</div>
+
+        <div class="questions">
+          <h4>Question breakdown</h4>
+          <table class="q-table">
+            <thead>
+              <tr><th>#</th><th>Question</th><th>Your answer</th><th>Correct answer</th><th>Marks</th></tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let q of result?.questions; let i = index" [class.correct]="q.marks_awarded && q.marks_awarded>0">
+                <td>{{ i + 1 }}</td>
+                <td>{{ q.question }}</td>
+                <td>{{ q.answer }}</td>
+                <td>{{ q.correct_answer }}</td>
+                <td>{{ q.marks_awarded || 0 }} / {{ q.marks || 0 }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <ng-template #noResult>
+        <div class="card">
+        <h3>Welcome</h3>
+        <p class="muted">You don't have a recent test result. Launch an exam from the Exams page to get started.</p>
+        <div class="cta"><button class="btn">View available exams</button></div>
+      </div>
+    </ng-template>
+  </section>
+</div>

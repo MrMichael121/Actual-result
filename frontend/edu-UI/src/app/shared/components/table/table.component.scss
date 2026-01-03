@@ -1,0 +1,27 @@
+:host {
+  display: block;
+}
+
+.shared-table {
+  .table-toolbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.5rem;
+
+    .search { width: 240px; }
+  }
+
+  table { width: 100%; }
+
+  th.mat-header-cell {
+    font-weight: 600;
+    background: #fafafa;
+  }
+
+  td.mat-cell {
+    vertical-align: middle;
+  }
+
+  .mat-elevation-z1 { overflow: auto; }
+}

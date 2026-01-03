@@ -1,0 +1,209 @@
+<div class="category-create">
+    <div class="card">
+        <div class="toolbar">
+            <div class="title">
+                <!-- <h2 *ngIf="!isEditing">Create Category</h2>
+                    <h2 *ngIf="isEditing">Edit Category</h2>
+                    <p class="muted" *ngIf="!isEditing">Add a new category for the question bank. Fill required fields
+                         and save.</p>
+                    <p class="muted" *ngIf="isEditing">Update the category details and click Update to save changes.</p> -->
+            </div>
+            <div class="actions-row">
+                <button mat-flat-button color="accent" type="button" class="btn-cancel" (click)="cancel()">
+                    <mat-icon>arrow_back</mat-icon>
+                    <span>View Categories</span>
+                </button>
+            </div>
+        </div>
+
+        <div class="card-body">
+            <mat-horizontal-stepper linear #stepper>
+                <mat-step>
+                    <ng-template matStepLabel>Basic</ng-template>
+                    <div class="form-grid step-content">
+                        <div class="mat-con">
+                            <mat-form-field appearance="outline" class="full">
+                                <mat-icon matPrefix>edit</mat-icon>
+                                <mat-label>Name</mat-label>
+                                <input matInput [value]="name" (input)="setName($any($event.target).value)" placeholder="Category name"  />
+                            </mat-form-field>
+                        </div>
+
+                        <div class="mat-con">
+                            <mat-form-field appearance="outline" class="full">
+                                <mat-icon matPrefix>school</mat-icon>
+                                <mat-label>Institute</mat-label>
+                                <mat-select [value]="institute" [disabled]="!isSuperAdmin || isEditing" (selectionChange)="setInstitute($event.value)">
+                                    <mat-option *ngFor="let i of institutesList" [value]="i.id">{{i.name}}</mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </div>
+
+                        <div class="mat-con">
+                            <mat-form-field appearance="outline" class="full">
+                                <mat-icon matPrefix>description</mat-icon>
+                                <mat-label>Description</mat-label>
+                                <textarea matInput [value]="description" (input)="setDescription($any($event.target).value)" placeholder="Optional description"></textarea>
+                            </mat-form-field>
+                        </div>
+                    <!-- </div>
+                    <div class="step-actions">
+                        <button mat-button matStepperNext type="button">Next</button>
+                    </div>
+                </mat-step>
+
+                <mat-step>
+                    <ng-template matStepLabel>Organization</ng-template>
+                    <div class="form-grid step-content"> -->
+                        <div class="mat-con">
+                            <mat-form-field appearance="outline" class="full">
+                                <mat-icon matPrefix>category</mat-icon>
+                                <mat-label>Type</mat-label>
+                                <mat-select [value]="type" (selectionChange)="setType($event.value)" >
+                                    <mat-option *ngFor="let t of typeOptions" [value]="t.id">{{t.name}}</mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </div>
+
+                        <div class="mat-con">
+                            <mat-form-field appearance="outline" class="full">
+                                <mat-icon matPrefix>person</mat-icon>
+                                <mat-label>Who inputs the answer</mat-label>
+                                <mat-select [value]="whoInputs" (selectionChange)="setWhoInputs($event.value)" >
+                                    <mat-option *ngFor="let w of whoInputOptions" [value]="w.id">{{w.name}}</mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </div>
+
+                        <div class="mat-con">
+                            <mat-form-field appearance="outline" class="full">
+                                <mat-icon matPrefix>assessment</mat-icon>
+                                <mat-label>Evaluation</mat-label>
+                                <mat-select [value]="evaluation" (selectionChange)="setEvaluation($event.value)" >
+                                    <mat-option *ngFor="let e of evaluationOptions" [value]="e.id">{{e.name}}</mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </div>
+                    </div>
+                    <div class="form-actions">
+                        <!-- <button mat-button matStepperPrevious type="button">Back</button> -->
+                        <button mat-button matStepperNext type="button">Next</button>
+                    </div>
+                </mat-step>
+
+                <mat-step>
+                    <ng-template matStepLabel>Access & Scoring</ng-template>
+                    <div class="form-grid step-content">
+                        <div class="mat-con">
+                            <mat-form-field appearance="outline" class="full">
+                                <mat-icon matPrefix>apartment</mat-icon>
+                                <mat-label>Departments (required)</mat-label>
+                                <mat-select multiple [value]="selectedDepartments" (selectionChange)="setDepartments($event.value)" >
+                                    <mat-option *ngFor="let d of departments" [value]="d.id">{{d.name}}</mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </div>
+
+                        <div class="mat-con">
+                            <mat-form-field appearance="outline" class="full">
+                                <mat-icon matPrefix>group</mat-icon>
+                                <mat-label>Teams (required)</mat-label>
+                                <mat-select multiple [value]="selectedTeams" (selectionChange)="setTeams($event.value)" >
+                                    <mat-option *ngFor="let t of teams" [value]="t.id">{{t.name}}</mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </div>
+                        <div class="mat-con">
+                            <mat-form-field appearance="outline" class="full">
+                                <mat-icon matPrefix>toggle_on</mat-icon>
+                                <mat-label>Status</mat-label>
+                                <mat-select [value]="status" (selectionChange)="setStatus($event.value)" >
+                                    <mat-option *ngFor="let s of statusOptions" [value]="s.id">{{s.name}}</mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </div>
+
+                        <div class="mat-con">
+                            <mat-form-field appearance="outline" class="full">
+                                <mat-icon matPrefix>grade</mat-icon>
+                                <mat-label>Mark for each question</mat-label>
+                                <input matInput [value]="markForEachQuestion" (input)="setMark($any($event.target).value)" placeholder="e.g. 1"  />
+                            </mat-form-field>
+                        </div>
+                        <div class="mat-con">
+                            <mat-form-field appearance="outline" class="full">
+                                <mat-icon matPrefix>public</mat-icon>
+                                <mat-label>Access</mat-label>
+                                <mat-select [value]="publicAccess" (selectionChange)="publicAccess = $event.value" >
+                                    <mat-option [value]="true">Public</mat-option>
+                                    <mat-option [value]="false">Limited</mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </div>
+
+                    </div>
+                    <div class="form-actions">
+                        <button mat-button matStepperPrevious type="button">Back</button>
+                        <button mat-button matStepperNext type="button">Next</button>
+                    </div>
+                </mat-step>
+
+                <mat-step>
+                    <ng-template matStepLabel>Review</ng-template>
+                    <div class="form-grid step-content">
+                        <div class="review-summary">
+                            <h3>Category Summary</h3>
+                            <div class="row two-cols">
+                                <div>
+                                    <p><strong>Name:</strong> {{ name || '-' }}</p>
+                                    <p><strong>Institute:</strong> {{ getInstituteName(institute) || '-' }}</p>
+                                    <p><strong>Description:</strong> {{ description || '-' }}</p>
+                                </div>
+                                <div>
+                                    <p><strong>Type:</strong> {{ getOptionName(typeOptions, type) || '-' }}</p>
+                                    <p><strong>Who Inputs:</strong> {{ getOptionName(whoInputOptions, whoInputs) || '-' }}</p>
+                                    <p><strong>Evaluation:</strong> {{ getOptionName(evaluationOptions, evaluation) || '-' }}</p>
+                                </div>
+                            </div>
+
+                            <div class="row two-cols">
+                                <div>
+                                    <p><strong>Departments:</strong>
+                                        <span *ngIf="selectedDepartments?.length; else noDept">
+                                            <span *ngFor="let d of selectedDepartments; let idx = index">{{ getDepartmentName(d) || d }}<span *ngIf="idx < selectedDepartments.length - 1">, </span></span>
+                                        </span>
+                                        <ng-template #noDept>-</ng-template>
+                                    </p>
+                                </div>
+                                <div>
+                                    <p><strong>Teams:</strong>
+                                        <span *ngIf="selectedTeams?.length; else noTeam">
+                                            <span *ngFor="let t of selectedTeams; let idx = index">{{ getTeamName(t) || t }}<span *ngIf="idx < selectedTeams.length - 1">, </span></span>
+                                        </span>
+                                        <ng-template #noTeam>-</ng-template>
+                                    </p>
+                                </div>
+                            </div>
+
+                            <div class="row two-cols">
+                                <div>
+                                    <p><strong>Status:</strong> {{ getOptionName(statusOptions, status) || '-' }}</p>
+                                    <p><strong>Mark / Question:</strong> {{ markForEachQuestion || '-' }}</p>
+                                </div>
+                                <div>
+                                    <p><strong>Access:</strong> {{ publicAccess ? 'Public' : 'Limited' }}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-actions">
+                        <button mat-button matStepperPrevious type="button"><mat-icon>arrow_back</mat-icon> Back</button>
+                        <button mat-flat-button color="primary" (click)="save()" type="button"><mat-icon>save</mat-icon> {{ isEditing ? 'Update' : 'ADD' }}</button>
+                        <!-- <button mat-flat-button color="accent" (click)="reset()" type="button"><mat-icon>refresh</mat-icon> Reset</button> -->
+                        <!-- <button mat-stroked-button color="basic" (click)="cancel()" type="button"><mat-icon>arrow_back</mat-icon> Back</button> -->
+                    </div>
+                </mat-step>
+            </mat-horizontal-stepper>
+        </div>
+    </div>
+</div>

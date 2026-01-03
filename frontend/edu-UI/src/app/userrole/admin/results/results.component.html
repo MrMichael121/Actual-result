@@ -1,0 +1,83 @@
+<div class="page dashboard admin-dashboard">
+  <header class="dash-header">
+    <!-- <div>
+    </div> -->
+    <div style="display:flex;align-items:center;gap:12px">
+      <mat-form-field appearance="outline" style="min-width:220px">
+        <mat-label>Institute</mat-label>
+        <mat-select [(value)]="selectedInstituteId" (selectionChange)="onInstituteChange($event.value)">
+          <mat-option *ngFor="let inst of institutes" [value]="inst.id">{{inst.name}}</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+    </div>
+    <!-- <div style="margin-left:auto">
+      <button mat-raised-button color="primary" routerLink="/admin/exam-reports">Exam Reports</button>
+    </div> -->
+    <div class="kpis">
+      <div class="kpi">
+        <div class="kpi-val">{{metrics.totalStudents}}</div>
+        <div class="kpi-label">Students</div>
+      </div>
+      <div class="kpi">
+        <div class="kpi-val">{{metrics.testsScheduled}}</div>
+        <div class="kpi-label">Scheduled tests</div>
+      </div>
+      <div class="kpi">
+        <div class="kpi-val">{{metrics.attemptsToday}}</div>
+        <div class="kpi-label">Attempts today</div>
+      </div>
+      <div class="kpi">
+        <div class="kpi-val">{{metrics.avgScore}}%</div>
+        <div class="kpi-label">Average score</div>
+      </div>
+    </div>
+  </header>
+
+  <section class="charts-grid">
+    <ng-container *ngFor="let c of charts">
+      <div class="chart-card">
+        <h4>{{c.title}}</h4>
+        <div class="chart-placeholder">
+          <app-dynamic-chart [type]="c.type" [data]="c.data"></app-dynamic-chart>
+        </div>
+      </div>
+    </ng-container>
+    <!-- fallback placeholders when no charts are provided -->
+    <div class="chart-card" *ngIf="charts.length === 0">
+      <h4>Overview</h4>
+      <div class="chart-placeholder">
+        <svg viewBox="0 0 200 80" preserveAspectRatio="none" class="svg-small">
+          <rect x="10" y="30" width="20" height="50" rx="3" fill="#0b7285" />
+          <rect x="40" y="10" width="20" height="70" rx="3" fill="#1f7bff" />
+          <rect x="70" y="45" width="20" height="35" rx="3" fill="#66c2d9" />
+        </svg>
+      </div>
+    </div>
+  </section>
+
+  <section class="lists">
+    <div class="table-card">
+      <h4>Upcoming Tests</h4>
+      <table class="stats-table">
+        <thead><tr><th>Test</th><th>Class</th><th>Start</th></tr></thead>
+        <tbody>
+          <tr *ngFor="let t of upcomingTests">
+            <td>{{t.title}}</td>
+            <td>{{t.class}}</td>
+            <td>{{t.start | date:'short'}}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="report-card">
+      <h4>Quick Actions</h4>
+      <ul>
+        <li><button class="btn">Create test</button></li>
+        <li><button class="btn btn-outline">Export results</button></li>
+        <li>Review flagged answers</li>
+      </ul>
+    </div>
+  </section>
+</div>

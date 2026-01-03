@@ -1,0 +1,153 @@
+:root {
+  --topbar-height: 4rem; // Top bar fixed height
+  --sidenav-width: 16.25rem; // Side nav fixed width
+}
+
+/* box sizing */
+* { box-sizing: border-box; }
+
+/* Prevent root scroll */
+html, body { width:100%; margin:0; padding:0; height:100%; background-color:var(--theme-3); overflow:auto; position:relative }
+
+/* Full height app layout: horizontal row */
+.app-layout {
+  overflow: hidden;
+  display: flex;
+  flex-direction: row;
+  height: 100vh;
+  background: var(--theme-3); // Sidebar background
+  // padding: 40px;
+  gap: 0;
+  min-width: 0;
+  position: relative;
+}
+
+/* Side nav: left column, same height as app-main */
+.app-sidenav {
+  position: relative;
+  flex: 0 0 auto;
+  width: auto;
+  height: 100%;
+  background-color: var(--theme-1);
+  overflow: inherit;
+  background: transparent;
+  // border-top-left-radius: 30px;
+  // border-bottom-left-radius: 30px;
+  min-width: 0; /* allow shrinking of the column */
+}
+
+
+
+/* Main area: side nav + content -- app-main sits to the right of app-sidenav */
+.app-main {
+  position: relative;
+  background-color: var(--theme-1);
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto; // Take remaining width
+  min-width: 0;
+  height: 100%;
+  /* Make main width the remaining space after the side-nav */
+  width: calc(100% - var(--sidenav-width));
+  // background-color: transparent;
+  overflow: inherit;
+  // border-top-right-radius: 30px;
+  // border-bottom-right-radius: 30px;
+}
+
+
+/* Top bar inside app-main (10% of app-main) */
+  .app-topbar { flex: 0 0 var(--topbar-height); min-height: var(--topbar-height); width:100%; background:var(--theme-2); display:grid; align-items:center; box-shadow:0 0.125rem 0.625rem rgba(20,30,60,0.06); padding:0.625rem 2.5rem 0 }
+
+
+/* Content: scrolls internally only */
+.app-content { flex:1 1 auto; display:block; min-height:0; width:100%; background:var(--theme-2); padding:1.25rem 1.5rem; overflow-y:auto; -ms-overflow-style:none }
+
+// 
+
+/* Responsive Layout */
+@media (max-width:992px ) {
+
+  :root {
+    --topbar-height: 4rem;
+  }
+
+  .app-layout {
+    // flex-direction: row;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    width: 100%;
+    background: var(--theme-3);
+    overflow: hidden;
+  }
+
+  .app-main {
+    flex: 1 1 auto;     /* REQUIRED */
+    display: flex;
+    flex-direction: column;
+    min-height: 0;      /* REQUIRED for scrolling */
+    /* On mobile the main should be the remaining width after collapsed sidenav (72px) */
+    width: calc(100% - 72px);
+    overflow: hidden;
+    background: var(--theme-1);
+  }
+
+  /* On mobile, shift main content to the right of the collapsed sidenav (72px) */
+  .app-main { margin-left: 72px; }
+
+  /* When sidenav expanded via .sidenav-open expand, set main width and margin accordingly */
+  .sidenav-open .app-main {
+    margin-left: var(--sidenav-width);
+    width: calc(100% - var(--sidenav-width));
+  }
+
+ 
+  .app-sidenav {
+    /* on mobile keep a compact collapsed nav by default (72px) */
+    position: fixed;
+    left: 0;
+    top: 0;
+    height: 100vh;
+    width: 72px;
+    transform: none;
+    flex: 0 0 72px;
+    z-index: 65;
+    background: var(--theme-1);
+    overflow: auto;
+  }
+
+  /* also cover side-nav variant class used in component styles */
+  .app-side-nav {
+    position: fixed;
+    left: 0;
+    top: 0;
+    height: 100vh;
+    width: 72px;
+    z-index: 65;
+    background: var(--theme-1);
+    overflow: auto;
+  }
+
+  /* when parent (e.g., root) has .sidenav-open, expand to full width */
+  .sidenav-open .app-sidenav,
+  .sidenav-open .app-side-nav {
+    width: var(--sidenav-width);
+    flex: 0 0 var(--sidenav-width);
+  }
+
+
+}
+
+/* Custom Scrollbar for sidebar/content */
+.app-sidenav::-webkit-scrollbar,
+.app-content::-webkit-scrollbar {
+  width: 0.5rem;
+  background: rgba(86,91,102,0.09);
+}
+.app-sidenav::-webkit-scrollbar-thumb,
+.app-content::-webkit-scrollbar-thumb {
+  background: #b2bacb;
+  border-radius: 0.4375rem;
+}

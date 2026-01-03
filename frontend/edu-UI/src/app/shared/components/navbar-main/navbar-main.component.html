@@ -1,0 +1,58 @@
+<div class="navbar-main">
+  <div class="navbar-inner">
+    <div class="navbar-left">
+      <div class="app-title">
+        <div class="title">{{ moduleName }}</div>
+        <div class="subtitle">{{ moduleData }}</div>
+      </div>
+    </div>
+
+    <div class="navbar-right" *ngIf="isLogin">
+      <button mat-icon-button aria-label="Notifications">
+        <mat-icon class="notification-icon">notifications</mat-icon>
+      </button>
+      <button mat-icon-button aria-label="Settings">
+        <mat-icon class="settings-icon">settings</mat-icon>
+      </button>
+
+      <!-- Inline avatar + name (no dropdown) -->
+      <div class="user-inline">
+        <div class="avatar-inline">{{ initials }}</div>
+        <div class="user-inline-meta">
+          <div class="user-name">{{ displayName }}</div>
+          <div class="user-institute">{{ instituteShortName }}</div>
+        </div>
+      </div>
+
+      <button mat-icon-button aria-label="logout" class="logout-inline" (click)="confirmLogout()">
+        <mat-icon class="logout-icon">exit_to_app</mat-icon>
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Logout confirmation dialog template -->
+<ng-template #logoutConfirmationDialog>
+  <div class="logout-modal-wrap" role="dialog" aria-modal="true" aria-labelledby="logoutTitle">
+    <div class="logout-card" tabindex="-1">
+      <header class="logout-header">
+        <div class="logout-graphic-wrap" aria-hidden="true">
+          <mat-icon class="logout-graphic">logout</mat-icon>
+        </div>
+        <div class="logout-titles">
+          <h2 id="logoutTitle" class="logout-heading">Sign out</h2>
+          <p class="logout-sub">You're about to sign out of the Online Assessment Portal</p>
+        </div>
+      </header>
+
+      <section class="logout-body">
+        <p class="logout-desc">Are you sure you want to sign out? Any unsaved changes may be lost. You can sign back in at any time.</p>
+      </section>
+
+      <footer class="modal-actions" role="toolbar" aria-label="Logout actions">
+        <button mat-stroked-button color="primary" class="btn-cancel" (click)="dialog.closeAll()">Cancel</button>
+        <button mat-flat-button color="warn" class="btn-logout" (click)="logout()" aria-describedby="logoutTitle">Sign out</button>
+      </footer>
+    </div>
+  </div>
+</ng-template>

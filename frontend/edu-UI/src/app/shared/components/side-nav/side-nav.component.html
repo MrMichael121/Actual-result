@@ -1,0 +1,61 @@
+<aside class="app-side-nav" [class.collapsed]="collapsed" *ngIf="isLogin">
+
+  <div class="side-top">
+
+      <!-- <div class="avatar-wrap">
+        <div class="avatar">
+          <span class="avatar-initial">{{ (userName && userName.length>0) ? userName.charAt(0) : 'U' }}</span>
+        </div>
+        <div class="status-dot" *ngIf="!collapsed"></div>
+      </div> -->
+      <!-- <div class="user-meta" *ngIf="!collapsed">
+        <div class="name">{{ userName }}</div>
+        <div class="institute">{{ userInstitute || '' }}</div> -->
+        <!-- <div class="role">{{ userRole || '' }}</div> -->
+      <!-- </div> -->
+
+  <button class="collapse-toggle" mat-icon-button (click)="toggleCollapse()" [attr.aria-expanded]="!collapsed" aria-label="Toggle sidebar">
+    <mat-icon>{{ collapsed ? 'chevron_right' : 'chevron_left' }}</mat-icon>
+  </button>
+
+    <div class="logo-wrap" aria-hidden="true" *ngIf="!collapsed">
+      <img class="institute-logo" src="/assets/images/profluent-lab.png" alt="Institute logo" />
+    </div>
+    <!-- if *ngIf="collapsed" display logo as oval -->
+    <div class="logo-wrap logo-collapsed" aria-hidden="true" *ngIf="collapsed">
+      <mat-icon class="institute-logo-collapsed">school</mat-icon>
+    </div>
+
+  </div>
+
+  <!-- <nav class="menu">
+    <a *ngFor="let m of menus" [routerLink]="m.path" class="menu-item" routerLinkActive="active" [title]="m.label">
+      <mat-icon class="menu-icon">{{ m.icon || 'menu' }}</mat-icon>
+      <span class="menu-label" *ngIf="!collapsed">{{ m.label }}</span>
+    </a>
+  </nav> -->
+  <nav class="menu">
+    <ng-container *ngFor="let m of menus">
+      <ng-container *ngIf="['Users','Categories','Questions','Exams','Schedule Exam'].includes(m.label); else plainLink">
+        <a *hasAccess="m.label; hasAccessAction: 'view'" [routerLink]="m.path" class="menu-item" routerLinkActive="active" [title]="m.label">
+          <mat-icon class="menu-icon">{{ m.icon || 'menu' }}</mat-icon>
+          <span class="menu-label" *ngIf="!collapsed">{{ m.label }}</span>
+        </a>
+      </ng-container>
+      <ng-template #plainLink>
+        <a [routerLink]="m.path" class="menu-item" routerLinkActive="active" [title]="m.label">
+          <mat-icon class="menu-icon">{{ m.icon || 'menu' }}</mat-icon>
+          <span class="menu-label" *ngIf="!collapsed">{{ m.label }}</span>
+        </a>
+      </ng-template>
+    </ng-container>
+  </nav>
+  <!-- <nav class="side-bottom" >
+    <button class="menu-item menu-button" mat-button routerLink="/settings" routerLinkActive="active" title="Settings" aria-label="Settings">
+      <mat-icon class="menu-icon">settings</mat-icon>
+      <span class="menu-label" *ngIf="!collapsed">Settings</span>
+    </button>
+  </nav> -->
+
+  <ng-content></ng-content>
+</aside>

@@ -1,0 +1,158 @@
+.institute-wrap{ padding: 8px}
+.hero{ flex:1;  gap: 8px;    display: grid;}
+.card{  border-radius:8px; padding: 12px;  }
+
+.form-actions button {background: var(--button-1); color: var(--button-text-1);}
+.form-actions button:hover {background: var(--button-1-hover); color: var(--button-text-2);}
+
+/* campuses card adjustments to replace inline styles */
+.campus-card{ margin-top:12px; padding:14px; border-radius:12px; background: var(--bg-1) }
+.campus-header{ display:flex; justify-content:space-between; align-items:center; gap:12px }
+.campus-header h3{ margin:0; font-size:1.02rem; color:var(--text-1); font-weight:600 }
+.section-heading{ margin:10px 0 0; font-size:1.02rem; color:var(--text-2); font-weight:500 }
+.card .section-heading{ margin-top:0 }
+.full{ width:100%; margin-bottom:14px }
+.form-actions{ display:flex; gap:12px; 
+// border sadow top
+    box-shadow: 0 -6px 18px rgba(16,32,48,0.06); padding-top:12px; }
+
+@media (max-width:920px){ .hero{ flex-direction:column } .hero-right{ width:100% } }
+
+/* grid layout for form */
+.grid{ display:grid; grid-template-columns: 1fr 380px; gap:22px; align-items:start }
+.col{ display:flex; flex-direction:column }
+.two-cols{ display:flex; gap:14px }
+.half{ flex:1 }
+
+/* allow a half column to be taller and have the adjacent column stack */
+.half.tall { display:flex; flex-direction:column; justify-content:flex-start }
+.half.tall textarea { min-height:120px; border-radius:8px }
+
+/* chip-grid spacing/height so branch list looks balanced */
+::ng-deep mat-chip-grid { min-height: 40px; display:flex; align-items:center }
+::ng-deep mat-chip-row { margin-right:8px }
+
+/* subtle vertical divider on larger screens */
+@media (min-width:921px){
+ 	.col + .col{ border-left:1px solid rgba(15,35,55,0.04); padding-left:20px }
+}
+
+/* tighten error spacing and align icons */
+::ng-deep .mat-form-field-prefix .mat-icon { width:28px; text-align:center }
+::ng-deep .mat-error { margin-top:6px }
+
+/* actions alignment */
+.form-actions{ justify-content:flex-end; align-items:center; margin-top:12px; }
+
+/* chip-list (department / team) visuals */
+.field-label{ display:block; margin-bottom:8px; font-weight:600; color:#2b4050 }
+.chip-list{ display:flex; gap:8px; flex-wrap:wrap; margin-bottom:10px }
+.chip{ display:inline-flex; align-items:center; background:#f7fbfe; padding:8px 12px; border-radius:18px; border:1px solid #e1f0fa }
+.chip-label{ margin-right:8px; color:#0b4a6f; font-size:0.95rem; font-weight:600 }
+.chip-remove{ background:transparent; border:0; cursor:pointer; color:#5b6f7f; font-size:16px; line-height:1 }
+
+/* inputs used for adding chips (standalone matInput) */
+.chip-input[matInput], input[matInput].chip-input { border:0; padding:8px; width:100%; box-sizing:border-box }
+
+/* small responsive tweak */
+@media (max-width:720px){ ::ng-deep .mat-form-field { width:100% } .hero{ flex-direction:column } .card{ padding:18px } }
+.dev-debug {
+	margin: 8px 0;
+	font-size: 12px;
+	color: #666;
+}
+
+/* Block card for Head office and other logical blocks */
+// .block-card {
+// 	background: #ffffff;
+// 	border-radius: 12px;
+// 	padding: 16px;
+// 	// margin-bottom: 14px;
+// 	box-shadow: 0 6px 18px rgba(16,32,48,0.06);
+// 	border: 1px solid var(--border-2);
+// }
+
+/* compact appearance for fields inside block cards */
+.compact-field ::ng-deep .mat-input-element { padding: 10px 8px; }
+.compact ::ng-deep .mat-input-element { padding: 10px 8px; }
+.compact-row { gap: 10px; align-items: center }
+.head-office-contacts .mat-form-field { margin-bottom: 0 }
+.head-office-loc .mat-form-field { margin-bottom: 0 }
+
+/* slightly elevate action buttons within blocks */
+.block-card .mat-flat-button { box-shadow: 0 8px 20px rgba(15,35,55,0.06) }
+
+/* small spacing for actions inside expansion headers */
+.panel-actions { display:flex; gap:8px; align-items:center }
+.panel-actions button { min-height:36px }
+
+/* Stepper styles (applicable to this component) */
+:host ::ng-deep .mat-horizontal-stepper-header-container {
+	padding: 6px 8px;
+	border-bottom: 1px solid rgba(15,35,55,0.04);
+}
+
+:host ::ng-deep .mat-horizontal-stepper-header { gap: 8px; }
+
+:host ::ng-deep .mat-step-icon {
+	width: 28px; height: 28px; font-size: 13px;
+}
+
+:host ::ng-deep .mat-horizontal-stepper-header .mat-step-label {
+	font-size: 0.92rem; padding: 4px 8px; white-space: nowrap;
+}
+
+/* allow header scroll on small screens */
+@media (max-width:920px) {
+	:host ::ng-deep .mat-horizontal-stepper-header-container { overflow-x:auto; -webkit-overflow-scrolling: touch }
+}
+
+// .step-actions { display:flex; gap:12px; justify-content:flex-end; margin-top:10px }
+// .step-actions button[mat-button] { min-width:88px; padding:6px 10px }
+// .step-actions button[mat-flat-button] { min-width:110px }
+
+/* tighten spacing inside steps */
+.card .block-card { padding: 12px;     min-height: 500px;
+    max-height: 500px;
+    overflow: auto; }
+::ng-deep .mat-form-field { margin-bottom: 10px }
+
+/* Review summary styles for the final step */
+.review-summary {
+	display: flex;
+	flex-direction: column;
+	gap: 18px;
+	padding: 12px 8px;
+}
+.review-summary h3 { margin: 0; font-size: 1rem; color: var(--text-2); font-weight: 600 }
+.review-summary .row.two-cols { display: flex; gap: 18px; box-shadow: 0 6px 18px rgba(16,32,48,0.09); }
+.review-summary .row.two-cols > div { flex: 1; }
+.review-summary p { margin: 6px 0; color: var(--text-3); font-size: 0.95rem }
+
+.row.two-cols{
+	border-radius: 10px;
+	// padding: 12px;
+	// border: 1px solid rgba(15,35,55,0.04);
+	box-shadow: 0 6px 18px rgba(16,32,48,0.04);
+	// margin-bottom: 10px;
+}
+/* Campus summary card */
+.campus-summary {
+	border-radius: 10px;
+	padding: 12px;
+	// background: var(--bg-2, #fbfdff);
+	border: 1px solid rgba(15,35,55,0.04);
+	box-shadow: 0 6px 18px rgba(16,32,48,0.04);
+	// margin-bottom: 10px;
+}
+.campus-summary p { margin: 4px 0; }
+.campus-summary strong { font-weight: 600; color: var(--text-1) }
+
+/* Responsive adjustments for review and campus blocks */
+@media (max-width: 720px) {
+	.review-summary .row.two-cols { flex-direction: column; }
+	.campus-summary { padding: 10px; }
+}
+
+/* small utility for labels inside review summary */
+.review-summary .label { font-weight: 600; color: var(--text-2); margin-right: 6px }

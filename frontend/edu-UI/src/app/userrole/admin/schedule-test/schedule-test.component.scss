@@ -1,0 +1,422 @@
+.page{ padding:8px; }
+
+.schedule-card{
+	margin:12px 0;
+	padding:18px;
+	border:1px solid rgba(4,40,46,0.08);
+	border-radius:10px;
+	background:var(--bg-1);
+	box-shadow:0 6px 18px rgba(1,39,46,0.06);
+}
+.toolbar .actions button{background-color: var(--button-1); color: var(--button-text-1)!important; }
+.toolbar .actions button:hover{background: var(--button-1-hover); color: var(--button-text-2);}
+
+.orm-col button{background-color: var(--button-1); color: var(--button-text-1)!important; }
+.orm-col button:hover{background: var(--button-1-hover); color: var(--button-text-2);}
+
+.form-actions{ display: flex; gap: 10px; justify-content:flex-end; align-items:center }
+.form-actions button {background: var(--button-1); color: var(--button-text-1);}
+.form-actions button:hover {background: var(--button-1-hover); color: var(--button-text-2);}
+
+// .user-filters{ display:grid; grid-template-columns: 1fr; gap:8px; margin-bottom:8px }
+// .user-list{ border:1px solid rgba(4,40,46,0.06); border-radius:6px; padding:8px; max-height:420px; overflow:auto }
+// .user-list-header{ display:flex; justify-content:space-between; align-items:center; gap:8px; margin-bottom:6px }
+// .user-list mat-list-option{ padding:6px 4px }
+// .user-list .muted{ color:rgba(0,0,0,0.54); font-size:12px }
+
+// /* Filter block border */
+// .filter-block.bordered{ border:1px solid rgba(4,40,46,0.08); padding:12px; border-radius:8px; background:#fafafa; margin-bottom: 10px; }
+// .filter-block.bordered .row.small{ align-items:center }
+// .filter-block.bordered .checkbox-col{ display:flex; align-items:center; justify-content:center }
+// .filter-block.bordered .actions-col{ margin-left:auto; display:flex; gap:8px; align-items:center }
+
+// /* centered modal filter */
+// .filter-backdrop{ position:fixed; inset:0; background: rgba(0,0,0,0.35); display:flex; align-items:center; justify-content:center; z-index:1200 }
+// .filter-block.single-block{ width: min(920px, 96%); max-width:920px; background:#fff; box-shadow:0 10px 30px rgba(2,20,30,0.22); border-radius:8px; padding:14px }
+// .filter-block.single-block .row.small{ gap:10px; display:block }
+
+// /* compact grid inside modal: two columns on wider screens */
+// .filter-block.single-block .row.small .col{ flex: 1 1 100%; min-width:unset; margin-bottom:10px }
+// .filter-block.single-block .user-filters{ display:grid; grid-template-columns: 1fr; gap:10px; }
+// @media (min-width:640px){ .filter-block.single-block .user-filters{ grid-template-columns: 1fr 1fr; } }
+// .filter-block.single-block .mat-form-field{ width:100% }
+
+// /* give the modal content a modest max-height and scroll when necessary */
+// .filter-block.single-block{ max-height:78vh; overflow:auto; padding-bottom:18px }
+
+// /* Overlay panel when anchored to the left of the filter button */
+// .overlay-filters-panel-left { display:block }
+// .overlay-filters-panel-left .filter-block { width: 420px; max-height: 72vh; overflow:auto; border-radius:8px; padding:12px; box-shadow: 0 18px 40px rgba(0,0,0,0.14); background: #fff; }
+
+// /* user filters modal when centered (backdrop) — increase size for better visibility */
+// .filter-backdrop .filter-block.single-block { width: min(920px, 96%); max-width:920px; max-height:78vh; }
+
+// /* actions row full-width */
+// .filter-block.single-block .actions-col{ display:flex; justify-content:space-between; gap:8px; align-items:center; margin-top:8px }
+// .filter-block.single-block .actions-col .left-actions{ display:flex; gap:8px; align-items:center }
+// .filter-block.single-block .actions-col .right-actions{ display:flex; gap:8px; align-items:center }
+
+// /* center small rows inside modal */
+// .row.small.center{ justify-content:center }
+
+// /* ensure compact time fields look consistent */
+// .time-field.compact{ max-width:160px }
+// .time-field.compact .mat-form-field-infix{ padding:6px 8px }
+
+// /* user filter modal shares the same backdrop styles */
+// .user-filter-button{ margin-left:12px }
+// .filter-block.single-block .actions-col button{ min-width:88px }
+
+// /* Exam preview card */
+// .exam-preview.card{ margin-top:12px; padding:12px; border:1px solid rgba(4,40,46,0.06); border-radius:8px; background:#fff; }
+// .exam-preview .exam-title{ margin:0 0 6px 0; font-size:14px }
+// .exam-preview .exam-desc{ margin:0 0 8px 0; color:rgba(0,0,0,0.7) }
+// .exam-preview .exam-meta{ font-size:12px; color:rgba(0,0,0,0.6); display:flex; gap:12px }
+
+// @media (min-width:960px){
+// 	.user-filters{ grid-template-columns: 1fr 1fr }
+// }
+
+// /* inside modal, ensure fields stack single-column on narrow widths */
+// .filter-block.single-block .user-filters{ grid-template-columns: 1fr }
+
+// /* Utility alignment helpers used in template */
+// .align-center{ display:flex; align-items:center; }
+// .align-actions-end{ display:contents; align-items:flex-end; }
+
+// /* Ensure the right column (aside.right) has a minimum visual presence */
+// .schedule-card .right{ min-width:280px }
+// .schedule-card .right .card.section{ height:auto }
+
+// /* On smaller screens stack nicely */
+// @media (max-width:960px){
+// 	.schedule-form.grid-two{ grid-template-columns: 1fr; }
+// 	.schedule-card .right{ min-width:auto }
+// }
+// /* Stepper spacing and actions to match create-exam look */
+// .mat-horizontal-stepper-header{ padding:8px 0 }
+// .mat-horizontal-stepper-content{ padding:16px 0 }
+// .step-actions{ display:flex; gap:10px; justify-content:flex-end; padding-top:12px }
+// .step-actions button {background: var(--button-1); color: var(--button-text-1);} 
+// .step-actions button:hover {background: var(--button-1-hover); color: var(--button-text-2);} 
+
+
+// =======================
+
+.schedule-card {
+  width: 100%;
+  max-width: 100%;
+  margin: 0;
+  padding: 16px;
+}
+
+.review-summary {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+  padding: 12px 8px;
+
+  .row {
+    display: grid;
+    grid-template-columns: 180px 1fr;
+    gap: 8px;
+    align-items: center;
+    padding: 6px 0;
+    border-bottom: 1px dashed rgba(0,0,0,0.06);
+  }
+
+  .label { font-weight: 600; color: rgba(0,0,0,0.75); }
+  .value { color: rgba(0,0,0,0.85); }
+
+  .assigned-list { list-style:none; margin:0; padding:0; display:flex; flex-wrap:wrap; gap:8px; }
+  .assigned-list li { background:#f5f5f5; padding:6px 10px; border-radius:6px; font-size:0.95rem; }
+
+  @media (max-width:700px) { .row { grid-template-columns: 1fr; } .label { margin-bottom:4px; } }
+}
+
+/* STEP 1 – two main cards */
+
+.step1-two-column {
+  display: flex;
+  align-items: stretch;  /* same height */
+  gap: 16px;
+}
+
+.basic-info {
+  flex: 1 1 65%;
+}
+
+.schedule-section {
+  flex: 1 1 35%;
+  display: flex;
+  flex-direction: column;
+}
+
+/* generic card */
+
+.card.section {
+  margin-bottom: 16px;
+  padding: 16px 20px;
+  border-radius: 12px;
+  box-shadow: 0 4px 18px rgba(15, 23, 42, 0.08);
+  background: #ffffff;
+}
+
+.section-title {
+  font-size: 18px;
+  font-weight: 600;
+  margin: 0 0 16px;
+  color: #0f172a;
+}
+
+.section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* basic form grid */
+
+.form-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-bottom: 12px;
+}
+
+.form-col {
+  flex: 1 1 0;
+  min-width: 0;
+}
+
+.form-col-2 {
+  flex: 1 1 calc(50% - 8px);
+}
+
+.form-col-auto {
+  flex: 0 0 auto;
+}
+
+.full-width {
+  width: 100%;
+}
+
+.filter-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+/* schedule fields layout */
+
+.schedule-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.schedule-field {
+  flex: 1 1 0;
+}
+
+/* date wider, time fixed so icons line up like screenshot */
+
+.date-field {
+  flex: 0 1 60%;
+}
+
+.time-field {
+  flex: 1 0 140px;
+}
+
+.schedule-toggles {
+  display: grid;
+  align-items: center;
+  gap: 24px;
+  margin-top: 8px;
+}
+
+/* exam preview */
+
+.exam-preview {
+  margin-top: 8px;
+  padding: 12px 14px;
+  border-radius: 10px;
+  background: #f9fafb;
+  border: 1px dashed #e5e7eb;
+}
+
+.exam-preview-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 8px;
+}
+
+.exam-title {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 600;
+  color: #111827;
+}
+
+.exam-meta {
+  font-size: 12px;
+  color: #6b7280;
+}
+
+.exam-desc {
+  margin: 6px 0 0;
+  font-size: 13px;
+  color: #4b5563;
+}
+
+.step-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+/* user list */
+
+.user-list {
+  margin-top: 8px;
+  border-radius: 10px;
+  border: 1px solid #e5e7eb;
+  max-height: 360px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.user-list-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 12px;
+  background: #f9fafb;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.user-selection-list {
+  max-height: 320px;
+  overflow: auto;
+}
+
+.muted {
+  color: #6b7280;
+  font-size: 12px;
+}
+
+/* exam filters modal */
+
+// .filters-panel {
+//   position: fixed;
+//   inset: 0;
+//   background: rgba(15, 23, 42, 0.4);
+//   display: flex;
+//   align-items: flex-start;
+//   justify-content: center;
+//   padding: 40px 16px;
+//   z-index: 1000;
+// }
+
+// .filters-panel .filter-block {
+//   width: 100%;
+//   max-width: 720px;
+//   background: #ffffff;
+//   border-radius: 14px;
+//   padding: 16px 20px 20px;
+//   box-shadow: 0 12px 30px rgba(15, 23, 42, 0.35);
+// }
+
+/* user filter slide-in */
+
+// .filter-backdrop {
+//   position: fixed;
+//   inset: 0;
+//   background: rgba(15, 23, 42, 0.35);
+//   display: flex;
+//   justify-content: flex-end;
+//   z-index: 1000;
+// }
+
+// .filter-backdrop .filter-block {
+//   width: 100%;
+//   max-width: 420px;
+//   height: 100%;
+//   background: #ffffff;
+//   padding: 16px 18px 18px;
+//   box-shadow: -8px 0 24px rgba(15, 23, 42, 0.2);
+//   overflow-y: auto;
+// }
+
+// .filter-backdrop .bordered {
+//   border-left: 1px solid #e5e7eb;
+// }
+
+// .actions-row {
+//   display: flex;
+//   justify-content: space-between;
+//   margin-top: 8px;
+// }
+
+// .left-actions,
+// .right-actions {
+//   display: flex;
+//   gap: 8px;
+// }
+
+// /* actions step */
+
+// .actions-panel .actions {
+//   display: flex;
+//   justify-content: flex-end;
+//   gap: 8px;
+// }
+
+// /* Material tweaks */
+
+// .mat-form-field-appearance-outline .mat-form-field-outline {
+//   border-radius: 10px;
+// }
+
+// .mat-slide-toggle {
+//   font-size: 13px;
+// }
+
+// /* responsive */
+
+// @media (max-width: 900px) {
+//   .step1-two-column {
+//     flex-direction: column;
+//   }
+
+//   .basic-info,
+//   .schedule-section {
+//     flex: 1 1 100%;
+//   }
+
+//   .schedule-row {
+//     flex-direction: column;
+//   }
+
+//   .time-field {
+//     flex: 1 1 100%;
+//     max-width: 100%;
+//   }
+
+//   .form-col-2 {
+//     flex: 1 1 100%;
+//   }
+
+//   .card.section {
+//     padding: 12px 14px;
+//   }
+
+//   .filter-backdrop .filter-block {
+//     max-width: 100%;
+//   }
+// }

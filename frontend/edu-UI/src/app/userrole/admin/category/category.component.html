@@ -1,0 +1,273 @@
+<div class="category-page">
+    <div class="toolbar">
+        <!-- <div class="title">
+            <h2>Categories</h2>
+            <p class="muted">Browse and review question bank</p>
+        </div> -->
+
+        <div class="search">
+            <mat-form-field appearance="outline" class="search-field">
+                <mat-icon matPrefix aria-hidden="false" aria-label="Search icon">search</mat-icon>
+                <input matInput placeholder="Search question bank" [(ngModel)]="filter"
+                    (ngModelChange)="applyFilter($event)" aria-label="Search question bank" />
+                <button mat-icon-button matSuffix *ngIf="filter" (click)="filter = ''; applyFilter('')"
+                    aria-label="Clear search">
+                    <mat-icon>close</mat-icon>
+                </button>
+            </mat-form-field>
+        </div>
+        <div class="controls">
+            <div class="action-row" (click)="openFiltersOverlay(); $event.stopPropagation()">
+                <button #filtersBtn mat-flat-button type="button" class="filter-btn custom-filter-btn">
+                    <mat-icon>filter_alt</mat-icon>
+                    <span>Filters</span>
+                </button>
+                <button mat-flat-button (click)="refresh()" class="refresh-btn custom-refresh-btn">
+                    <mat-icon>refresh</mat-icon>
+                    <span>Refresh</span>
+                </button>
+
+
+                <button *hasAccess="'Categories'; hasAccessAction: 'add'" mat-flat-button color="primary" routerLink="/category/create">
+                    <mat-icon>add</mat-icon> Add Category
+                </button>
+
+            </div>
+
+        </div>
+    </div>
+
+    <div class="list-card">
+        <ng-template #filtersPanel>
+            <div class="filters-panel card" (click)="$event.stopPropagation()">
+                <div class="filter-block">
+                    <!-- <div class="filter-row"> -->
+
+                        <mat-form-field appearance="outline" class="filter-item">
+                            <mat-label>Institute</mat-label>
+                            <mat-select [(ngModel)]="selectedInstitute" placeholder="Select institute"
+                                [disabled]="!isSuperAdmin" (selectionChange)="onInstituteChange($event.value)">
+                                <mat-option [value]="null">All</mat-option>
+                                <mat-option *ngFor="let i of institutes"
+                                    [value]="i.institute_id">{{i.short_name}}</mat-option>
+                            </mat-select>
+                            <mat-hint *ngIf="!isSuperAdmin">You cannot change institute (only super admin)</mat-hint>
+                        </mat-form-field>
+
+                        <mat-form-field appearance="outline" class="filter-item">
+                            <mat-label>Category Name</mat-label>
+                            <input matInput placeholder="Category name" [(ngModel)]="filterName" />
+                        </mat-form-field>
+
+                        <mat-form-field appearance="outline" class="filter-item">
+                            <mat-label>Departments</mat-label>
+                            <mat-select multiple [(ngModel)]="selectedDepartments" placeholder="Select departments">
+                                <mat-option *ngFor="let d of departments" [value]="d.id">{{d.name}}</mat-option>
+                            </mat-select>
+                        </mat-form-field>
+
+                        <mat-form-field appearance="outline" class="filter-item">
+                            <mat-label>Teams</mat-label>
+                            <mat-select multiple [(ngModel)]="selectedTeams" placeholder="Select teams">
+                                <mat-option *ngFor="let t of teams" [value]="t.id">{{t.name}}</mat-option>
+                            </mat-select>
+                        </mat-form-field>
+
+                        <!-- Creation Date after -->
+                        <mat-form-field appearance="outline" class="filter-item">
+                            <mat-label>Created After</mat-label>
+                            <input matInput [matDatepicker]="pickerAfter" placeholder="Select start date"
+                                [(ngModel)]="filterCreationDateAfter">
+                            <mat-datepicker-toggle matSuffix [for]="pickerAfter"></mat-datepicker-toggle>
+                            <mat-datepicker #pickerAfter></mat-datepicker>
+                        </mat-form-field>
+
+                        <!-- add creation date before filter -->
+                        <mat-form-field appearance="outline" class="filter-item">
+                            <mat-label>Created Before</mat-label>
+                            <input matInput [matDatepicker]="picker" placeholder="Select end date"
+                                [(ngModel)]="filterCreationDate">
+                            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                            <mat-datepicker #picker></mat-datepicker>
+                        </mat-form-field>
+
+                        <!-- Active status filter -->
+                        <mat-form-field appearance="outline" class="filter-item">
+                            <mat-label>Active Status</mat-label>
+                            <mat-select [(ngModel)]="filterActiveStatus" placeholder="Select status">
+                                <mat-option [value]="null">All</mat-option>
+                                <mat-option [value]="true">Active</mat-option>
+                                <mat-option [value]="false">Inactive</mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                        <div class="filter-actions">
+                        <!-- Created By Me (checkbox) -->
+                        <div class="filter-item checkbox-item">
+                            <mat-checkbox [(ngModel)]="filterCreatedByMe">Created by me</mat-checkbox>
+                        </div>
+
+                        <!-- Public Access (checkbox) -->
+                        <div class="filter-item checkbox-item">
+                            <mat-checkbox [(ngModel)]="filterPublicAccess">Public access</mat-checkbox>
+                        </div>
+                        </div>
+
+                        <div class="filter-actions">
+                            <button mat-flat-button color="primary" type="button"
+                                (click)="onApply()"><mat-icon>check</mat-icon> Apply</button>
+                            <button mat-flat-button color="primary" type="button"
+                                (click)="onReset()"><mat-icon>refresh</mat-icon> Reset</button>
+                        </div>
+                    <!-- </div> -->
+                </div>
+            </div>
+        </ng-template>
+
+        <div class="list-wrapper">
+            <table mat-table [dataSource]="dataSource" class="mat-elevation-z1 compact premium-table" matSort>
+
+                <!-- Name Column -->
+                <ng-container matColumnDef="name">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header>Name</th>
+                    <td mat-cell *matCellDef="let element"> {{element.name}} </td>
+                </ng-container>
+
+                <!-- Description Column -->
+                <ng-container matColumnDef="description">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Description </th>
+                    <td mat-cell *matCellDef="let element"> {{element.description}} </td>
+                </ng-container>
+
+                <!-- Evaluation Column -->
+                <ng-container matColumnDef="evaluation">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header>Evaluation</th>
+                    <td mat-cell *matCellDef="let element"> {{element.evaluation}} </td>
+                </ng-container>
+
+                <!-- Active Column -->
+                <ng-container matColumnDef="active">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header>Active</th>
+                    <td mat-cell *matCellDef="let element"><mat-slide-toggle [checked]="element.active"
+                            (change)="toggleActive(element)"></mat-slide-toggle></td>
+                </ng-container>
+                <!-- Actions Column -->
+                <ng-container matColumnDef="actions">
+                    <th mat-header-cell *matHeaderCellDef>Actions</th>
+                    <td mat-cell *matCellDef="let element">
+                            <div class="actions-inline">
+                            <button *hasAccess="'Categories'; hasAccessAction: 'view'" mat-icon-button color="primary" (click)="viewDetails(element)" title="View details"><mat-icon>visibility</mat-icon></button>
+                            <button *hasAccess="'Categories'; hasAccessAction: 'edit'" mat-icon-button color="accent" (click)="EditCategory(element)" title="Edit"><mat-icon>edit</mat-icon></button>
+                            <button *hasAccess="'Categories'; hasAccessAction: 'delete'" mat-icon-button color="warn" (click)="deleteCategory(element)" title="Delete"><mat-icon>delete</mat-icon></button>
+                        </div>
+                    </td>
+                </ng-container>
+
+                <thead>
+                    <tr mat-header-row *matHeaderRowDef="columns"></tr>
+                </thead>
+                <tbody>
+                    <tr mat-row *matRowDef="let row; columns: columns"></tr>
+                </tbody>
+
+            </table>
+            <mat-paginator [pageSizeOptions]="[25,50,100]" showFirstLastButtons
+                class="custom-paginator"></mat-paginator>
+        </div>
+    </div>
+    <div class="modal-backdrop" *ngIf="selectedCategory || editing">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 *ngIf="!editing">Category details</h3>
+                <h1>{{ selectedCategory.name || '—' }}</h1>
+                <button mat-icon-button (click)="closeModal()"><mat-icon>close</mat-icon></button>
+            </div>
+
+            <div class="modal-body">
+                <ng-container *ngIf="selectedCategory && !editing">
+                    <div class="detail-card">
+                        <!-- <mat-tab-group class="detail-tabs" mat-stretch-tabs> -->
+                        <mat-tab-group dynamicHeight mat-align-tabs="start">
+                            <mat-tab label="Overview">
+
+
+
+                                <div class="detail-grid">
+                                    <div class="label"><mat-icon>domain</mat-icon> Name</div>
+                                    <div class="value">{{ selectedCategory.name || '—' }}</div>
+
+                                    <div class="label"><mat-icon>description</mat-icon> Description</div>
+                                    <div class="value">{{ selectedCategory.description || '—' }}</div>
+
+                                    <div class="label"><mat-icon>domain</mat-icon> Institute</div>
+                                    <div class="value">{{ selectedCategory.institute.institute_name ||
+                                        selectedCategory.institute.name || '—' }}</div>
+                                    
+                                    <div class="label"><mat-icon>assessment</mat-icon> Evaluation</div>
+                                    <div class="value">{{ selectedCategory.evaluation || '—' }}</div>
+
+                                    <div class="label"><mat-icon>question_answer</mat-icon> Answer By</div>
+                                    <div class="value">{{ selectedCategory.answer_by || '—' }}</div>
+
+                                    <div class="label"><mat-icon>category</mat-icon> Type</div>
+                                    <div class="value">{{ selectedCategory.type || '—' }}</div>
+
+                                    <div class="label"><mat-icon>format_list_numbered</mat-icon> Mark / Q</div>
+                                    <div class="value">{{ selectedCategory.mark_each_question ?? '—' }}</div>
+
+                                    <div class="label"><mat-icon>toggle_on</mat-icon> Active</div>
+                                    <div class="value">{{ selectedCategory.active_status ? 'Yes' : 'No' }}</div>
+
+                                    <div class="label"><mat-icon>public</mat-icon> Public Access</div>
+                                    <div class="value">{{ selectedCategory.public_access ? 'Yes' : 'No' }}</div>
+
+                                </div>
+
+
+                            </mat-tab>
+
+                            <mat-tab label="Departments"
+                                *ngIf="selectedCategory.departments && keysLength(selectedCategory.departments) > 0">
+                                <div class="tab-panel">
+                                    <div class="chips">
+                                        <span class="chip"
+                                            *ngFor="let d of iterableList(selectedCategory.departments)">{{
+                                            d.name || d }}</span>
+                                    </div>
+                                </div>
+                            </mat-tab>
+
+                            <mat-tab label="Teams"
+                                *ngIf="selectedCategory.teams && keysLength(selectedCategory.teams) > 0">
+                                <div class="tab-panel">
+                                    <div class="chips">
+                                        <span class="chip" *ngFor="let t of iterableList(selectedCategory.teams)">{{
+                                            t.name
+                                            || t }}</span>
+                                    </div>
+                                </div>
+                            </mat-tab>
+
+                            <mat-tab label="Metadata">
+
+                                <div class="detail-grid">
+                                    <div class="label">Created by</div>
+                                    <div class="value">{{ selectedCategory.created_by?.user_name ||selectedCategory.created_by || '—' }}</div>
+                                    <div class="label">Created</div>
+                                    <div class="value">{{ selectedCategory.created_date || selectedCategory.created ||'—' }}</div>
+                                    <div class="label">Updated by</div>
+                                    <div class="value">{{ selectedCategory.updated_by?.user_name ||selectedCategory.updated_by || '—' }}</div>
+                                    <div class="label">Updated</div>
+                                    <div class="value">{{ selectedCategory.updated_date || selectedCategory.updated || '—' }}</div>
+                                </div>
+                            </mat-tab>
+                        </mat-tab-group>
+                    </div>
+                </ng-container>
+
+                <div class="modal-actions">
+                    <button mat-button (click)="closeModal()">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

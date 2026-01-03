@@ -1,0 +1,231 @@
+/* Card and sidebar shadow */
+.q-card, .nav-card {
+	box-shadow: 0 4px 24px rgba(30, 58, 138, 0.08);
+	border: 1.5px solid #e3e9fa;
+	background: #fff;
+}
+
+/* Progress bar polish */
+.progress-bar-outer {
+	background: #e3e9fa;
+	box-shadow: 0 2px 8px rgba(30,136,229,0.08);
+	border-radius: 999px;
+	height: 20px;
+}
+.progress-bar-inner {
+	border-radius: 999px;
+	box-shadow: 0 1px 8px rgba(67,198,172,0.10);
+}
+
+/* Info badges */
+.header .pill, .header .timer {
+	font-size: 1.05em;
+	font-weight: 700;
+	border-radius: 999px;
+	box-shadow: 0 2px 8px rgba(30,136,229,0.06);
+	padding: 8px 18px;
+}
+
+/* Nav buttons */
+.q-nav .nav-item {
+	transition: background 0.18s, color 0.18s, transform 0.12s;
+	font-size: 1.08em;
+}
+.q-nav .nav-item:hover {
+	background: #f0f7ff;
+	color: #1e88e5;
+	transform: scale(1.08);
+}
+.q-nav .nav-item.active {
+	font-size: 1.18em;
+	border-width: 2px;
+}
+
+/* Sticky header and progress bar shadow */
+.header, .progress-bar-outer {
+	box-shadow: 0 2px 12px rgba(30,58,138,0.06);
+}
+
+/* Responsive tweaks */
+@media (max-width: 720px) {
+	.header, .progress-bar-outer { border-radius: 0; }
+	.q-card, .nav-card { border-radius: 8px; }
+}
+.page{ padding:18px }
+.user-exam-runner .header{ display:flex; justify-content:space-between; align-items:center;border-radius:8px; gap:12px; position:sticky; top:0; background: var(--bg-1); padding:10px; z-index:4 ; border: 2px solid #86868d83;}
+.user-exam-runner .header .title{ font-size:1.25rem; font-weight:700 ; font-weight: bold;}
+.user-exam-runner .header .timer{ background:#fff7e6; padding:6px 12px; border-radius:10px; color:#865b00; font-weight:600 }
+.user-exam-runner .header .pill{ background:#e6f7ff; padding:6px 12px; border-radius:10px; color:#0b6ea6; font-weight:600 }
+
+
+/* Custom button styles for all buttons */
+.actions button {background: var(--button-1); color: var(--button-text-1);}
+.actions button:hover {background: var(--button-1-hover); color: var(--button-text-2);}
+
+.q-card{ background: var(--bg-1); padding:14px; border-radius:10px; box-shadow:0 8px 24px rgba(16,32,48,0.06); margin-top:14px; border:1px solid rgba(16,32,48,0.04) }
+.q-text{ margin-bottom:10px; font-weight:600; color:#0b3946 }
+.q-options{ display:flex; flex-direction:column; gap:8px }
+.opt{ display:flex; align-items:center; gap:10px; padding:10px; border-radius:8px; transition:background .12s, transform .08s; border:1px solid transparent }
+.opt input{ transform:scale(1.02); margin-right:6px }
+.opt:hover{ background:#f4fbff; transform:translateY(-1px); border-color:rgba(11,114,133,0.06) }
+.opt .opt-text{ color:#243740 }
+.q-input input[type="text"], .q-input textarea{ width:100%; min-height: 30px; border-radius:8px; border:1px solid #e6eef2; }
+// .actions{ margin-top:16px }
+.btn{ background:#0b7285; color:#fff; padding:10px 14px; border-radius:8px; border:none; cursor:pointer }
+
+/* layout: questions + side navigation */
+.user-exam-runner .questions { display:flex; gap:18px }
+.user-exam-runner .questions .q-list { flex:1 }
+.user-exam-runner .questions .q-nav { width:220px; position:relative ; padding: 12px 0; min-width: 20%;}
+.user-exam-runner .q-nav .nav-card { position:sticky; top:76px; padding:12px }
+
+/* Horizontal nav-row placed under the progress bar */
+.nav-row { margin: 10px 0; }
+.nav-card.horizontal { padding: 12px; display: block; }
+.nav-card.horizontal .nav-list { margin-top: 8px; }
+
+/* Horizontal nav grid */
+.nav-grid { display:flex; gap:8px; flex-wrap:wrap; align-items:center }
+.nav-grid .nav-item { min-width:36px; width:40px; height:40px; display:inline-flex; justify-content:center; align-items:center; padding:6px; border-radius:8px }
+
+/* Vertical nav inside aside keeps original stacked layout */
+.nav-grid-vertical { display:flex; flex-direction:column; gap:8px }
+.nav-grid-vertical .nav-item { width:100%; justify-content:flex-start }
+
+.q-nav .nav-item { display:flex; align-items:center; gap:8px; padding:8px; border-radius:6px; cursor:pointer }
+.q-nav .nav-item.active { background:linear-gradient(90deg, rgba(11,114,133,0.06), rgba(11,114,133,0.02)); font-weight:600 }
+
+/* progress */
+.exam-progress { display:flex; gap:8px; align-items:center; margin-bottom:8px }
+.exam-progress .pill { background:#e6f7ff; color:#0b6ea6; padding:6px 10px; border-radius:999px; font-weight:600 }
+
+/* multi choice and radio improvements */
+.multi-list mat-checkbox, .q-options mat-radio-button { display:block; margin-bottom:6px }
+
+/* sticky submit at bottom on small screens */
+@media (max-width:720px){
+	.user-exam-runner .questions{ flex-direction:column }
+	.user-exam-runner .q-nav{ display:none }
+	.actions{ position:sticky; bottom:0; left:0; right:0; background:linear-gradient(180deg, rgba(255,255,255,0.9), rgba(255,255,255,0.95)); padding:10px 0; display:flex; justify-content:center }
+  .nav-card.horizontal { padding: 10px; }
+  .nav-grid .nav-item { min-width:32px; width:36px; height:36px }
+}
+
+/* Sticky behavior: keep nav-row below progress bar */
+.nav-row { position: sticky; top: 86px; z-index: 12 }
+.nav-card.horizontal { display:flex; align-items:center; gap:12px; padding:8px 12px }
+.nav-card.horizontal .nav-list { display:flex; overflow-x:auto; -webkit-overflow-scrolling:touch; padding-bottom:4px }
+.nav-card.horizontal .nav-list::-webkit-scrollbar { height:8px }
+.nav-card.horizontal .nav-list::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.12); border-radius:4px }
+.nav-controls { display:flex; align-items:center }
+.nav-controls .btn-stroked { margin:0 6px; padding:6px 10px }
+
+/* Keep buttons accessible when scrolled: ensure focus outline visible */
+.nav-item:focus { outline: 3px solid rgba(30,136,229,0.14); outline-offset: 2px }
+
+/* pager styles inside nav-card */
+.q-nav .pager{ margin-top:12px; display:flex; gap:8px; justify-content:space-between; align-items:center }
+
+.nav-item.answered{
+	background: #e6faea;
+	color: #219150;
+	font-weight: 600;
+	border: 1.5px solid #b6e7c9;
+	box-shadow: 0 2px 8px rgba(33,145,80,0.06);
+}
+
+.nav-item.active {
+	background: #e3e9fa;
+	color: #1e3a8a;
+	border: 1.5px solid #b6c7e7;
+	font-weight: 700;
+	box-shadow: 0 2px 8px rgba(30,58,138,0.08);
+}
+
+/* Progress Bar */
+.progress-bar-outer {
+	width: 100%;
+	background: #f5f7fa;
+	border-radius: 8px;
+	height: 18px;
+	margin: 0 0 8px 0;
+	position: sticky;
+	top: 62px;
+	z-index: 10;
+	box-shadow: 0 2px 8px rgba(30,136,229,0.04);
+}
+.progress-bar-inner {
+	background: linear-gradient(90deg,#1e88e5,#43c6ac);
+	height: 100%;
+	border-radius: 8px;
+	transition: width 0.3s;
+}
+.progress-label {
+	position: absolute;
+	left: 50%;
+	top: 0;
+	transform: translateX(-50%);
+	font-size: 12px;
+	color: #4a555f;
+	line-height: 18px;
+}
+
+/* Timer warning */
+.timer.warning {
+	background: #fff3cd;
+	color: #b85c00;
+	border-radius: 8px;
+	font-weight: 700;
+}
+.timer-warning {
+	margin-left: 8px;
+	font-size: 1.1em;
+}
+
+/* Confirmation Dialog */
+.confirm-backdrop {
+	position: fixed;
+	top: 0; left: 0; right: 0; bottom: 0;
+	background: rgba(0,0,0,0.25);
+	z-index: 1000;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+.confirm-dialog {
+	min-width: 320px;
+	max-width: 90vw;
+	padding: 24px 18px;
+	border-radius: 12px;
+	text-align: center;
+}
+.confirm-title {
+	font-size: 1.15rem;
+	font-weight: 700;
+	margin-bottom: 8px;
+}
+.confirm-body {
+	color: #4a555f;
+	margin-bottom: 18px;
+}
+.confirm-actions {
+	display: flex;
+	gap: 16px;
+	justify-content: center;
+}
+.btn-stroked{ border:1px solid rgba(11,114,133,0.12); padding:6px 10px; border-radius:6px; background:transparent }
+
+@media (max-width:720px){
+	.user-exam-runner .header{ flex-direction:column; align-items:flex-start; gap:8px }
+	.q-card{ padding:12px }
+}
+
+/* Shared design helpers - harmonize look */
+.card{ background:linear-gradient(180deg,#ffffff,#fbfdff); border-radius:10px; box-shadow:0 8px 24px rgba(16,32,48,0.06); padding:14px }
+.muted{ color:#6b7887 }
+.btn-primary{ background:#0b7285; color:#fff; border-radius:8px; padding:8px 12px }
+.heading-lg{ font-size:1.15rem; font-weight:700 }
+
+/* small tweaks for inputs inside cards */
+.q-card .mat-form-field-infix { padding:6px 8px }
+.q-card .mat-form-field-label { font-size:13px }

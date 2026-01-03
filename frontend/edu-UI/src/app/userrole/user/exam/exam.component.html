@@ -1,0 +1,358 @@
+<div class="page user-exam">
+   <div class="toolbar">
+      <!-- <div class="title"> -->
+         <!-- <h2>Your Exams</h2>
+         <p class="muted">Exams available for your institute</p> -->
+         <div class="search">
+            <mat-form-field appearance="outline" class="search-field">
+               <mat-icon matPrefix aria-hidden="false" aria-label="Search icon">search</mat-icon>
+               <input matInput placeholder="Name, Institute, Department" [(ngModel)]="search"
+                  (ngModelChange)="applyFilter()" aria-label="Search institutes" />
+               <button mat-icon-button matSuffix *ngIf="search" (click)="search = ''; applyFilter()"
+                  aria-label="Clear search">
+                  <mat-icon>close</mat-icon>
+               </button>
+            </mat-form-field>
+         </div>
+      <!-- </div> -->
+      <div class="controls">
+         <button mat-flat-button (click)="loadExams()" class="refresh-btn custom-refresh-btn">
+            <mat-icon>refresh</mat-icon>
+            <span>Refresh</span>
+         </button>
+
+         <div class="action-row">
+            <!-- (click)="openFiltersOverlay(); $event.stopPropagation()" -->
+            <button #filtersBtn mat-flat-button type="button" class="filter-btn custom-filter-btn">
+               <mat-icon>filter_alt</mat-icon>
+               <span>Filters</span>
+            </button>
+         </div>
+      </div>
+   </div>
+
+   <!-- <div class="filters-panel card">
+      <div class="filter-row">
+
+         <mat-form-field appearance="outline" class="status-filter">
+            <mat-label>Status</mat-label>
+            <mat-select [(ngModel)]="filterPublished" (selectionChange)="applyFilter()">
+               <mat-option value="">All</mat-option>
+               <mat-option value="live">Live</mat-option>
+               <mat-option value="scheduled">Scheduled</mat-option>
+            </mat-select>
+         </mat-form-field>
+      </div>
+   </div> -->
+
+   <div class="list-card">
+      <div class="list-wrapper">
+         <mat-tab-group class="exam-tabs">
+            <mat-tab [label]="'Active (' + activeSource.data.length + ')'">
+               <div class="tab-table">
+                  <table mat-table [dataSource]="activeSource" class="mat-elevation-z1 compact premium-table" matSort>
+
+                     <ng-container matColumnDef="title">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header>Title</th>
+                        <td mat-cell *matCellDef="let row">{{ row.title }}</td>
+                     </ng-container>
+
+                     <ng-container matColumnDef="start">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header>Start</th>
+                        <td mat-cell *matCellDef="let row">{{ row.start_time || '—' }}</td>
+                     </ng-container>
+
+                     <ng-container matColumnDef="end">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header>End</th>
+                        <td mat-cell *matCellDef="let row">{{ row.end_time || '—' }}</td>
+                     </ng-container>
+
+                     <ng-container matColumnDef="duration">
+                        <th mat-header-cell *matHeaderCellDef>Duration</th>
+                        <td mat-cell *matCellDef="let row">{{ row.duration_mins || '—' }}</td>
+                     </ng-container>
+
+                     <ng-container matColumnDef="questions">
+                        <th mat-header-cell *matHeaderCellDef>No. Questions</th>
+                        <td mat-cell *matCellDef="let row">{{ row.total_questions || 0 }}</td>
+                     </ng-container>
+
+                     <ng-container matColumnDef="pass_mark">
+                        <th mat-header-cell *matHeaderCellDef>Pass Mark</th>
+                        <td mat-cell *matCellDef="let row">{{ row.pass_mark || 0 }}</td>
+                     </ng-container>
+
+                     <ng-container matColumnDef="number_of_attempts">
+                        <th mat-header-cell *matHeaderCellDef>No. Attempts</th>
+                        <td mat-cell *matCellDef="let row">{{ row.number_of_attempts || 0 }}</td>
+                     </ng-container>
+
+                     <ng-container matColumnDef="status">
+                        <th mat-header-cell *matHeaderCellDef>Status</th>
+                        <td mat-cell *matCellDef="let row">
+                           <div class="launch-badge">{{ row.type | titlecase }}</div>
+                        </td>
+                     </ng-container>
+
+                     <ng-container matColumnDef="actions">
+                        <th mat-header-cell *matHeaderCellDef>Actions</th>
+                        <td mat-cell *matCellDef="let row">
+                           <div class="exam-actions">
+                              <button *ngIf="(((row.type || '') | lowercase) === 'active')" mat-button color="primary"
+                                 (click)="launchExam(row)"><mat-icon>rocket_launch</mat-icon>
+                                 Launch</button>
+                           </div>
+                        </td>
+                     </ng-container>
+
+                     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                     <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+                  </table>
+                  <mat-paginator [pageSizeOptions]="[25,50,100]" showFirstLastButtons class="custom-paginator"></mat-paginator>
+               </div>
+            </mat-tab>
+
+            <mat-tab [label]="'Completed (' + completeSource.data.length + ')'">
+               <div class="tab-table">
+                  <table mat-table [dataSource]="completeSource" class="mat-elevation-z1 compact premium-table" matSort>
+                     <!-- columns same as above -->
+                     <ng-container matColumnDef="title">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header>Title</th>
+                        <td mat-cell *matCellDef="let row">{{ row.title }}</td>
+                     </ng-container>
+                     <ng-container matColumnDef="start">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header>Start</th>
+                        <td mat-cell *matCellDef="let row">{{ row.start_time || '—' }}</td>
+                     </ng-container>
+                     <ng-container matColumnDef="end">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header>End</th>
+                        <td mat-cell *matCellDef="let row">{{ row.end_time || '—' }}</td>
+                     </ng-container>
+                     <ng-container matColumnDef="duration">
+                        <th mat-header-cell *matHeaderCellDef>Duration</th>
+                        <td mat-cell *matCellDef="let row">{{ row.duration_mins || '—' }}</td>
+                     </ng-container>
+                     <ng-container matColumnDef="questions">
+                        <th mat-header-cell *matHeaderCellDef>No. Questions</th>
+                        <td mat-cell *matCellDef="let row">{{ row.total_questions || 0 }}</td>
+                     </ng-container>
+                     <ng-container matColumnDef="pass_mark">
+                        <th mat-header-cell *matHeaderCellDef>Pass Mark</th>
+                        <td mat-cell *matCellDef="let row">{{ row.pass_mark || 0 }}</td>
+                     </ng-container>
+                     <ng-container matColumnDef="number_of_attempts">
+                        <th mat-header-cell *matHeaderCellDef>No. Attempts</th>
+                        <td mat-cell *matCellDef="let row">{{ row.number_of_attempts || 0 }}</td>
+                     </ng-container>
+                     <ng-container matColumnDef="status">
+                        <th mat-header-cell *matHeaderCellDef>Status</th>
+                        <td mat-cell *matCellDef="let row">
+                           <div class="launch-badge">{{ row.type | titlecase }}</div>
+                        </td>
+                     </ng-container>
+                     <ng-container matColumnDef="actions">
+                        <th mat-header-cell *matHeaderCellDef>Actions</th>
+                        <td mat-cell *matCellDef="let row">
+                           <div class="exam-actions">
+                              <div *ngIf="row.user_review">
+                                 <button mat-button color="accent"
+                                    (click)="viewReview(row)"><mat-icon>rule</mat-icon> View Review</button>
+                              </div>
+                           </div>
+                        </td>
+                     </ng-container>
+                     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                     <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+                  </table>
+                  <mat-paginator [pageSizeOptions]="[25,50,100]" showFirstLastButtons class="custom-paginator"></mat-paginator>
+               </div>
+            </mat-tab>
+
+            <mat-tab [label]="'Upcoming (' + upcomingSource.data.length + ')'">
+               <div class="tab-table">
+                  <table mat-table [dataSource]="upcomingSource" class="mat-elevation-z1 compact premium-table" matSort>
+                     <!-- columns same as above -->
+                     <ng-container matColumnDef="title">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header>Title</th>
+                        <td mat-cell *matCellDef="let row">{{ row.title }}</td>
+                     </ng-container>
+                     <ng-container matColumnDef="start">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header>Start</th>
+                        <td mat-cell *matCellDef="let row">{{ row.start_time || '—' }}</td>
+                     </ng-container>
+                     <ng-container matColumnDef="end">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header>End</th>
+                        <td mat-cell *matCellDef="let row">{{ row.end_time || '—' }}</td>
+                     </ng-container>
+                     <ng-container matColumnDef="duration">
+                        <th mat-header-cell *matHeaderCellDef>Duration</th>
+                        <td mat-cell *matCellDef="let row">{{ row.duration_mins || '—' }}</td>
+                     </ng-container>
+                     <ng-container matColumnDef="questions">
+                        <th mat-header-cell *matHeaderCellDef>No. Questions</th>
+                        <td mat-cell *matCellDef="let row">{{ row.total_questions || 0 }}</td>
+                     </ng-container>
+                     <ng-container matColumnDef="pass_mark">
+                        <th mat-header-cell *matHeaderCellDef>Pass Mark</th>
+                        <td mat-cell *matCellDef="let row">{{ row.pass_mark || 0 }}</td>
+                     </ng-container>
+                     <ng-container matColumnDef="number_of_attempts">
+                        <th mat-header-cell *matHeaderCellDef>No. Attempts</th>
+                        <td mat-cell *matCellDef="let row">{{ row.number_of_attempts || 0 }}</td>
+                     </ng-container>
+                     <ng-container matColumnDef="status">
+                        <th mat-header-cell *matHeaderCellDef>Status</th>
+                        <td mat-cell *matCellDef="let row">
+                           <div class="launch-badge">{{ row.type | titlecase }}</div>
+                        </td>
+                     </ng-container>
+                     <ng-container matColumnDef="actions">
+                        <th mat-header-cell *matHeaderCellDef>Actions</th>
+                        <td mat-cell *matCellDef="let row">
+                           <div class="exam-actions">
+                              <button *ngIf="(((row.type || '') | lowercase) === 'active')" mat-button color="primary"
+                                 (click)="launchExam(row)">Launch</button>
+                           </div>
+                        </td>
+                     </ng-container>
+                     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                     <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+                  </table>
+                  <mat-paginator [pageSizeOptions]="[25,50,100]" showFirstLastButtons class="custom-paginator"></mat-paginator>
+               </div>
+            </mat-tab>
+         </mat-tab-group>
+
+         <div *ngIf="loading" class="muted">Loading exams...</div>
+         <div *ngIf="!loading && (!exams || exams.length === 0)" class="muted">No exams available.</div>
+      </div>
+      <!-- mobile card list (shown only <960px via CSS) -->
+      <div class="exam-cards">
+         <div *ngFor="let exam of exams" class="exam-card">
+            <div class="meta">
+               <div>
+                  <div class="title">{{exam.title}}</div>
+                  <div class="muted small">{{ exam.start_time || '—' }} • {{ exam.end_time || '—' }}</div>
+               </div>
+               <div class="pill">{{ exam.total_questions || 0 }} Q</div>
+            </div>
+            <div class="body muted">
+               <div>Duration: {{ exam.duration_mins || '—' }} mins</div>
+               <!-- <div>Pass mark: {{ exam.pass_mark || 0 }}</div> -->
+            </div>
+            <div class="actions">
+               <button *ngIf="(((exam.type || '') | lowercase) === 'active')" mat-button color="primary"
+                  (click)="launchExam(exam)">Launch</button>
+            </div>
+         </div>
+      </div>
+
+   </div>
+   <!-- Review modal -->
+   <div class="review-backdrop" *ngIf="reviewOpen">
+      <div class="review-panel">
+         <div class="review-header">
+            <h3>Exam Review</h3>
+            <button mat-icon-button (click)="closeReview()"><mat-icon>close</mat-icon></button>
+         </div>
+
+         <div *ngIf="reviewLoading" class="muted">Loading review...</div>
+
+         <mat-tab-group *ngIf="!reviewLoading && reviewAttempts.length" [(selectedIndex)]="reviewSelectedAttempt">
+            <mat-tab *ngFor="let a of reviewAttempts; let i = index" [label]="'Attempt ' + a.attempt_number">
+               <div class="review-list">
+                  <div class="attempt-meta">
+                     <div class="meta-row primary-row">
+                        <div class="meta-item score-item">
+                           <strong>Score</strong>
+                           <span class="value">{{ a.score || 0 }}</span>
+                        </div>
+                        <!-- percentage -->
+                        <div class="meta-item passmark-item" *ngIf="a.percentage">
+                           <strong>Percentage</strong>
+                           <span class="value">{{ a.percentage || 0 }} %</span>
+                        </div>
+                        <div class="meta-item status-item">
+                           <strong>Status</strong>
+                           <span class="value status-badge" [ngClass]="{'status-pass': a.status === 'evaluated', 'status-fail': a.status === 'failed'}">{{ a.status || 'N/A' | titlecase }}</span>
+                        </div>
+                        <div class="meta-item result-item" *ngIf="a.result">
+                           <strong>Result</strong>
+                           <span class="value result-badge" [ngClass]="{'result-pass': (a.result | lowercase) === 'passed', 'result-fail': (a.result | lowercase) === 'failed'}">{{ a.result | titlecase }}</span>
+                        </div>
+                     <!-- </div>
+                     <div class="meta-row secondary-row"> -->
+                        <div class="meta-item" *ngIf="a.time_taken">
+                           <strong>Time Taken</strong>
+                           <span class="value">{{ a.time_taken.split('.')[0] }}</span>
+                        </div>
+                        <div class="meta-item" *ngIf="a.started_date">
+                           <strong>Started</strong>
+                           <span class="value">{{ a.started_date | date:'EEE, dd MMM yyyy HH:mm' }}</span>
+                        </div>
+                        <div class="meta-item" *ngIf="a.submitted_date">
+                           <strong>Submitted</strong>
+                           <span class="value">{{ a.submitted_date | date:'EEE, dd MMM yyyy HH:mm' }}</span>
+                        </div>
+                     </div>
+                  </div>
+                  <table class="review-table">
+                     <thead>
+                        <tr>
+                           <th style="width:40px">#</th>
+                           <th>Question &amp; Options</th>
+                           <th style="width:110px">Mark</th>
+                           <th style="width:120px">Status</th>
+                        </tr>
+                     </thead>
+                     <tbody>
+                        <tr *ngFor="let it of a.items; let idx = index" class="review-row" [ngClass]="getRowClass(it)">
+                           <td class="index-cell">{{ idx + 1 }}</td>
+                           <td class="question-cell">
+                              <div class="q-text">{{ it.question_text || it.question }}</div>
+
+                              <!-- Options list for choose-type questions -->
+                              <div class="not-answered" *ngIf="it.question_type !== 'fill' && normalizeSelectedOptions(it).length === 0">Not answered</div>
+                              <ul class="options-list" *ngIf="it.question_type !== 'fill' && it.options && it.options.length">
+                                 <li *ngFor="let opt of it.options" [ngClass]="optionStatus(it,opt)">
+                                    <span class="opt-text">{{ opt.option_text || '-' }}</span>
+                                    <span class="opt-indicator" *ngIf="isOptionSelected(it,opt)">
+                                       <mat-icon aria-hidden="true">check_circle</mat-icon>
+                                    </span>
+                                    <!-- show correct indicator when user did not select it (so user can see correct answer when they chose wrong) -->
+                                    <span class="correct-indicator" *ngIf="isOptionCorrect(opt) && !isOptionSelected(it,opt)">
+                                       <mat-icon aria-hidden="true">done</mat-icon>
+                                    </span>
+                                 </li>
+                              </ul>
+
+                              <!-- Fill type: show user's answer and correct answer -->
+                              <div class="fill-answer" *ngIf="it.question_type === 'fill'">
+                                 <div class="fill-row">
+                                    <div class="fill-label">Your answer:</div>
+                                    <div class="fill-value" [ngClass]="{ 'fill-correct': it.is_correct, 'fill-incorrect': !it.is_correct }">{{ (it.selected_option || []).join(', ') || '-' }}</div>
+                                 </div>
+                                 <div class="fill-row">
+                                    <div class="fill-label">Expected:</div>
+                                    <div class="fill-value expected">{{ it.correct_option || '-' }}</div>
+                                 </div>
+                                 <div class="feedback" *ngIf="it.feedback">{{ it.feedback }}</div>
+                              </div>
+                           </td>
+                           <td class="marks-cell">
+                              <div class="marks">{{ it.marks_awarded || 0 }}</div>
+                           </td>
+                           <td class="status-cell">
+                              <div class="status-badge" [ngClass]="{ 'status-pass': it.is_correct, 'status-fail': !it.is_correct }">{{ it.is_correct ? 'Correct' : 'Incorrect' }}</div>
+                           </td>
+                        </tr>
+                     </tbody>
+                  </table>
+               </div>
+            </mat-tab>
+         </mat-tab-group>
+
+         <div *ngIf="!reviewLoading && !reviewAttempts.length" class="muted">No review data available.</div>
+      </div>
+   </div>
+</div>

@@ -1,0 +1,79 @@
+<div class="page dashboard">
+   <header class="dash-header">
+      <div>
+         <!-- <h2>Super Admin Dashboard</h2>
+      <p class="muted">Overview & reports for the platform</p> -->
+      <!-- Refresh button and call API -->
+         <button class="btn-refresh" mat-icon-button (click)="loadDashboard()" aria-label="Refresh dashboard data">
+            <mat-icon>refresh</mat-icon>
+         </button>
+      </div>
+      <div class="summary">
+         <div class="kpi">
+            <div class="kpi-val">{{summary.totalInstitutes}}</div>
+            <div class="kpi-label">Institutes</div>
+         </div>
+         <div class="kpi">
+            <div class="kpi-val">{{summary.totalUsers}}</div>
+            <div class="kpi-label">Total users</div>
+         </div>
+         <!-- active tests -->
+          <div class="kpi">
+            <div class="kpi-val">{{summary.activeTests}}</div>
+            <div class="kpi-label">Active tests</div>
+         </div>
+         <div class="kpi">
+            <div class="kpi-val">{{summary.upcomingTests}}</div>
+            <div class="kpi-label">Upcoming tests</div>
+         </div>
+         <div class="kpi">
+            <div class="kpi-val">{{summary.completedTests}}</div>
+            <div class="kpi-label">Completed tests</div>
+         </div>
+      </div>
+   </header>
+
+   <section class="charts-grid">
+      <!-- Chart placeholders. Replace with Chart.js / ngx-charts components if desired -->
+      <ng-container *ngFor="let c of charts">
+         <div class="chart-card">
+            <h4>{{ c.title || (c.type | titlecase) }}</h4>
+            <div class="chart-placeholder" [ngClass]="c.type + '-chart'">
+               <app-dynamic-chart [type]="c.type" [data]="c.data"></app-dynamic-chart>
+            </div>
+         </div>
+      </ng-container>
+   </section>
+
+   <section class="lists">
+      <div class="table-card">
+         <h4>Institute stats</h4>
+         <table class="stats-table">
+            <thead>
+               <tr>
+                  <th>Institute</th>
+                  <th>Users</th>
+                  <th>Scheduled Tests</th>
+               </tr>
+            </thead>
+            <tbody>
+               <tr *ngFor="let i of instituteStats">
+                  <td>{{i.name}}</td>
+                  <td>{{i.users}}</td>
+                  <td>{{i.scheduledTests}}</td>
+               </tr>
+            </tbody>
+         </table>
+      </div>
+
+      <div class="report-card">
+         <h4>Reports</h4>
+         <ul>
+            <li>Export user list (CSV)</li>
+            <li>Test schedule report</li>
+            <li>Results summary by institute</li>
+            <li>Attempt logs</li>
+         </ul>
+      </div>
+   </section>
+</div>

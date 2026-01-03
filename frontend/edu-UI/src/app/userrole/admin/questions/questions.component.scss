@@ -1,0 +1,241 @@
+// Verified css
+.page{padding: 8px; color: var(--text-1);}
+
+
+.question-card{background: var(--bg-1) ;padding:8px; border-radius: 8px;box-shadow:0 12px 30px rgba(16,32,48,0.06)}
+.form-row{display:flex;flex-direction:column;margin-top:12px}
+
+.options-list{display:flex;flex-direction:column;gap:10px}
+.option-row{display:flex;gap:8px;align-items:center}
+.option-input{flex:1}
+.btn{padding:8px 12px;border-radius:10px;border:0;background:#f5f7fb;cursor:pointer;font-weight:700}
+.btn.small{padding:6px 10px;font-size:13px}
+.btn-primary{background:linear-gradient(90deg,#0b7285,#1f7bff);color:#fff;box-shadow:0 10px 28px rgba(13,60,80,0.08)}
+.btn-primary .btn-ic{margin-right:8px}
+.btn-secondary{background:#fff;border:1px solid #e6eef8;color:#0b394d}
+.actions{display:flex;justify-content:flex-end;gap:12px;margin-top:16px}
+
+
+
+@media(max-width:720px){.question-card{padding:16px}}
+
+
+// /* Two column row for better alignment */
+.row.two-cols{ display:flex; gap:16px; align-items:flex-start }
+.form-col{ flex:1; display:flex; flex-direction:column }
+.template-down {
+  display: flex;
+  justify-content: flex-end;
+  flex: 1;
+}
+
+// /* Questions list block styling */
+// .questions-list{ margin-top:12px; }
+// .question-block{ padding:12px; border-radius:10px;background-color: var(--bg-2); border:1px solid var(--border-2); margin-bottom:12px }
+// .block-header{ display:flex; justify-content:space-between; align-items:center; margin-bottom:8px }
+// .block-header h3{ margin:0; font-size:1rem }
+
+// /* Options layout */
+// .options-list{ margin-top:8px }
+// .option-row{ display:flex; gap:8px; align-items:center }
+// .option-input{ flex:1 }
+
+// /* Improved styling for question-card and inner blocks */
+// .question-card{ padding:20px; }
+// .question-card .toolbar{ margin-bottom:10px }
+// .question-block{ padding:16px; border-radius:12px; display:block }
+// .block-header{ padding-bottom:6px; border-bottom:1px solid rgba(15,45,65,0.03); margin-bottom:12px }
+// .block-header h3{ font-size:1rem; margin:0 }
+// .block-actions button{ margin-left:8px }
+
+// /* Make mat-form-field inside the card fill available width */
+// .question-block mat-form-field.full{ width:100% }
+// .question-block .option-field{ width:100%; }
+// .option-row .mat-form-field{ flex:1; }
+
+// /* layout: keep two-cols responsive */
+// @media(max-width:800px){
+// 	.row.two-cols{ flex-direction:column }
+// 	.file-col, .placeholder-col{ min-width:auto }
+// }
+
+// /* align option controls and shorten option input left spacing when showing radio/checkbox */
+// .option-row mat-radio-button, .option-row mat-checkbox{ flex:0 0 auto; margin-right:6px }
+// .option-row .option-field{ margin-right:6px }
+
+/* action buttons spacing */
+.action-row{ display:flex; align-items:center; gap:12px; padding: 8px; }
+.action-row.batch-actions{ display:flex; gap:12px; justify-content:flex-end; margin-top:12px }
+.action-row.batch-actions button{ min-width:120px }
+.action-row button {background: var(--button-1); color: var(--button-text-1);}
+.action-row button:hover {background: var(--button-1-hover); color: var(--button-text-2);}
+
+
+.actions {
+  display: flex;justify-content: space-between; align-items: center;  flex-wrap: wrap;  gap: 1rem; padding: 0.5rem 0;
+  .actions-row,
+  .action-row {display: flex;align-items: center;gap: 0.75rem;}
+  .action-row {order: 2;  margin-left: auto; }
+  .actions-row {    order: 1;  }}
+
+.admin-questions .actions-row button {background: var(--button-1); color: var(--button-text-1);}
+.admin-questions .actions-row button:hover {background: var(--button-1-hover); color: var(--button-text-2);}
+
+/* Style native selects inside mat-form-field so selected value looks like other inputs */
+/* Style native selects inside mat-form-field so selected value looks like other inputs */
+.question-card select.mat-native-control,
+.question-card select[matNativeControl],
+.question-card .mat-form-field-infix select.mat-native-control,
+.question-card .mat-form-field-infix select[matNativeControl] {
+	padding: 12px 14px !important;
+	font-size: 14px !important;
+	line-height: 1.4 !important;
+	border-radius: 10px;
+	background: transparent;
+	color: inherit;
+	width: 100%;
+	box-sizing: border-box;
+	-webkit-appearance: none;
+	appearance: none;
+}
+
+/* place a right-side arrow using background image for consistency */
+.question-card .mat-form-field-infix select.mat-native-control,
+.question-card .mat-form-field-infix select[matNativeControl] {
+	background-image: linear-gradient(45deg, transparent 50%, #0b7285 50%), linear-gradient(135deg, #0b7285 50%, transparent 50%);
+	background-position: calc(100% - 18px) calc(1em + 2px), calc(100% - 13px) calc(1em + 2px);
+	background-size: 6px 6px, 6px 6px;
+	background-repeat: no-repeat;
+	padding-right: 36px !important; /* leave room for faux caret */
+}
+
+/* Option elements have limited styling, but set font where supported */
+.question-card select.mat-native-control option,
+.question-card select[matNativeControl] option{ font-size:14px }
+
+/* Style the visible selected value inside mat-select so it matches matInput look */
+.question-card .mat-select-trigger, .question-card .mat-select-value-text {
+	font-size: 14px;
+	line-height: 1.4;
+	color: inherit;
+}
+
+/* Style overlayed mat-option elements (overlay is outside component DOM). Use ::ng-deep or move to global styles.scss */
+::ng-deep .cdk-overlay-container .mat-select-panel .mat-option {
+	font-size: 14px;
+	padding-top: 8px;
+	padding-bottom: 8px;
+}
+
+::ng-deep .cdk-overlay-container .mat-select-panel .mat-option.mat-active,
+::ng-deep .cdk-overlay-container .mat-select-panel .mat-option.mat-selected {
+	background: rgba(31,123,255,0.06);
+}
+
+/* Ensure icons inside mat-select appear correctly aligned */
+.question-card .mat-select-arrow {
+	right: 10px;
+}
+
+/* Compact sizing tweaks for denser layout */
+.question-card .mat-form-field.compact,
+.question-card mat-form-field.compact {
+	min-width: 160px;
+	width: auto;
+}
+
+.question-card .mat-form-field .mat-form-field-infix,
+.question-card .mat-form-field.compact .mat-form-field-infix {
+	padding: 6px 8px;
+}
+
+.question-card .mat-form-field .mat-form-field-wrapper {
+	padding-bottom: 2px;
+}
+
+.question-card .mat-form-field .mat-form-field-label {
+	font-size: 12px;
+}
+
+.question-card input.mat-input-element, .question-card textarea.mat-input-element {
+	font-size: 13px;
+	padding: 6px 8px;
+}
+.question-card .entrycheck {display: flex;}
+
+.question-card .entry-checkbox { display: flex; align-items: center; gap: 8px; font-size: 14px; }
+.question-card .entry-checkbox .checkbox-icon { font-size: 18px; vertical-align: middle; }
+
+/* Compact buttons */
+.question-card .btn, .question-card button.mat-stroked-button, .question-card button.mat-flat-button {
+	padding: 6px 8px;
+	min-width: 36px;
+	height: 32px;
+	font-size: 13px;
+}
+
+/* Reduce icon button size */
+.question-card button.mat-icon-button { width: 34px; height: 34px; }
+
+/* Smaller option fields */
+.question-card .option-field .mat-form-field-infix { padding: 6px 8px; }
+.question-card .option-input { font-size: 13px; }
+
+/* Button sizing fixes for Mat buttons in compact layout */
+button[mat-flat-button], button[mat-stroked-button], button[mat-icon-button]{ min-height:36px; padding:6px 12px; display:inline-flex; align-items:center; gap:8px }
+
+.mode-select{ margin-top:12px }
+.mode-select .align-end{ display:flex; align-items:flex-end; justify-content:flex-end }
+.bulk-block input[type="file"]{ display:block; margin-top:6px }
+.bulk-block .upload-actions{ margin-top:8px; display:flex; gap:8px; justify-content:flex-end }
+
+.file-col{ display:flex; flex-direction:column; min-width:220px }
+.file-drop{ border:1px solid var(--border-2); padding:12px; border-radius:8px; display:flex; gap:6px; align-items:center; background-color: var(--bg-2);  width:100%; box-sizing:border-box }
+.file-drop .file-info{ width:100% }
+.file-drop .muted{ font-size:0.9rem }
+.file-col{ cursor:pointer }
+/* hide the native input but keep it accessible to assistive tech */
+.hidden-file{ position:absolute; left:-9999px; width:1px; height:1px; overflow:hidden }
+.file-col.drag-active .file-drop{ border-color:#1f7bff; background:rgba(31,123,255,0.04) }
+
+/* --- Cleaned Question Card / Accordion Styles (recommended) --- */
+.questions-accordion { margin-top: 12px; }
+
+.question-panel { 
+	border-radius: 12px; 
+	background: var(--bg-1); 
+	border: 1px solid rgba(16,32,48,0.06);
+	box-shadow: 0 6px 16px rgba(16,32,48,0.04);
+	margin-bottom: 12px; 
+	overflow: hidden;
+}
+
+.mat-expansion-panel-header { padding: 12px 16px !important; background: transparent; }
+.mat-expansion-panel-header .mat-content { display:flex; align-items:center; gap:12px; width:100%; }
+.mat-expansion-indicator { margin-left: 8px; }
+
+.summary-type { font-weight:700; text-transform:capitalize; color:var(--text-1); }
+.summary-marks { color: rgba(0,0,0,0.55); margin-left:8px; }
+.summary-preview { color: rgba(0,0,0,0.45); font-style: italic; margin-left:12px; white-space:nowrap; text-overflow:ellipsis; overflow:hidden; max-width:45ch; }
+
+.panel-actions { margin-left:auto; display:flex; gap:8px; align-items:center }
+.panel-actions button.mat-icon-button { background: transparent; }
+
+.panel-body{ padding: 14px 16px 18px 16px; border-top: 1px dashed rgba(16,32,48,0.03); }
+
+// .form-row { margin-top: 12px; }
+.form-col { flex: 1 1 0; }
+
+/* Options list modern layout */
+.options-list { display:flex; flex-direction:column; gap:10px; margin-top:8px; }
+.option-row { display:flex; gap:8px; align-items:center; }
+.option-field { flex: 1 1 auto; }
+.option-input { width:100%; }
+.option-radio, .option-checkbox { flex: 0 0 auto; }
+
+.btn.small { padding:6px 10px; font-size:13px; }
+
+@media (max-width: 800px) {
+	.row.two-cols { flex-direction: column; }
+	.summary-preview { display:none; }
+}

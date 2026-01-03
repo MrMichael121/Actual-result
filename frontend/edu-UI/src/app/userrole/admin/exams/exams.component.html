@@ -1,0 +1,313 @@
+<div class="page admin-exams">
+    <div class="toolbar">
+
+        <!-- <div class="title"> -->
+            <!-- <h2>Exams</h2>
+            <p class="muted">View exams by institute</p> -->
+            <div class="search">
+                <mat-form-field appearance="outline" class="search-field">
+                    <mat-icon matPrefix aria-hidden="false" aria-label="Search icon">search</mat-icon>
+                    <input matInput placeholder="Search by text or type" [(ngModel)]="filter"
+                        (ngModelChange)="applyFilter($event)" aria-label="Search exam" />
+                    <button mat-icon-button matSuffix *ngIf="filter" (click)="filter = ''; applyFilter('')"
+                        aria-label="Clear search">
+                        <mat-icon>close</mat-icon>
+                    </button>
+                </mat-form-field>
+            </div>
+        <!-- </div> -->
+
+        <div class="controls">
+            <div class="action-row">
+                <button #filtersBtn mat-flat-button type="button"
+                    (click)="openFiltersOverlay(); $event.stopPropagation()" class="filter-btn custom-filter-btn">
+                    <mat-icon>filter_alt</mat-icon>
+                    <span>Filters</span>
+                </button>
+                <button mat-flat-button color="primary" (click)="refresh()" class="refresh-btn">
+                    <mat-icon>refresh</mat-icon>
+                    <span>Refresh</span>
+                </button>
+                <button *hasAccess="'Exams'; hasAccessAction: 'add'" mat-flat-button color="primary" (click)="clearEditAndCreate()">
+                    <mat-icon>add</mat-icon> Add Exam
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+    <div class="exams-card">
+        <ng-template #filtersPanel>
+            <div class="filters-panel card" (click)="$event.stopPropagation()">
+                <div class="filter-block">
+                    <mat-form-field appearance="outline" class="filter-item">
+                        <mat-label>Institute</mat-label>
+                        <mat-select [(ngModel)]="selectedInstitute" [disabled]="!isSuperAdmin"
+                            (selectionChange)="onInstituteChange($event.value)">
+                            <mat-option value="">All Institutes</mat-option>
+                            <mat-option *ngFor="let inst of institutes"
+                                [value]="inst.institute_id">{{inst.short_name}}</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+
+                    <mat-form-field appearance="outline" class="filter-item">
+                        <mat-label>Exam Name</mat-label>
+                        <input matInput placeholder="Exam name" [(ngModel)]="filterName" />
+                    </mat-form-field>
+
+                    <!-- <mat-form-field appearance="outline" class="filter-item">
+                        <mat-label>Departments</mat-label>
+                        <mat-select multiple [(ngModel)]="selectedDepartments" placeholder="Select departments">
+                            <mat-option *ngFor="let d of departments" [value]="d.id">{{d.name}}</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+
+                    <mat-form-field appearance="outline" class="filter-item">
+                        <mat-label>Teams</mat-label>
+                        <mat-select multiple [(ngModel)]="selectedTeams" placeholder="Select teams">
+                            <mat-option *ngFor="let t of teams" [value]="t.id">{{t.name}}</mat-option>
+                        </mat-select>
+                    </mat-form-field> -->
+
+                    <!-- Creation Date after -->
+                    <mat-form-field appearance="outline" class="filter-item">
+                        <mat-label>Created After</mat-label>
+                        <input matInput [matDatepicker]="pickerAfter" placeholder="Select start date"
+                            [(ngModel)]="filterCreationDateAfter">
+                        <mat-datepicker-toggle matSuffix [for]="pickerAfter"></mat-datepicker-toggle>
+                        <mat-datepicker #pickerAfter></mat-datepicker>
+                    </mat-form-field>
+
+                    <!-- add creation date before filter -->
+                    <mat-form-field appearance="outline" class="filter-item">
+                        <mat-label>Created Before</mat-label>
+                        <input matInput [matDatepicker]="picker" placeholder="Select end date"
+                            [(ngModel)]="filterCreationDate">
+                        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                        <mat-datepicker #picker></mat-datepicker>
+                    </mat-form-field>
+
+                    <!-- Active status filter -->
+                    <mat-form-field appearance="outline" class="filter-item">
+                        <mat-label>Active Status</mat-label>
+                        <mat-select [(ngModel)]="filterActiveStatus" placeholder="Select status">
+                            <mat-option [value]="null">All</mat-option>
+                            <mat-option [value]="true">Active</mat-option>
+                            <mat-option [value]="false">Inactive</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+
+                    <!-- Created By Me (checkbox) -->
+                    <div class="filter-item checkbox-item">
+                        <mat-checkbox [(ngModel)]="filterCreatedByMe">Created by me</mat-checkbox>
+                    </div>
+                    <div class="filter-actions">
+                        <button mat-flat-button color="primary" type="button"
+                            (click)="onApply()"><mat-icon>check</mat-icon>
+                            Apply</button>
+                        <button mat-flat-button color="primary" type="button"
+                            (click)="onReset()"><mat-icon>refresh</mat-icon>
+                            Reset</button>
+                    </div>
+                </div>
+            </div>
+        </ng-template>
+
+        <div class="list-wrapper">
+            <!-- <div *ngIf="!exams || exams.length === 0" class="empty muted">No exams found for selected institute</div> -->
+            <!-- <div *ngIf="exams && exams.length > 0"> -->
+                <table mat-table [dataSource]="dataSource" class="mat-elevation-z1 compact premium-table" matSort>
+
+                    <ng-container matColumnDef="title">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header>Title</th>
+                        <td mat-cell *matCellDef="let e">{{ e.title }}</td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="description">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header>Description</th>
+                        <td mat-cell *matCellDef="let e">{{ e.description }}</td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="total_questions">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header>Questions</th>
+                        <td mat-cell *matCellDef="let e">{{ e.total_questions }}</td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="duration_mins">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header>Duration (mins)</th>
+                        <td mat-cell *matCellDef="let e">{{ e.duration_mins }}</td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="number_of_attempts">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header>Attempts</th>
+                        <td mat-cell *matCellDef="let e">{{ e.number_of_attempts }}</td>
+                    </ng-container>
+
+                    <!-- <ng-container matColumnDef="start_time">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Start</th>
+            <td mat-cell *matCellDef="let e">{{ e.start_time }}</td>
+          </ng-container>
+
+          <ng-container matColumnDef="end_time">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>End</th>
+            <td mat-cell *matCellDef="let e">{{ e.end_time }}</td>
+          </ng-container> -->
+
+                    <ng-container matColumnDef="actions">
+                        <th mat-header-cell *matHeaderCellDef>Actions</th>
+
+                        <td mat-cell *matCellDef="let e">
+                                <div class="actions-inline">
+                                <button *hasAccess="'Exams'; hasAccessAction: 'view'" mat-icon-button color="primary" (click)="onView(e)"><mat-icon>visibility</mat-icon></button>
+                                <button *hasAccess="'Exams'; hasAccessAction: 'edit'" mat-icon-button color="accent" (click)="onEdit(e)"><mat-icon>edit</mat-icon></button>
+                                <button *hasAccess="'Exams'; hasAccessAction: 'delete'" mat-icon-button color="warn" (click)="deleteSchedule(e)" title="Delete"><mat-icon>delete</mat-icon></button>
+                            </div>
+                        </td>
+
+                    </ng-container>
+
+                    <thead>
+                        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                    </thead>
+                    <tbody>
+                        <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+                    </tbody>
+                </table>
+                <mat-paginator [pageSizeOptions]="[25,50,100]" showFirstLastButtons
+                    class="custom-paginator"></mat-paginator>
+        </div>
+    </div>
+    <!-- Modal for viewing exam details -->
+    <div *ngIf="showModal" class="modal-overlay">
+        <div class="modal">
+            <div class="modal-header">
+                <h3>Exam Details</h3>
+                <button mat-icon-button (click)="closeModal()" aria-label="Close"><mat-icon>close</mat-icon></button>
+            </div>
+            <div class="modal-body">
+                <ng-container *ngIf="selectedExam; else noData">
+                    <mat-tab-group class="exam-tabs" mat-stretch-tabs>
+                        <mat-tab label="Overview & Settings">
+                            <div class="tab-panel">
+                                <div class="detail-grid">
+                                    <div class="label">Exam Name</div>
+                                    <div class="value">{{ selectedExam.title || selectedExam.name || '—' }}</div>
+
+                                    <div class="label">Description</div>
+                                    <div class="value">{{ selectedExam.description || selectedExam.desc || 'No description' }}</div>
+
+                                    <div class="label">Institute</div>
+                                    <div class="value">{{ selectedExam.display_institute || '—' }}</div>
+                                <!-- </div>
+                            </div>
+                        </mat-tab>
+
+                        <mat-tab label="Settings">
+                            <div class="tab-panel">
+                                <div class="detail-grid"> -->
+                                    <div class="label">Duration (mins)</div>
+                                    <div class="value">{{ selectedExam.duration_mins || selectedExam.duration || '—' }}</div>
+
+                                    <div class="label">Total questions</div>
+                                    <div class="value">{{ selectedExam.total_questions || selectedExam.questions_count || '—' }}</div>
+
+                                    <div class="label">Pass mark</div>
+                                    <div class="value">{{ selectedExam.pass_mark ?? selectedExam.passMark ?? '—' }}</div>
+
+                                    <!-- <div class="label">Attempts</div>
+                                    <div class="value">{{ selectedExam.number_of_attempts ?? selectedExam.attempts ?? '—' }}</div> -->
+
+                                    <div class="label">Public access</div>
+                                    <div class="value">{{ selectedExam.public_access ? 'Yes' : 'No' }}</div>
+
+                                    <!-- <div class="label">Published</div>
+                                    <div class="value">{{ selectedExam.published ? 'Yes' : 'No' }}</div> -->
+                                </div>
+                            </div>
+                        </mat-tab>
+
+                        <mat-tab label="Categories">
+                            <div class="tab-panel">
+                                <div *ngIf="selectedExam.categories?.length; else noCats">
+                                    <table mat-table [dataSource]="selectedExam.categories" class="mat-elevation-z1 compact premium-table">
+                                        <ng-container matColumnDef="category">
+                                            <th mat-header-cell *matHeaderCellDef>Category</th>
+                                            <td mat-cell *matCellDef="let c">{{ c.category?.category_name || c.category_name }}</td>
+                                        </ng-container>
+                                        <ng-container matColumnDef="description">
+                                            <th mat-header-cell *matHeaderCellDef>Description</th>
+                                            <td mat-cell *matCellDef="let c">{{ c.category?.description || c.description || '-' }}</td>
+                                        </ng-container>
+                                        <ng-container matColumnDef="questions">
+                                            <th mat-header-cell *matHeaderCellDef>Questions</th>
+                                            <td mat-cell *matCellDef="let c">{{ c.number_of_questions ?? (c.questions?.length || 0) }}</td>
+                                        </ng-container>
+                                        <ng-container matColumnDef="randomize">
+                                            <th mat-header-cell *matHeaderCellDef>Randomize</th>
+                                            <td mat-cell *matCellDef="let c">{{ c.randomize_questions ? 'Yes' : 'No' }}</td>
+                                        </ng-container>
+                                        <!-- Actions Column -->
+                                        <ng-container matColumnDef="actions">
+                                            <th mat-header-cell *matHeaderCellDef>View Questions</th>
+                                            <td mat-cell *matCellDef="let c; let i = index">
+                                                <button mat-icon-button color="primary" *ngIf="(c.questions?.length || 0) > 0" (click)="toggleCategoryQuestions(i)">
+                                                    <mat-icon>{{ selectedExam._expanded && selectedExam._expanded[i] ? 'expand_less' : 'expand_more' }}</mat-icon>
+                                                </button>
+                                                <button mat-icon-button color="accent" *ngIf="!(c.questions?.length || 0)" disabled>
+                                                    <mat-icon>block</mat-icon>
+                                                </button>
+                                            </td>
+                                        </ng-container>
+                                        <tr mat-header-row *matHeaderRowDef="['category','description','questions','randomize','actions']"></tr>
+                                        <tr mat-row *matRowDef="let row; columns: ['category','description','questions','randomize','actions'];"></tr>
+                                    </table>
+                                    <div class="category-details" *ngFor="let c of selectedExam.categories; let i = index">
+                                        <div *ngIf="selectedExam._expanded && selectedExam._expanded[i]" class="questions-list">
+                                            <table class="questions-table">
+                                                <thead>
+                                                    <tr><th>Question</th><th>Type</th><th>Marks</th></tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr *ngFor="let q of c.questions">
+                                                        <td>{{ q.question_text || q.text || q.title || '-' }}</td>
+                                                        <td>{{ q.question_type || q.type || '—' }}</td>
+                                                        <td>{{ q.marks ?? q.points ?? '-' }}</td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                                <ng-template #noCats>
+                                    <div class="muted">No categories available</div>
+                                </ng-template>
+                            </div>
+                        </mat-tab>
+
+                        <mat-tab label="Metadata">
+                            <div class="tab-panel">
+                                <div class="detail-grid">
+                                    <div class="label">Created By</div>
+                                    <div class="value">{{ selectedExam.created_by_display }}</div>
+                                    <div class="label">Created</div>
+                                    <div class="value">{{ selectedExam.created_date || selectedExam.created || '—' }}</div>
+                                    <div class="label">Updated By</div>
+                                    <div class="value">{{ selectedExam.updated_by_display }}</div>
+                                    <div class="label">Updated</div>
+                                    <div class="value">{{ selectedExam.updated_date || selectedExam.updated || '—' }}</div>
+                                </div>
+                            </div>
+                        </mat-tab>
+                    </mat-tab-group>
+                </ng-container>
+                <ng-template #noData>
+                    <div class="muted">No exam data available</div>
+                </ng-template>
+            </div>
+            <div class="modal-actions">
+                <button mat-stroked-button color="primary" (click)="closeModal()">Close</button>
+            </div>
+        </div>
+    </div>
+</div>

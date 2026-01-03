@@ -1,0 +1,229 @@
+<div class="page admin-questions">
+   <div class="toolbar">
+      <div class="title">
+         <!-- <h2 *ngIf="!isEditing">Add question</h2>
+      <h2 *ngIf="isEditing">Edit question</h2>
+      <p class="muted" *ngIf="!isEditing">Create and save questions for tests</p>
+      <p class="muted" *ngIf="isEditing">Edit and update the question</p> -->
+      </div>
+
+      <div class="controls">
+         <div class="action-row">
+            <button mat-flat-button type="button" routerLink="/view-questions">
+               <mat-icon>arrow_back</mat-icon>
+               <span>View Questions</span>
+            </button>
+         </div>
+      </div>
+   </div>
+
+
+   <div class="question-card">
+
+      <!-- Global fields: Institute & Exam (single selection for the batch) -->
+      <div class="row two-cols" *ngIf="!isEditing">
+         <div class="form-col">
+            <mat-form-field appearance="outline" class="full">
+               <mat-icon matPrefix>school</mat-icon>
+               <mat-label>Institute</mat-label>
+               <mat-select id="institute-select" title="Institute" [disabled]="!isSuperAdmin"
+                  [(ngModel)]="questions[0].institute_id" (ngModelChange)="loadCategories($event)">
+                  <mat-option value="">Select institute</mat-option>
+                  <mat-option *ngFor="let inst of institutes" [value]="inst.institute_id">{{inst.name}}</mat-option>
+               </mat-select>
+            </mat-form-field>
+         </div>
+         <div class="form-col">
+            <mat-form-field appearance="outline" class="half">
+               <mat-icon matPrefix>assignment</mat-icon>
+               <mat-label>Category</mat-label>
+               <input type="text" matInput [formControl]="categoryCtrl" [matAutocomplete]="auto"
+                  placeholder="Pick a category" />
+               <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayCategory.bind(this)"
+                  (optionSelected)="onCategoryAutocompleteSelected($event.option.value)">
+                  <mat-option *ngFor="let cat of (filteredCategories$ | async)" [value]="cat">{{cat.name}}</mat-option>
+               </mat-autocomplete>
+            </mat-form-field>
+         </div>
+      </div>
+      <div class="row two-cols">
+         <div class="form-col">
+            <!-- Selected -->
+         </div>
+         <div class="form-col">
+            <!-- Selected category description -->
+            <div class="category-desc" *ngIf="selectedCategory">
+               <p>{{selectedCategory.description}}</p>
+            </div>
+         </div>
+      </div>
+
+
+
+      <!-- Mode selector: manual vs bulk upload -->
+      <div class="row two-cols" *ngIf="!isEditing">
+         <div class="form-col">
+            <div class="entrycheck">
+               <mat-checkbox class="entry-checkbox" [(ngModel)]="bulkMode" title="Bulk upload toggle">
+                  <mat-icon color="primary" class="checkbox-icon">cloud_upload</mat-icon>
+                  Bulk upload
+               </mat-checkbox>
+               <div class="template-down" *ngIf="bulkMode">
+                  <!-- Download Template for bulk upload instructions or help -->
+                  <button mat-flat-button type="button" color="accent" (click)="downloadTemplate()">
+                     <mat-icon>download</mat-icon>
+                     <span>Download Template</span>
+                  </button>
+               </div>
+            </div>
+
+         </div>
+
+         <div class="form-col file-col" *ngIf="bulkMode" (click)="triggerFileSelect()" [class.drag-active]="dragActive"
+            (dragenter)="onDragOver($event)" (dragover)="onDragOver($event)" (dragleave)="onDragLeave($event)"
+            (drop)="onDrop($event)" tabindex="0" (keydown.enter)="triggerFileSelect()"
+            (keydown.space)="$event.preventDefault(); triggerFileSelect()">
+            <mat-form-field appearance="outline" class="compact">
+               <mat-icon matPrefix>file_upload</mat-icon>
+               <mat-label>Questions file</mat-label>
+               <input matInput readonly [value]="selectedBulkFile?.name || ''"
+                  placeholder="Select or drop a .csv/.xlsx file" (click)="triggerFileSelect()" />
+               <button mat-icon-button matSuffix type="button"
+                  (click)="triggerFileSelect()"><mat-icon>attach_file</mat-icon></button>
+            </mat-form-field>
+
+            <input #hiddenFileInput type="file" class="hidden-file"
+               title="Select questions file Or drag & drop file here" (change)="onBulkFileSelected($event)"
+               accept=".csv,.xlsx" />
+         </div>
+      </div>
+
+      <!-- Questions block: repeatable; each block has min 2 fields per row -->
+      <div class="questions-list" *ngIf="mode === 'manual'">
+         <mat-accordion class="questions-accordion" multi>
+            <mat-expansion-panel class="question-panel"
+               *ngFor="let q of questions; let qi = index; trackBy: trackByIndex" [expanded]="q._expanded"
+               (opened)="onPanelOpened(q, qi)" (closed)="onPanelClosed(q, qi)">
+               <mat-expansion-panel-header>
+                  <mat-panel-title>Question {{ qi + 1 }}</mat-panel-title>
+                  <mat-panel-description>
+                     <span class="summary-type">{{ q.type || '—' }}</span>
+                     <span class="summary-marks">&nbsp;•&nbsp;{{ q.marks || 0 }} pts</span>
+                     <span class="summary-preview">&nbsp;•&nbsp;{{ q.text ? (q.text | slice:0:60) : 'No text' }}</span>
+                  </mat-panel-description>
+                  <div class="panel-actions">
+                     <button type="button" mat-icon-button aria-label="Remove question" (click)="removeQuestion(qi)"
+                        [disabled]="questions.length<=1">
+                        <mat-icon>remove_circle</mat-icon>
+                     </button>
+                  </div>
+               </mat-expansion-panel-header>
+
+               <div class="panel-body">
+                  <div class="row two-cols">
+                     <div class="form-col">
+                        <mat-form-field appearance="outline" class="full">
+                           <mat-icon matPrefix>category</mat-icon>
+                           <mat-label>Type</mat-label>
+                           <mat-select id="q-type-{{qi}}" title="Question type" [(ngModel)]="q.type">
+                              <mat-option value="">Select type</mat-option>
+                              <mat-option *ngFor="let t of questionTypes" [value]="t.value">{{t.label}}</mat-option>
+                           </mat-select>
+                        </mat-form-field>
+                     </div>
+                     <div class="form-col">
+                        <mat-form-field appearance="outline" class="full">
+                           <mat-icon matPrefix>format_list_numbered</mat-icon>
+                           <mat-label>Marks</mat-label>
+                           <input matInput id="q-marks-{{qi}}" type="number" [(ngModel)]="q.marks" min="1" title="Marks"
+                              placeholder="Marks" />
+                        </mat-form-field>
+                     </div>
+                  </div>
+
+                  <div class="form-row">
+                     <mat-form-field appearance="outline" class="full">
+                        <mat-icon matPrefix>edit</mat-icon>
+                        <mat-label>Question</mat-label>
+                        <textarea matInput [(ngModel)]="q.text" rows="3" placeholder="Write the question..."></textarea>
+                     </mat-form-field>
+                  </div>
+
+                  <div *ngIf="q.type==='choose' || q.type==='multi'" class="form-row options-row">
+                     <label>Options</label>
+                     <div class="options-list">
+                        <mat-radio-group *ngIf="q.type==='choose'" [(ngModel)]="q.correct" name="correctOption-{{qi}}"
+                           class="radio-group">
+                           <div class="option-row" *ngFor="let opt of q.options; let i = index; trackBy: trackByIndex">
+                              <mat-radio-button [value]="i" class="option-radio"></mat-radio-button>
+                              <mat-form-field appearance="outline" class="option-field">
+                                 <mat-icon matPrefix>label</mat-icon>
+                                 <input matInput [(ngModel)]="q.options[i]" [ngModelOptions]="{standalone: true}"
+                                    class="option-input" placeholder="Option {{i+1}}" />
+                              </mat-form-field>
+                              <button type="button" class="btn small" (click)="removeOption(qi, i)"
+                                 [disabled]="q.options.length<=2">Remove</button>
+                           </div>
+                        </mat-radio-group>
+
+                        <div *ngIf="q.type==='multi'">
+                           <div class="option-row" *ngFor="let opt of q.options; let i = index; trackBy: trackByIndex">
+                              <mat-checkbox [checked]="isOptionCorrect(qi,i)"
+                                 (change)="toggleMultiCorrect(qi, i, $event.checked)"
+                                 class="option-checkbox"></mat-checkbox>
+                              <mat-form-field appearance="outline" class="option-field">
+                                 <mat-icon matPrefix>label</mat-icon>
+                                 <input matInput [(ngModel)]="q.options[i]" [ngModelOptions]="{standalone: true}"
+                                    placeholder="Option {{i+1}}" />
+                              </mat-form-field>
+                              <button type="button" class="btn small" (click)="removeOption(qi, i)"
+                                 [disabled]="q.options.length<=2">Remove</button>
+                           </div>
+                        </div>
+
+                        <button type="button" class="btn" (click)="addOption(qi)">Add option</button>
+                     </div>
+                     <div class="hint muted" *ngIf="q.type==='choose'">Select one correct option</div>
+                     <div class="hint muted" *ngIf="q.type==='multi'">Select one or more correct options</div>
+                  </div>
+
+                  <div *ngIf="q.type==='fill'" class="form-row">
+                     <mat-form-field appearance="outline" class="full">
+                        <mat-icon matPrefix>check</mat-icon>
+                        <mat-label>Answer (single-line)</mat-label>
+                        <input matInput id="q-answer-{{qi}}" [(ngModel)]="q.answerText" title="Answer"
+                           placeholder="Correct answer" />
+                     </mat-form-field>
+                  </div>
+
+                  <div *ngIf="q.type==='paragraph'" class="form-row">
+                     <mat-form-field appearance="outline" class="full">
+                        <mat-icon matPrefix>description</mat-icon>
+                        <mat-label>Model answer (paragraph)</mat-label>
+                        <textarea matInput id="q-answer-par-{{qi}}" [(ngModel)]="q.answerText" rows="4"
+                           title="Model answer" placeholder="Model answer (max 1000 chars)"></textarea>
+                     </mat-form-field>
+                  </div>
+               </div>
+            </mat-expansion-panel>
+         </mat-accordion>
+      </div>
+      <div class="actions">
+         <div class="actions-row batch-actions">
+            <button type="button" mat-stroked-button (click)="addQuestion()"
+               *ngIf="mode === 'manual' && !isEditing"><mat-icon>add</mat-icon> Add Question</button>
+         </div>
+         <div class="action-row batch-actions">
+            <button type="button" mat-stroked-button color="warn" (click)="resetAll()"><mat-icon>refresh</mat-icon>
+               Reset</button>
+            <button type="button" mat-stroked-button color="primary" (click)="submit()"
+               [disabled]="!questions || !questions.length">
+               <mat-icon>save</mat-icon>
+               <span *ngIf="!isEditing">Save All</span>
+               <span *ngIf="isEditing">Update</span>
+            </button>
+         </div>
+      </div>
+
+   </div>
+</div>

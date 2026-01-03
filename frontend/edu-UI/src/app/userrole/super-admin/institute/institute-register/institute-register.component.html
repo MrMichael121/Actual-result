@@ -1,0 +1,499 @@
+<div class="institute-wrap">
+  <div class="hero">
+    <div class="toolbar">
+      <div class="title">
+        <!-- <h2 *ngIf="!isEditing">Create Institute</h2>
+        <h2 *ngIf="isEditing">Edit Institute</h2>
+        <p class="lead" *ngIf="!isEditing">Register a new institute to start creating tests and managing users.</p>
+        <p class="lead" *ngIf="isEditing">Edit the institute details and save changes.</p> -->
+      </div>
+      <div class="form-actions">
+        <button mat-flat-button color="accent" type="button" routerLink="/view-institutes">
+          <mat-icon>arrow_back</mat-icon>
+          <span>View Institute</span>
+        </button>
+      </div>
+    </div>
+    <div class="card">
+      <form [formGroup]="form" (ngSubmit)="onSubmit()">
+        <mat-horizontal-stepper linear #stepper>
+          <!-- Step 1: Basic Info -->
+          <mat-step [stepControl]="form.controls['name']">
+            <ng-template matStepLabel>Institute</ng-template>
+            <div class="block-card">
+              <h2 class="section-heading">Institute Information</h2>
+              <div class="row two-cols">
+                <mat-form-field appearance="outline" class="half">
+                  <mat-label>Name</mat-label>
+                  <mat-icon matPrefix>domain</mat-icon>
+                  <input matInput formControlName="name" placeholder="Full institute name" />
+                </mat-form-field>
+
+                <mat-form-field appearance="outline" class="half">
+                  <mat-label>Short Name</mat-label>
+                  <mat-icon matPrefix>badge</mat-icon>
+                  <input matInput formControlName="short_name" placeholder="Short name / code" />
+                  <mat-error *ngIf="form.controls['short_name'].hasError('required')">Short name is required</mat-error>
+                </mat-form-field>
+              </div>
+              <div class="row two-cols">
+                <mat-form-field appearance="outline" class="half">
+                  <mat-label>Primary Contact Person (Admin)</mat-label>
+                  <mat-icon matPrefix>person</mat-icon>
+                  <input matInput formControlName="primary_contact_person" placeholder="Full name" />
+                  <mat-error *ngIf="form.controls['primary_contact_person'].hasError('required')">Contact person is
+                    required</mat-error>
+                </mat-form-field>
+
+                <mat-form-field appearance="outline" class="half">
+                  <mat-label>Primary Contact Person E-Mail (Admin)</mat-label>
+                  <mat-icon matPrefix>email</mat-icon>
+                  <input matInput formControlName="primary_contact_email" placeholder="admin@example.com" />
+                  <mat-error *ngIf="form.controls['primary_contact_email'].hasError('required')">Email is
+                    required</mat-error>
+                  <mat-error *ngIf="form.controls['primary_contact_email'].hasError('email')">Enter a valid
+                    email</mat-error>
+                </mat-form-field>
+              </div>
+
+              <div class="row two-cols">
+                <mat-form-field appearance="outline" class="half">
+                  <mat-label>Primary Contact Phone</mat-label>
+                  <mat-icon matPrefix>phone</mat-icon>
+                  <input matInput formControlName="primary_contact_phone" placeholder="+1 555 555 5555" />
+                </mat-form-field>
+                <mat-form-field appearance="outline" class="half">
+                  <mat-label>Website</mat-label>
+                  <mat-icon matPrefix>language</mat-icon>
+                  <input matInput formControlName="website" placeholder="https://example.com" />
+                </mat-form-field>
+              </div>
+            </div>
+            <div class="form-actions">
+              <button type="button" mat-button matStepperNext class="next-btn"><span>Next</span><mat-icon>arrow_forward</mat-icon></button>
+            </div>
+          </mat-step>
+
+          <!-- Step 2: Industry & Org -->
+          <mat-step>
+            <ng-template matStepLabel>Industry-Org & Billing</ng-template>
+            <div class="block-card">
+              <!-- <h2 class="section-heading">Industry & Contacts</h2> -->
+              <div class="row two-cols">
+                <mat-form-field appearance="outline" class="half">
+                  <mat-label>Industry type</mat-label>
+                  <mat-icon matPrefix>business</mat-icon>
+                  <mat-select formControlName="industry_type">
+                    <mat-option *ngFor="let t of industryTypes" [value]="t">{{t}}</mat-option>
+                  </mat-select>
+                  <mat-error *ngIf="form.controls['industry_type'].hasError('required')">Select industry
+                    type</mat-error>
+                </mat-form-field>
+
+                <mat-form-field appearance="outline" class="half">
+                  <mat-label>Industry Sector</mat-label>
+                  <mat-icon matPrefix>category</mat-icon>
+                  <mat-select formControlName="industry_sector">
+                    <mat-option *ngFor="let s of sectorOptions" [value]="s">{{s}}</mat-option>
+                    <mat-option *ngIf="!sectorOptions || sectorOptions.length === 0" value="">-- Select industry type
+                      first --</mat-option>
+                  </mat-select>
+                  <mat-error *ngIf="form.controls['industry_sector'].hasError('required')">Select industry
+                    sector</mat-error>
+                </mat-form-field>
+              </div>
+
+            <!-- </div>
+            <div class="block-card"> -->
+              <!-- <h2 class="section-heading">Org structure: Departments & teams</h2> -->
+              <div class="row two-cols">
+                <div class="half">
+                  <label class="field-label">Department / Grade</label>
+                  <mat-form-field appearance="outline" class="full">
+                    <mat-label>Departments</mat-label>
+                    <mat-icon matPrefix>layers</mat-icon>
+                    <mat-chip-grid #deptChipGrid aria-label="Enter departments" formControlName="department">
+                      <mat-chip-row *ngFor="let d of departmentList" (removed)="removeDepartment(d)">
+                        {{ d }}
+                        <button type="button" matChipRemove [attr.aria-label]="'Remove department ' + d">
+                          <mat-icon>cancel</mat-icon>
+                        </button>
+                      </mat-chip-row>
+                    </mat-chip-grid>
+                    <input placeholder="New department" [matChipInputFor]="deptChipGrid"
+                      [matChipInputSeparatorKeyCodes]="separatorKeysCodes" [matChipInputAddOnBlur]="true"
+                      (matChipInputTokenEnd)="addDepartmentFromChip($event)" />
+                  </mat-form-field>
+                </div>
+
+                <div class="half">
+                  <label class="field-label">Team / Batch / Group / Section</label>
+                  <mat-form-field appearance="outline" class="full">
+                    <mat-label>Teams</mat-label>
+                    <mat-icon matPrefix>group</mat-icon>
+                    <mat-chip-grid #teamChipGrid aria-label="Enter teams" formControlName="team">
+                      <mat-chip-row *ngFor="let t of teamList" (removed)="removeTeam(t)">
+                        {{ t }}
+                        <button type="button" matChipRemove [attr.aria-label]="'Remove team ' + t">
+                          <mat-icon>cancel</mat-icon>
+                        </button>
+                      </mat-chip-row>
+                    </mat-chip-grid>
+                    <input placeholder="New team" [matChipInputFor]="teamChipGrid"
+                      [matChipInputSeparatorKeyCodes]="separatorKeysCodes" [matChipInputAddOnBlur]="true"
+                      (matChipInputTokenEnd)="addTeamFromChip($event)" />
+                  </mat-form-field>
+                </div>
+              </div>
+            <!-- </div> -->
+            <!-- <div class="form-actions">
+              <button type="button" mat-button matStepperPrevious ><mat-icon>arrow_back</mat-icon><span>Back</span></button>
+              <button type="button" mat-button matStepperNext class="next-btn"><span>Next</span><mat-icon>arrow_forward</mat-icon></button>
+            </div>
+          </mat-step> -->
+
+          <!-- Step 3: Org Structure & Billing -->
+          <!-- <mat-step>
+            <ng-template matStepLabel> Billing</ng-template> -->
+
+            <!-- <div class="block-card"> -->
+              <!-- <h2 class="section-heading">Billing, Subscription & Limits</h2> -->
+              <div class="row two-cols">
+                <mat-form-field appearance="outline" class="half">
+                  <mat-label>Max users Limit</mat-label>
+                  <mat-icon matPrefix>person_add</mat-icon>
+                  <input matInput type="number" formControlName="max_users" placeholder="e.g. 500" />
+                  <mat-error *ngIf="form.controls['max_users'].hasError('min')">Value must be at least 1</mat-error>
+                </mat-form-field>
+
+                <!-- <div class="half"> -->
+                  <mat-form-field appearance="outline" class="half">
+                    <mat-label>Status</mat-label>
+                    <mat-icon matPrefix>check_circle</mat-icon>
+                    <mat-select formControlName="active">
+                      <mat-option [value]="true">
+                        <mat-icon color="primary" class="status-icon" aria-label="Active">check_circle</mat-icon>
+                        Active
+                      </mat-option>
+                      <mat-option [value]="false">
+                        <mat-icon color="warn" class="status-icon" aria-label="Inactive">cancel</mat-icon>
+                        Inactive
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                <!-- </div> -->
+              </div>
+
+              <div class="row two-cols">
+                <mat-form-field appearance="outline" class="half">
+                  <mat-label>Subscription Start Date</mat-label>
+                  <mat-icon matPrefix>calendar_today</mat-icon>
+                  <input matInput type="date" formControlName="subscription_start" placeholder="YYYY-MM-DD"
+                    title="Subscription start date" aria-label="Subscription start date" />
+                </mat-form-field>
+
+                <mat-form-field appearance="outline" class="half">
+                  <mat-label>Subscription End Date</mat-label>
+                  <mat-icon matPrefix>calendar_today</mat-icon>
+                  <input matInput type="date" formControlName="subscription_end" placeholder="YYYY-MM-DD"
+                    title="Subscription end date" aria-label="Subscription end date" />
+                </mat-form-field>
+              </div>
+            </div>
+
+            <div class="form-actions">
+              <button type="button" mat-button matStepperPrevious ><mat-icon>arrow_back</mat-icon><span>Back</span></button>
+              <button type="button" mat-button matStepperNext class="next-btn"><span>Next</span><mat-icon>arrow_forward</mat-icon></button>
+            </div>
+          </mat-step>
+
+          <!-- Step 4: Head Office & Campuses -->
+          <mat-step>
+            <ng-template matStepLabel>Locations</ng-template>
+            <div class="block-card" *ngIf="!isEditing">
+              <h2 class="section-heading">Head Office</h2>
+              <div class="row two-cols">
+                <div class="half tall">
+                  <div [formGroupName]="'headOffice'">
+                    <mat-form-field appearance="outline" class="full compact-field">
+                      <mat-label>Head Office Address</mat-label>
+                      <mat-icon matPrefix>location_on</mat-icon>
+                      <textarea matInput formControlName="address" rows="2"
+                        placeholder="Street, landmark, postal code"></textarea>
+                    </mat-form-field>
+                  </div>
+                </div>
+
+                <div class="half">
+                  <div [formGroupName]="'headOffice'">
+                    <div class="row two-cols head-office-loc compact-row">
+                      <mat-form-field appearance="outline" class="compact half">
+                        <mat-label>Country</mat-label>
+                        <mat-icon matPrefix>public</mat-icon>
+                        <mat-select formControlName="country">
+                          <mat-option *ngFor="let c of countries" [value]="c.id">{{ c.name }}</mat-option>
+                        </mat-select>
+                      </mat-form-field>
+
+                      <mat-form-field appearance="outline" class="compact half">
+                        <mat-label>State</mat-label>
+                        <mat-icon matPrefix>map</mat-icon>
+                        <mat-select formControlName="state"
+                          [attr.aria-disabled]="!stateOptions.length || loadingStates">
+                          <mat-option *ngFor="let s of stateOptions" [value]="s.id">{{ s.name }}</mat-option>
+                        </mat-select>
+                        <mat-hint *ngIf="!loadingStates && !stateOptions.length">No states</mat-hint>
+                      </mat-form-field>
+
+                      <mat-form-field appearance="outline" class="compact half">
+                        <mat-label>City</mat-label>
+                        <mat-icon matPrefix>location_city</mat-icon>
+                        <mat-select formControlName="city" [attr.aria-disabled]="!cityOptions.length || loadingCities">
+                          <mat-option *ngFor="let city of cityOptions" [value]="city.id">{{ city.name }}</mat-option>
+                        </mat-select>
+                        <mat-hint *ngIf="!loadingCities && !cityOptions.length">No cities</mat-hint>
+                      </mat-form-field>
+                    </div>
+                    <div class="row two-cols head-office-contacts">
+                      <mat-form-field appearance="outline" class="compact half">
+                        <mat-label>Pincode</mat-label>
+                        <mat-icon matPrefix>pin_drop</mat-icon>
+                        <input matInput formControlName="pincode" placeholder="Pincode / ZIP" />
+                      </mat-form-field>
+                      <mat-form-field appearance="outline" class="compact half">
+                        <mat-label>Head Office Email</mat-label>
+                        <mat-icon matPrefix>email</mat-icon>
+                        <input matInput formControlName="email" placeholder="info@example.com" />
+                      </mat-form-field>
+                      <mat-form-field appearance="outline" class="compact half">
+                        <mat-label>Head Office Phone</mat-label>
+                        <mat-icon matPrefix>phone</mat-icon>
+                        <input matInput formControlName="phone" placeholder="Phone" />
+                      </mat-form-field>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="block-card campus-card">
+              <div class="campus-header">
+                <h2 class="section-heading">Campuses / Branches</h2>
+                <button mat-flat-button color="primary" type="button" (click)="addCampus()">
+                  <mat-icon>add</mat-icon>
+                  <span>Add Campus</span>
+                </button>
+              </div>
+              <div formArrayName="campuses">
+                <mat-accordion *ngIf="campuses && campuses.length > 0" multi>
+                  <mat-expansion-panel *ngFor="let c of campuses.controls; let i = index"
+                    [expanded]="expandedIndex === i">
+                    <mat-expansion-panel-header>
+                      <mat-panel-title>{{ c.get('name')?.value || ('Campus ' + (i+1)) }}</mat-panel-title>
+                      <mat-panel-description>
+                        <div class="panel-actions">
+                          <button mat-flat-button color="warn" type="button"
+                            (click)="$event.stopPropagation(); removeCampus(i)">
+                            <mat-icon>delete</mat-icon>
+                            <span>Remove</span>
+                          </button>
+                          <button *ngIf="!c.get('isPrimary')?.value" mat-flat-button color="primary" type="button"
+                            (click)="$event.stopPropagation(); setPrimaryCampus(i)">
+                            <mat-icon>star</mat-icon>
+                            <span>Set Primary</span>
+                          </button>
+                        </div>
+                      </mat-panel-description>
+                    </mat-expansion-panel-header>
+                    <div [formGroupName]="i">
+                      <div class="row two-cols">
+                        <div class="half">
+                          <mat-form-field appearance="outline" class="full">
+                            <mat-label>Campus Name</mat-label>
+                            <mat-icon matPrefix>location_city</mat-icon>
+                            <input matInput formControlName="name" placeholder="Campus name" />
+                          </mat-form-field>
+
+                          <mat-form-field appearance="outline" class="full compact-field">
+                            <mat-label>Campus Address</mat-label>
+                            <mat-icon matPrefix>location_on</mat-icon>
+                            <textarea matInput formControlName="address" rows="2"
+                              placeholder="Street, landmark, postal code"></textarea>
+                          </mat-form-field>
+
+                          <div class="row two-cols">
+                            <mat-form-field appearance="outline" class="half">
+                              <mat-label>Contact Email</mat-label>
+                              <mat-icon matPrefix>email</mat-icon>
+                              <input matInput formControlName="email" placeholder="email@example.com" />
+                            </mat-form-field>
+                            <mat-form-field appearance="outline" class="half">
+                              <mat-label>Contact Phone</mat-label>
+                              <mat-icon matPrefix>phone</mat-icon>
+                              <input matInput formControlName="phone" placeholder="Phone number" />
+                            </mat-form-field>
+                          </div>
+                          <div class="row two-cols">
+                            <div class="half">
+                              <mat-checkbox [checked]="c.get('isPrimary')?.value" (click)="$event.stopPropagation()"
+                                (change)="setPrimaryCampus(i)">Primary</mat-checkbox>
+                            </div>
+                            <div class="half">
+                              <mat-checkbox [checked]="c.get('isActive')?.value"
+                                formControlName="isActive">Active</mat-checkbox>
+                            </div>
+                          </div>
+                        </div>
+
+                        <div class="half">
+                          <mat-form-field appearance="outline" class="full compact-field">
+                            <mat-label>Country</mat-label>
+                            <mat-icon matPrefix>public</mat-icon>
+                            <mat-select formControlName="country">
+                              <mat-option *ngFor="let cc of countries" [value]="cc.id">{{ cc.name }}</mat-option>
+                            </mat-select>
+                          </mat-form-field>
+
+                          <mat-form-field appearance="outline" class="full compact-field">
+                            <mat-label>State</mat-label>
+                            <mat-icon matPrefix>map</mat-icon>
+                            <mat-select formControlName="state"
+                              [attr.aria-disabled]="!campusStateOptions[(c.get('_cid')?.value)].length || campusLoadingStates[(c.get('_cid')?.value)]">
+                              <mat-option *ngFor="let s of campusStateOptions[(c.get('_cid')?.value)]" [value]="s.id">{{
+                                s.name }}</mat-option>
+                            </mat-select>
+                            <mat-hint
+                              *ngIf="!campusLoadingStates[(c.get('_cid')?.value)] && !campusStateOptions[(c.get('_cid')?.value)].length">No
+                              states found</mat-hint>
+                          </mat-form-field>
+
+                          <mat-form-field appearance="outline" class="full compact-field">
+                            <mat-label>City</mat-label>
+                            <mat-icon matPrefix>location_city</mat-icon>
+                            <mat-select formControlName="city"
+                              [attr.aria-disabled]="!campusCityOptions[(c.get('_cid')?.value)].length || campusLoadingCities[(c.get('_cid')?.value)]">
+                              <mat-option *ngFor="let city of campusCityOptions[(c.get('_cid')?.value)]"
+                                [value]="city.id">{{ city.name }}</mat-option>
+                            </mat-select>
+                            <mat-hint
+                              *ngIf="!campusLoadingCities[(c.get('_cid')?.value)] && !campusCityOptions[(c.get('_cid')?.value)].length">No
+                              cities found</mat-hint>
+                          </mat-form-field>
+
+                          <mat-form-field appearance="outline" class="full compact-field">
+                            <mat-label>Pincode</mat-label>
+                            <mat-icon matPrefix>pin_drop</mat-icon>
+                            <input matInput formControlName="pincode" placeholder="Pincode / ZIP" />
+                          </mat-form-field>
+                        </div>
+                      </div>
+
+                    </div>
+                  </mat-expansion-panel>
+                </mat-accordion>
+              </div>
+            </div>
+            <div class="form-actions">
+              <button type="button" mat-button matStepperPrevious ><mat-icon>arrow_back</mat-icon><span>Back</span></button>
+              <button type="button" mat-button matStepperNext class="next-btn"><span>Next</span><mat-icon>arrow_forward</mat-icon></button>
+            </div>
+          </mat-step>
+
+          <!-- Step 5: Review & Submit -->
+          <mat-step>
+            <ng-template matStepLabel>Review</ng-template>
+            <div class="block-card">
+              <h2 class="section-heading">Review & Submit</h2>
+              <p class="lead">Please review the information entered. Click Submit to register the institute.</p>
+              <!-- Full readout summary of form values -->
+              <div class="review-summary">
+                <h3>Institute Information</h3>
+                <div class="row two-cols">
+                  <div>
+                    <p><strong>Name:</strong> {{ form.get('name')?.value || '-' }}</p>
+                    <p><strong>Short name:</strong> {{ form.get('short_name')?.value || '-' }}</p>
+                    <p><strong>Website:</strong> {{ form.get('website')?.value || '-' }}</p>
+                    <p><strong>Industry:</strong> {{ form.get('industry_type')?.value || '-' }} / {{ form.get('industry_sector')?.value || '-' }}</p>
+                  </div>
+                  <div>
+                    <p><strong>Primary Contact:</strong> {{ form.get('primary_contact_person')?.value || '-' }}</p>
+                    <p><strong>Email:</strong> {{ form.get('primary_contact_email')?.value || '-' }}</p>
+                    <p><strong>Phone:</strong> {{ form.get('primary_contact_phone')?.value || '-' }}</p>
+                  </div>
+                </div>
+
+                <h3>Organization</h3>
+                <div class="row two-cols">
+                  <div>
+                    <p><strong>Departments:</strong>
+                      <span *ngIf="departmentList?.length; else noDept">
+                        <span *ngFor="let d of departmentList; let idx = index">{{ d }}<span *ngIf="idx < departmentList.length - 1">, </span></span>
+                      </span>
+                      <ng-template #noDept>-</ng-template>
+                    </p>
+                  </div>
+                  <div>
+                    <p><strong>Teams:</strong>
+                      <span *ngIf="teamList?.length; else noTeam">
+                        <span *ngFor="let t of teamList; let idx = index">{{ t }}<span *ngIf="idx < teamList.length - 1">, </span></span>
+                      </span>
+                      <ng-template #noTeam>-</ng-template>
+                    </p>
+                  </div>
+                </div>
+
+                <h3>Billing & Limits</h3>
+                <div class="row two-cols">
+                  <div>
+                    <p><strong>Max Users:</strong> {{ form.get('max_users')?.value || '-' }}</p>
+                    <p><strong>Active:</strong> {{ form.get('active')?.value ? 'Yes' : 'No' }}</p>
+                  </div>
+                  <div>
+                    <p><strong>Subscription:</strong> {{ form.get('subscription_start')?.value || '-' }} to {{ form.get('subscription_end')?.value || '-' }}</p>
+                  </div>
+                </div>
+
+                <h3 *ngIf="form.get('headOffice')?.get('address')?.value">Head Office</h3>
+                <div class="row two-cols" *ngIf="form.get('headOffice')?.get('address')?.value">
+                  <div>
+                    <p><strong>Address:</strong> {{ form.get('headOffice')?.get('address')?.value || '-' }}</p>
+                  </div>
+                  <div>
+                    <p><strong>Country / State / City:</strong>
+                      {{ form.get('headOffice')?.get('country')?.value || '-' }} / {{ form.get('headOffice')?.get('state')?.value || '-' }} / {{ form.get('headOffice')?.get('city')?.value || '-' }}
+                    </p>
+                    <p><strong>Pincode:</strong> {{ form.get('headOffice')?.get('pincode')?.value || '-' }}</p>
+                    <p><strong>Email:</strong> {{ form.get('headOffice')?.get('email')?.value || '-' }}</p>
+                    <p><strong>Phone:</strong> {{ form.get('headOffice')?.get('phone')?.value || '-' }}</p>
+                  </div>
+                </div>
+
+                <h3>Campuses</h3>
+                <div *ngIf="campuses?.length; else noCampus">
+                  <div *ngFor="let c of campuses.controls; let i = index" class="campus-summary">
+                    <p><strong>{{ c.get('name')?.value || ('Campus ' + (i + 1)) }}</strong>
+                      <span *ngIf="c.get('isPrimary')?.value"> (Primary)</span></p>
+                    <p>{{ c.get('address')?.value || '-' }}</p>
+                    <p><strong>Contact:</strong> {{ c.get('email')?.value || '-' }} | {{ c.get('phone')?.value || '-' }}</p>
+                    <p><strong>Location:</strong> {{ c.get('country')?.value || '-' }} / {{ c.get('state')?.value || '-' }} / {{ c.get('city')?.value || '-' }} | {{ c.get('pincode')?.value || '-' }}</p>
+                  </div>
+                </div>
+                <ng-template #noCampus>
+                  <p>No campuses added.</p>
+                </ng-template>
+              </div>
+            </div>
+            <div class="form-actions">
+              <button type="button" mat-button matStepperPrevious><mat-icon>arrow_back</mat-icon><span>Back</span></button>
+              <button mat-flat-button color="primary" type="submit" [disabled]="form.invalid">
+                <mat-icon>check</mat-icon>
+                <span *ngIf="!isEditing">Register</span>
+                <span *ngIf="isEditing">Save changes</span>
+              </button>
+            </div>
+          </mat-step>
+        </mat-horizontal-stepper>
+      </form>
+    </div>
+  </div>
+</div>

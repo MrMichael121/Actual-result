@@ -1,0 +1,18 @@
+<div class="shared-view">
+  <div class="header">
+    <h3 *ngIf="title">{{title}}</h3>
+    <div class="actions">
+      <button mat-icon-button (click)="emitEdit()" aria-label="Edit"><mat-icon>edit</mat-icon></button>
+      <button mat-icon-button (click)="emitClose()" aria-label="Close"><mat-icon>close</mat-icon></button>
+    </div>
+  </div>
+
+  <div class="content" *ngIf="data">
+    <div class="row" *ngFor="let key of keys()">
+      <div class="label">{{ labelFor(key) }}</div>
+      <div class="value"><pre>{{ displayValue(key) }}</pre></div>
+    </div>
+  </div>
+
+  <div *ngIf="!data" class="no-data muted">No data to display</div>
+</div>

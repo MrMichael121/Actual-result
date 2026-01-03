@@ -1,0 +1,87 @@
+.page{padding:24px}
+.dash-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px}
+.dash-header h2{margin:0}
+.dash-header .muted{color:#6b6f76}
+.summary{display:flex;gap:16px}
+.kpi{background:#fff;padding:12px 18px;border-radius:10px;box-shadow:0 6px 18px rgba(0,0,0,0.06);min-width:120px;text-align:center}
+.kpi-val{font-size:20px;font-weight:700;color:#2e2e38}
+.kpi-label{font-size:12px;color:#6b6f76}
+
+.charts-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:18px}
+.chart-card{background:white;padding:14px;border-radius:10px;box-shadow:0 6px 20px rgba(0,0,0,0.06)}
+.chart-card h4{margin:0 0 10px 0;font-size:15px}
+.chart-placeholder{height:180px;border-radius:8px;background:linear-gradient(90deg,#f6f7fb,#fff);display:flex;align-items:center;justify-content:center;color:#8b8f9a}
+
+/* Hover and interaction styles for chart elements */
+.chart-card{ transition: transform 180ms ease, box-shadow 180ms ease }
+.chart-card:hover{ transform: translateY(-6px); box-shadow: 0 18px 38px rgba(12,28,46,0.12) }
+
+/* bars */
+.chart-placeholder rect{ transition: transform 160ms ease, filter 160ms ease, opacity 160ms ease }
+.chart-placeholder rect:hover{ transform: translateY(-4px); filter:brightness(1.06); opacity:0.95 }
+
+/* rotate text labels look cleaner at small sizes */
+.chart-placeholder text{ pointer-events: none }
+
+/* pie slices (stroke circles): pointer sensitive using stroke) */
+.chart-placeholder circle[stroke]{ transition: stroke-width 140ms ease, transform 140ms ease }
+.chart-placeholder circle[stroke]:hover{ stroke-width: 10px; transform: scale(1.02) }
+
+/* line points */
+.chart-placeholder circle[r="2.5"]{ transition: r 120ms ease, transform 120ms ease }
+.chart-placeholder circle[r="2.5"]:hover{ r:3.8; transform: translateY(-2px) }
+
+/* metric overlay styling (centered value) */
+.metric-overlay{ position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; pointer-events:none }
+.metric-overlay .metric-value{ font-size:22px; font-weight:800; color:#0b3946 }
+.metric-overlay .metric-label{ font-size:12px; color:#6b7887 }
+
+.lists{display:flex;gap:16px}
+.table-card{flex:2;background:white;padding:14px;border-radius:10px;box-shadow:0 6px 20px rgba(0,0,0,0.06)}
+.report-card{flex:1;background:white;padding:14px;border-radius:10px;box-shadow:0 6px 20px rgba(0,0,0,0.06)}
+.stats-table{width:100%;border-collapse:collapse}
+.stats-table th,.stats-table td{padding:8px;border-bottom:1px solid #eef0f3;text-align:left}
+
+@media (max-width:1000px){
+	.charts-grid{grid-template-columns:repeat(2,1fr)}
+	.lists{flex-direction:column}
+}
+
+@media (max-width:600px){
+	.charts-grid{grid-template-columns:1fr}
+}
+
+/* Shared design helpers */
+.btn-primary{ background:#0b7285; color:#fff; border-radius:8px; padding:8px 12px }
+.heading-lg{ font-size:1.15rem; font-weight:700 }
+.card{ background:#fff; border-radius:10px; box-shadow:0 8px 20px rgba(16,32,48,0.06); padding:12px }
+
+/* Richer KPI styles */
+.kpi{ background: linear-gradient(135deg,#ffffff,#f7fbff); border-radius:12px; padding:14px 18px; min-width:140px; box-shadow: 0 8px 22px rgba(12,28,46,0.06); transition: transform .18s ease, box-shadow .18s ease }
+.kpi:hover{ transform: translateY(-6px); box-shadow: 0 18px 38px rgba(12,28,46,0.12) }
+.kpi-val{ font-size:22px; color:#0b3946 }
+.kpi-label{ font-size:12px; color:#6b7887 }
+
+/* Chart placeholder tuning */
+.chart-placeholder{ position:relative; overflow:hidden }
+.chart-placeholder .svg-small{ width:100%; height:100%; display:block }
+.chart-placeholder.pie .pie{ transform:scale(1.1); }
+.gauge{ width:70%; height:70% }
+
+/* Dynamic chart component container tweaks */
+.dynamic-chart{ padding:8px; display:flex; flex-direction:column; align-items:center; justify-content:center }
+.dynamic-chart .legend.small{ justify-content:center }
+
+/* bar legend under Users by Institute chart */
+.bar-legend{ display:flex; gap:12px; margin-top:10px; flex-wrap:wrap; justify-content:center }
+.bar-legend .legend-item{ display:flex; gap:8px; align-items:center; background: rgba(255,255,255,0.9); padding:6px 10px; border-radius:8px; box-shadow: 0 6px 12px rgba(12,28,46,0.04) }
+.bar-legend .dot{ width:12px; height:12px; border-radius:3px; display:inline-block }
+.bar-legend .legend-text{ display:flex; flex-direction:column }
+.bar-legend .legend-name{ font-size:13px; color:#0b3946; font-weight:600 }
+.bar-legend .legend-value{ font-size:12px; color:#6b7887 }
+
+/* small responsive tweaks */
+@media (max-width:1000px){ .chart-card h4{ font-size:14px } }
+
+/* subtle header accent */
+// .dash-header::after{ content:''; position:absolute; left:0; right:0; height:1px; background:linear-gradient(90deg,transparent,#eef4fb,transparent); top:78px; opacity:0.6 }

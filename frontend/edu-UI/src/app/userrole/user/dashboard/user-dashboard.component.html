@@ -1,0 +1,59 @@
+<div class="page user-dashboard">
+  <header class="dash-header">
+    <div style="display:flex;align-items:center;gap:12px">
+      <mat-form-field appearance="outline" style="min-width:220px">
+        <mat-label>Institute</mat-label>
+        <mat-select [(value)]="selectedInstituteId" (selectionChange)="onInstituteChange($any($event).value)">
+          <mat-option *ngFor="let i of institutes" [value]="i.id">{{i.name}}</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" style="min-width:220px">
+        <mat-label>User</mat-label>
+        <mat-select [(value)]="selectedUserId" (selectionChange)="onUserChange($any($event).value)">
+          <mat-option *ngFor="let u of users" [value]="u.id">{{u.name || u.email}}</mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+
+    <div class="kpis">
+      <div class="kpi">
+        <div class="kpi-val">{{ metrics.lastScore ?? '--' }}</div>
+        <div class="kpi-label">Last score</div>
+      </div>
+      <div class="kpi">
+        <div class="kpi-val">{{ metrics.lastPercent ?? '--' }}%</div>
+        <div class="kpi-label">Last %</div>
+      </div>
+      <div class="kpi">
+        <div class="kpi-val">{{ metrics.totalQuestions ?? '--' }}</div>
+        <div class="kpi-label">Questions answered</div>
+      </div>
+      <div class="kpi">
+        <div class="kpi-val">{{ metrics.accuracy ?? '--' }}%</div>
+        <div class="kpi-label">Accuracy</div>
+      </div>
+    </div>
+  </header>
+
+  <section class="charts-grid">
+    <ng-container *ngFor="let c of charts">
+      <div class="chart-card">
+        <h4>{{c.title}}</h4>
+        <div class="chart-placeholder">
+          <app-dynamic-chart [type]="c.type" [data]="c.data"></app-dynamic-chart>
+        </div>
+      </div>
+    </ng-container>
+    <div class="chart-card" *ngIf="charts.length === 0">
+      <h4>Overview</h4>
+      <div class="chart-placeholder">
+        <svg viewBox="0 0 200 80" preserveAspectRatio="none" class="svg-small">
+          <rect x="10" y="30" width="20" height="50" rx="3" fill="#0b7285" />
+          <rect x="40" y="10" width="20" height="70" rx="3" fill="#1f7bff" />
+          <rect x="70" y="45" width="20" height="35" rx="3" fill="#66c2d9" />
+        </svg>
+      </div>
+    </div>
+  </section>
+</div>

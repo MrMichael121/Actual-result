@@ -1,0 +1,179 @@
+<!-- =========================
+     Profluent Lab - Landing
+     ========================= -->
+
+<!-- Top banner area -->
+<div class="container">
+   <div class="header" role="banner">
+
+      <div class="brand">
+         <div routerLink="/" aria-label="Profluent Lab Home">Profluent Lab</div>
+
+      </div>
+
+      <div class="nav">
+         <div routerLink="/" class="link" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Home
+         </div>
+         <div routerLink="/features" class="link" routerLinkActive="active">Features</div>
+         <div routerLink="/pricing" class="link" routerLinkActive="active">Pricing</div>
+         <div routerLink="/docs" class="link" routerLinkActive="active">Docs</div>
+         <div routerLink="/contact" class="link" routerLinkActive="active">Contact</div>
+      </div>
+
+      <div class="actions">
+         <a routerLink="/login" class="mat-button-link" aria-label="Sign in">
+            <button mat-stroked-button color="primary">Sign in</button>
+         </a>
+         <a routerLink="/register" class="mat-button-link" aria-label="Get Started">
+            <button mat-flat-button color="primary">
+               <mat-icon aria-hidden="true">rocket_launch</mat-icon>
+               <span class="btn-text">Get Started</span>
+            </button>
+         </a>
+      </div>
+   </div>
+
+
+   <!-- Main content -->
+   <main class="hero" role="main">
+      <div class="container grid-two">
+         <!-- Left: hero copy -->
+         <section class="hero-left">
+            <h1 class="hero-title">Enterprise-ready Online Assessments</h1>
+            <p class="hero-sub">
+               Secure, scalable and integrated — built for institutions and corporates who value integrity and speed.
+            </p>
+
+            <div class="hero-ctas">
+               <a routerLink="/register" class="btn-primary" aria-label="Start Free Trial">
+                  <mat-icon aria-hidden="true">rocket_launch</mat-icon>
+                  <span>Start Free Trial</span>
+               </a>
+               <a routerLink="/demo" class="btn-outline" aria-label="Request Demo">Request Demo</a>
+            </div>
+
+            <dl class="hero-stats" aria-label="Platform statistics">
+               <div class="stat">
+                  <dt>Users</dt>
+                  <dd><strong>10K+</strong></dd>
+               </div>
+               <div class="stat">
+                  <dt>Exams</dt>
+                  <dd><strong>50K+</strong></dd>
+               </div>
+               <div class="stat">
+                  <dt>Uptime</dt>
+                  <dd><strong>99.9%</strong></dd>
+               </div>
+            </dl>
+         </section>
+
+         <!-- Right: illustration or preview -->
+         <aside class="hero-right" aria-label="Platform preview">
+            <!-- Replace with: <img src="assets/images/home.svg" alt="Platform preview" class="hero-image" loading="lazy"> -->
+            <div class="hero-illustration" aria-hidden="true"></div>
+         </aside>
+      </div>
+
+      <!-- Features -->
+      <section class="features">
+         <div class="container">
+            <h2 class="section-title">Platform Highlights</h2>
+            <div class="features-grid">
+               <article class="feature">
+                  <mat-icon aria-hidden="true">security</mat-icon>
+                  <h3>Secure by Design</h3>
+                  <p>Proctoring, secure browser and audit logs for full traceability.</p>
+               </article>
+               <article class="feature">
+                  <mat-icon aria-hidden="true">auto_stories</mat-icon>
+                  <h3>Question Bank</h3>
+                  <p>Organize questions, categories, tags and randomized papers at scale.</p>
+               </article>
+               <article class="feature">
+                  <mat-icon aria-hidden="true">insights</mat-icon>
+                  <h3>Real-time Analytics</h3>
+                  <p>Dashboards for performance, attempt analysis and item statistics.</p>
+               </article>
+               <article class="feature">
+                  <mat-icon aria-hidden="true">settings_suggest</mat-icon>
+                  <h3>Integrations</h3>
+                  <p>Connect with LMS, SSO providers and API-first automation.</p>
+               </article>
+            </div>
+         </div>
+      </section>
+
+      <!-- Steps -->
+
+      <section class="steps">
+         <div class="container">
+            <h2 class="section-title">How it Works</h2>
+            <ol class="steps-grid" aria-label="Workflow steps">
+               <li class="step">
+                  <div class="num" aria-hidden="true">1</div>
+                  <h4>Create Exam</h4>
+                  <p>Build from question bank or import existing items.</p>
+               </li>
+               <li class="step">
+                  <div class="num" aria-hidden="true">2</div>
+                  <h4>Assign &amp; Schedule</h4>
+                  <p>Flexible scheduling, assign by groups, campuses, or custom lists.</p>
+               </li>
+               <li class="step">
+                  <div class="num" aria-hidden="true">3</div>
+                  <h4>Deliver &amp; Proctor</h4>
+                  <p>Automated proctoring and integrity reports during delivery.</p>
+               </li>
+               <li class="step">
+                  <div class="num" aria-hidden="true">4</div>
+                  <h4>Analyze Results</h4>
+                  <p>Immediate grading, analytics and exportable reports.</p>
+               </li>
+            </ol>
+         </div>
+      </section>
+
+
+      <!-- CTA -->
+      <section class="cta">
+         <div class="container">
+            <h2>Ready to modernize assessments?</h2>
+            <p>Contact our sales team for enterprise onboarding and SLA options.</p>
+            <div class="cta-actions">
+               <a routerLink="/contact" class="btn-outline">Contact Sales</a>
+               <a routerLink="/register" class="btn-primary">
+                  <mat-icon aria-hidden="true">rocket_launch</mat-icon>
+                  <span>Start Free Trial</span>
+               </a>
+            </div>
+         </div>
+      </section>
+   </main>
+
+   <!-- Footer -->
+   <div class="footer" role="contentinfo">
+      <div class="container footer-grid">
+         <div class="col">
+            <h5>Profluent Lab</h5>
+            <p>Enterprise online assessment platform.</p>
+         </div>
+         <div class="col">
+            <h5>Product</h5>
+            <a routerLink="/features">Features</a>
+            <a routerLink="/pricing">Pricing</a>
+         </div>
+         <div class="col">
+            <h5>Resources</h5>
+            <a routerLink="/docs">Docs</a>
+            <a routerLink="/support">Support</a>
+         </div>
+         <div class="col">
+            <h5>Contact</h5>
+            <a routerLink="/contact">Contact Sales</a>
+            <p class="muted">© 2025 Profluent Lab</p>
+         </div>
+      </div>
+   </div>
+
+</div>
